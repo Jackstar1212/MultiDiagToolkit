@@ -1,36 +1,3 @@
-::[Bat To Exe Converter]
-::
-::YAwzoRdxOk+EWAjk
-::fBw5plQjdCyDJGyX8VAjFDdbQgGOJU2zFb0gzO3o5P6IsnGYkBi6iGdfAlQG7wqVHIhholOoM63dVhowDRpddBTmYQ4++GMP5jTUec6fvG8=
-::YAwzuBVtJxjWCl3EqQJgSA==
-::ZR4luwNxJguZRRnk
-::Yhs/ulQjdF+5
-::cxAkpRVqdFKZSDk=
-::cBs/ulQjdF65
-::ZR41oxFsdFKZSTk=
-::eBoioBt6dFKZSDk=
-::cRo6pxp7LAbNWATEpSI=
-::egkzugNsPRvcWATEpCI=
-::dAsiuh18IRvcCxnZtBJQ
-::cRYluBh/LU+EWAnk
-::YxY4rhs+aU+IeA==
-::cxY6rQJ7JhzQF1fEqQJiZkoaHErSXA==
-::ZQ05rAF9IBncCkqN+0xwdVsGAlXMbCXqZg==
-::ZQ05rAF9IAHYFVzEqQK17OHRvOwG5Is91W6bMxdzIAABVICYgye6nVhcFGXu
-::eg0/rx1wNQPfEVWB+kM9LVsJDCmXKGKeD7Qb3Of04+GOtgMYTOdf
-::fBEirQZwNQPfEVWB+kM9LVsJDCmmCCW/HrB8
-::cRolqwZ3JBvQF1fEqQK17OHRvOwG5Is91W6bMxdzIAABVICYgye6nVhcFGXu
-::dhA7uBVwLU+EWDk=
-::YQ03rBFzNR3SWATElA==
-::dhAmsQZ3MwfNWATE2E0+LRdNag2RNAs=
-::ZQ0/vhVqMQ3MEVWAtB9wSA==
-::Zg8zqx1/OA3MEVWAtB9wSA==
-::dhA7pRFwIByZRRnk
-::Zh4grVQjdCyDJGyX8VAjFDdbQgGOJU2zFb0gzO3o5P6IsnGYkBi6iGdfAlQG7wqVHIhholOoM63dVhowIT9saEDlP4DoQeqaW+xD1kJuX4kcqs5GFMPt1OGvUecIbKPut1u3akvCP69iEMsUWSP4G/AwiS3R1Oc6GiO01E/8N49eqMwHfDWCnXA5jTkx7r8w8e/ibP8fYs1vhoZN
-::YB416Ek+ZG8=
-::
-::
-::978f952a14a936cc963da21a135fa983
 @echo off
 
 rem 取得管理员权限
@@ -302,10 +269,6 @@ echo 声明：脚本修复功能不一定适用于您的问题，作者对使用
 echo 声明：继续使用代表您同意免除脚本作者对您电脑进行修改缩造成后果的责任，自行承担后果
 echo 声明：如果不同意，请点击右上角关闭按钮关闭脚本并删除脚本文件
 echo 首次使用建议阅读关于脚本的疑难解答
-echo.
-echo 本程序供林间暖苑水友使用（QQ群：885676509）
-echo 群里真热闹啊（赞赏↑）
-echo 睁眼闭眼这几个狗群友（嫌弃↓）/doge
 echo.
 echo ----------------------------------------------------------------------------------------
 set /p maininput=请选择项目：
