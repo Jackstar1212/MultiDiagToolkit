@@ -33,29 +33,29 @@
 ::978f952a14a936cc963da21a135fa983
 @echo off
 
-rem È¡µÃ¹ÜÀíÔ±È¨ÏŞ
+rem å–å¾—ç®¡ç†å‘˜æƒé™
 >NUL 2>&1 REG.exe query "HKU\S-1-5-19" || (
     ECHO SET UAC = CreateObject^("Shell.Application"^) > "%TEMP%\Getadmin.vbs"
     ECHO UAC.ShellExecute "%~f0", "%1", "", "runas", 1 >> "%TEMP%\Getadmin.vbs"
     "%TEMP%\Getadmin.vbs"
     DEL /f /q "%TEMP%\Getadmin.vbs" 2>NUL
     cls
-    echo ÇëÔÊĞí´Ë½Å±¾ÒÔ¹ÜÀíÔ±È¨ÏŞÔËĞĞ
-    echo µ±³öÏÖ¡°ÄãÒªÔÊĞí´ËÓ¦ÓÃ¶ÔÄúµÄÉè±¸½øĞĞ¸ü¸ÄÂğ£¿¡±¶Ô»°¿òÊ±£¬ÇëÑ¡¡°ÊÇ¡±
+    echo è¯·å…è®¸æ­¤è„šæœ¬ä»¥ç®¡ç†å‘˜æƒé™è¿è¡Œ
+    echo å½“å‡ºç°â€œä½ è¦å…è®¸æ­¤åº”ç”¨å¯¹æ‚¨çš„è®¾å¤‡è¿›è¡Œæ›´æ”¹å—ï¼Ÿâ€å¯¹è¯æ¡†æ—¶ï¼Œè¯·é€‰â€œæ˜¯â€
     timeout /t 3 /nobreak > NUL
     Exit /b
 )
 
-rem ÏµÍ³Õï¶ÏĞŞ¸´¹¤¾ß
+rem ç³»ç»Ÿè¯Šæ–­ä¿®å¤å·¥å…·
 
-rem ¼ì²éÏµÍ³»·¾³±äÁ¿
+rem æ£€æŸ¥ç³»ç»Ÿç¯å¢ƒå˜é‡
 
 wmic /? >nul 2>nul
 if %ERRORLEVEL% equ 0 (
 	echo. >nul 2>nul
 ) else (
 	rem call:systempath %%SystemRoot%%\system32\Wbem
-	echo Õï¶Ï¹¤¾ß¹¦ÄÜ¿ÉÄÜÊÜÏŞ£¬ÇëÊÖ¶¯ĞŞ¸´C:\Windows\system32\Wbem»·¾³±äÁ¿
+	echo è¯Šæ–­å·¥å…·åŠŸèƒ½å¯èƒ½å—é™ï¼Œè¯·æ‰‹åŠ¨ä¿®å¤C:\Windows\system32\Wbemç¯å¢ƒå˜é‡
 )
 
 netsh winsock show >nul 2>nul
@@ -65,20 +65,20 @@ if %ERRORLEVEL% equ 0 (
 	call:systempath %%SystemRoot%%\system32
 )
 
-rem ¼ì²éÓÃ»§temp»º´æÄ¿Â¼»·¾³±äÁ¿
+rem æ£€æŸ¥ç”¨æˆ·tempç¼“å­˜ç›®å½•ç¯å¢ƒå˜é‡
 echo %temp% |%systemroot%\system32\findstr "Local\Temp" >nul 2>nul
 if %ERRORLEVEL% equ 0 (
 	echo. >nul 2>nul
 ) else (
 	%systemroot%\system32\reg add "HKEY_CURRENT_USER\Environment" /v Temp /t REG_EXPAND_SZ /d "%USERPROFILE%\AppData\Local\Temp" /f >nul 2>nul
 	set temp=%USERPROFILE%\AppData\Local\Temp
-	echo ÒÑĞŞ¸´ÓÃ»§»·¾³±äÁ¿, ÇëÖØĞÂ´ò¿ª¼ì²é¹¤¾ß
+	echo å·²ä¿®å¤ç”¨æˆ·ç¯å¢ƒå˜é‡, è¯·é‡æ–°æ‰“å¼€æ£€æŸ¥å·¥å…·
 )
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq 360tray.exe" |findstr /i 360tray.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³ö360°²È«ÎÀÊ¿, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³ö360°²È«ÎÀÊ¿, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡º360å®‰å…¨å«å£«, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡º360å®‰å…¨å«å£«, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -86,8 +86,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq kxetray.exe" |findstr /i kxetray.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³ö½ğÉ½¶¾°Ô, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³ö½ğÉ½¶¾°Ô, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡ºé‡‘å±±æ¯’éœ¸, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡ºé‡‘å±±æ¯’éœ¸, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -95,8 +95,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq BaiduSdSvc.exe" |findstr /i BaiduSdSvc.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³ö°Ù¶ÈÉ±¶¾Èí¼ş, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³ö°Ù¶ÈÉ±¶¾Èí¼ş, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡ºç™¾åº¦æ€æ¯’è½¯ä»¶, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡ºç™¾åº¦æ€æ¯’è½¯ä»¶, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -104,8 +104,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq ksafe.exe" |findstr /i ksafe.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³ö½ğÉ½ÎÀÊ¿, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³ö½ğÉ½ÎÀÊ¿, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡ºé‡‘å±±å«å£«, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡ºé‡‘å±±å«å£«, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -113,8 +113,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq ccSvcHst.exe" |findstr /i ccSvcHst.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³öNortonÉ±¶¾, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³öNortonÉ±¶¾, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡ºNortonæ€æ¯’, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡ºNortonæ€æ¯’, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -122,8 +122,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq avp.exe" |findstr /i avp.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³ö¿¨°ÍË¹»ù, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³ö¿¨°ÍË¹»ù, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡ºå¡å·´æ–¯åŸº, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡ºå¡å·´æ–¯åŸº, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -131,8 +131,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq 360sd.exe" |findstr /i 360sd.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³ö360É±¶¾, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³ö360É±¶¾, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡º360æ€æ¯’, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡º360æ€æ¯’, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -140,8 +140,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq QQPCSoftMgr.exe" |findstr /i QQPCSoftMgr.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³öÌÚÑ¶µçÄÔ¹Ü¼Ò, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³öÌÚÑ¶µçÄÔ¹Ü¼Ò, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡ºè…¾è®¯ç”µè„‘ç®¡å®¶, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡ºè…¾è®¯ç”µè„‘ç®¡å®¶, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -149,28 +149,28 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq HipsTray.exe" |findstr /i HipsTray.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo ÇëÍË³ö»ğÈŞ°²È«Èí¼ş, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡
-	mshta vbscript:msgbox("ÇëÍË³ö»ğÈŞ°²È«Èí¼ş, ÒÔÃâ²Ù×÷¹ı³ÌÖĞ³öÏÖ´íÎó£¡",64,"ÏûÏ¢"^)(window.close^)
+	echo è¯·é€€å‡ºç«ç»’å®‰å…¨è½¯ä»¶, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼
+	mshta vbscript:msgbox("è¯·é€€å‡ºç«ç»’å®‰å…¨è½¯ä»¶, ä»¥å…æ“ä½œè¿‡ç¨‹ä¸­å‡ºç°é”™è¯¯ï¼",64,"æ¶ˆæ¯"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
 )
 
-rem ÉèÖÃ³ÌĞò°æ±¾¡¢×÷ÕßĞÅÏ¢
+rem è®¾ç½®ç¨‹åºç‰ˆæœ¬ã€ä½œè€…ä¿¡æ¯
 set "progver=2.1"
 set "Author=LonelyFish"
 
-rem cols ÉèÖÃ¿í¶È£»lines ÉèÖÃ³¤¶È
-rem ÑÕÉ«ÊôĞÔÓÉÁ½¸öÊ®Áù½øÖÆÊı×ÖÖ¸¶¨ -- µÚÒ»¸ö¶ÔÓ¦ÓÚ±³¾°£¬µÚ¶ş¸ö¶ÔÓ¦ÓÚÇ°¾°¡£Ã¿¸öÊı×Ö¿ÉÒÔÎªÒÔÏÂÈÎºÎÖµ:
-rem 0 = ºÚÉ« 1 = À¶É« 2 = ÂÌÉ« 3= Ç³ÂÌÉ« 4 = ºìÉ« 5 = ×ÏÉ« 6 = »ÆÉ« 7 = °×É« 8 = »ÒÉ« 9 = µ­À¶É« A = µ­ÂÌÉ« B = µ­Ç³ÂÌÉ« C = µ­ºìÉ« D = µ­×ÏÉ« E = µ­»ÆÉ« F = ÁÁ°×É«
+rem cols è®¾ç½®å®½åº¦ï¼›lines è®¾ç½®é•¿åº¦
+rem é¢œè‰²å±æ€§ç”±ä¸¤ä¸ªåå…­è¿›åˆ¶æ•°å­—æŒ‡å®š -- ç¬¬ä¸€ä¸ªå¯¹åº”äºèƒŒæ™¯ï¼Œç¬¬äºŒä¸ªå¯¹åº”äºå‰æ™¯ã€‚æ¯ä¸ªæ•°å­—å¯ä»¥ä¸ºä»¥ä¸‹ä»»ä½•å€¼:
+rem 0 = é»‘è‰² 1 = è“è‰² 2 = ç»¿è‰² 3= æµ…ç»¿è‰² 4 = çº¢è‰² 5 = ç´«è‰² 6 = é»„è‰² 7 = ç™½è‰² 8 = ç°è‰² 9 = æ·¡è“è‰² A = æ·¡ç»¿è‰² B = æ·¡æµ…ç»¿è‰² C = æ·¡çº¢è‰² D = æ·¡ç´«è‰² E = æ·¡é»„è‰² F = äº®ç™½è‰²
 
 setlocal enabledelayedexpansion
-powershell -executionpolicy bypass -command "&{$H=get-host;$W=$H.ui.rawui;$B=$W.buffersize;$B.width=128;$B.height=300;$W.buffersize=$B;$W.windowtitle='ÏµÍ³Õï¶ÏĞŞ¸´¹¤¾ß'}"
+powershell -executionpolicy bypass -command "&{$H=get-host;$W=$H.ui.rawui;$B=$W.buffersize;$B.width=128;$B.height=300;$W.buffersize=$B;$W.windowtitle='ç³»ç»Ÿè¯Šæ–­ä¿®å¤å·¥å…·'}"
 chcp 936 2>nul >nul
 
-title ÏµÍ³Õï¶ÏĞŞ¸´¹¤¾ß v%progver% by %Author%
+title ç³»ç»Ÿè¯Šæ–­ä¿®å¤å·¥å…· v%progver% by %Author%
 
-rem »ñÈ¡ÏµÍ³°æ±¾ĞÅÏ¢
+rem è·å–ç³»ç»Ÿç‰ˆæœ¬ä¿¡æ¯
 ver /? >nul 2>nul
 if !ERRORLEVEL! equ 0 (
 	for /f "tokens=4 " %%i in ('ver') do (
@@ -180,24 +180,24 @@ if !ERRORLEVEL! equ 0 (
 	set systemver=9
 )
 
-rem »ñÈ¡powershell°æ±¾ĞÅÏ¢
+rem è·å–powershellç‰ˆæœ¬ä¿¡æ¯
 for /f %%i in ('powershell -executionpolicy bypass $PSVersionTable.PSVersion 2^>nul ^|findstr [0-9]') do set powershellver=%%i
 
 set ipv4ipv6=^\^<[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\^> [0-9][a-f][0-9]*: [a-f][a-f][a-f]*: [a-f][a-f][a-f][0-9]: [0-9][0-9][0-9]*::
 set ipv4only=^\^<[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\^>
 set ipv6only=[0-9][a-f][0-9]*: [a-f][a-f][a-f]*: [a-f][a-f][a-f][0-9]: [0-9][0-9][0-9]*::
-rem »ñÈ¡Åú´¦ÀíÎÄ¼şÃû
+rem è·å–æ‰¹å¤„ç†æ–‡ä»¶å
 set mybatname=%~n0
 )
 
-rem ÉùÃ÷°²È«/²¦ºÅ/´úÀí/Ä£ÄâÆ÷/ÏŞËÙÈí¼ş±äÁ¿
-set securitysoftwareprocess=Avast adguard 2345 V2RayN V3Medic V3LSvc Ldshelper LenovoNerveCenter wsctrl LenovoPcManagerService McUICnt kxetray rstray HipsDaemon HipsTray HipsMain ADSafe kavsvc Norton Mcafee avguard SecurityHealthSystray KWatch ZhuDongFangYu 360tray 360safe QQPCMgr QQPCTray QQPCRTP BullGuardCore GlassWire avira k7gw panda avg QHActiveDefense QHWatchDog symantec mbam HitmanPro emsi BdAgent iobit zoner sophos WO17 gdata zonealarm trend fsagent antimalwareservice webroot spyshelter Lavservice killer 8021x NetPeeker NetLimiter SSTap SSTap-mod GameFirst_V Shadowsocks SSTap SuService drclient C+WClient NetScaning Clmsn BarClientView ProcessSafe iNode GOGOÉÏ»ú RzxClient CoobarClt nvvsvc NXPRUN LdBoxHeadless LdVBoxHeadless MEmuHeadless NoxVMHandle AndroidEmulator ddemuhandle LDSGameMaster
-rem ÓÎÏ·½ø³ÌºÚ°×Ãûµ¥/ÄÚ´æ´óĞ¡KB
+rem å£°æ˜å®‰å…¨/æ‹¨å·/ä»£ç†/æ¨¡æ‹Ÿå™¨/é™é€Ÿè½¯ä»¶å˜é‡
+set securitysoftwareprocess=Avast adguard 2345 V2RayN V3Medic V3LSvc Ldshelper LenovoNerveCenter wsctrl LenovoPcManagerService McUICnt kxetray rstray HipsDaemon HipsTray HipsMain ADSafe kavsvc Norton Mcafee avguard SecurityHealthSystray KWatch ZhuDongFangYu 360tray 360safe QQPCMgr QQPCTray QQPCRTP BullGuardCore GlassWire avira k7gw panda avg QHActiveDefense QHWatchDog symantec mbam HitmanPro emsi BdAgent iobit zoner sophos WO17 gdata zonealarm trend fsagent antimalwareservice webroot spyshelter Lavservice killer 8021x NetPeeker NetLimiter SSTap SSTap-mod GameFirst_V Shadowsocks SSTap SuService drclient C+WClient NetScaning Clmsn BarClientView ProcessSafe iNode GOGOä¸Šæœº RzxClient CoobarClt nvvsvc NXPRUN LdBoxHeadless LdVBoxHeadless MEmuHeadless NoxVMHandle AndroidEmulator ddemuhandle LDSGameMaster
+rem æ¸¸æˆè¿›ç¨‹é»‘ç™½åå•/å†…å­˜å¤§å°KB
 for /f "tokens=1*" %%i in ('tzutil.exe /g') do set timezone=%%i %%j
 
 for /f "tokens=3" %%i in ('reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Language" /v InstallLanguage 2^>nul') do set Languages=%%i
 if defined Languages (
-	if !Languages!==0804 set SystemLanguages=¼òÌåÖĞÎÄ
+	if !Languages!==0804 set SystemLanguages=ç®€ä½“ä¸­æ–‡
 	if !Languages!==0404 set SystemLanguages=TraditionalChinese
 	if !Languages!==0409 set SystemLanguages=English
 	if !Languages!==0011 set SystemLanguages=Japanese
@@ -218,7 +218,7 @@ if defined date (
 	echo. >nul 2>nul
 )
 
-rem »ñÈ¡ÎÒµÄÎÄµµÂ·¾¶
+rem è·å–æˆ‘çš„æ–‡æ¡£è·¯å¾„
 for /f "tokens=3,4*" %%i in ('reg query "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" /v Personal 2^>nul ^|findstr "Personal"') do set mydocdir=%%i %%j %%k
 if defined mydocdir (
 	set mydocdir=!mydocdir:~0,-2!
@@ -226,13 +226,13 @@ if defined mydocdir (
 	echo. >nul 2>nul
 )
 
-rem »ñÈ¡ÕıÔÚÊ¹ÓÃÍøÂçµÄÃû³Æ
+rem è·å–æ­£åœ¨ä½¿ç”¨ç½‘ç»œçš„åç§°
 set NNN=0
-for /f "tokens=1 delims=," %%i in ('Getmac /v /nh /fo csv ^|findstr /r "Device ÔİÈ±" ^|findstr /r /v "Switch Bluetooth Direct Xbox VMware VirtualBox ZeroTier WSL Loopback Ã»ÓĞÓ²¼ş"') do (
+for /f "tokens=1 delims=," %%i in ('Getmac /v /nh /fo csv ^|findstr /r "Device æš‚ç¼º" ^|findstr /r /v "Switch Bluetooth Direct Xbox VMware VirtualBox ZeroTier WSL Loopback æ²¡æœ‰ç¡¬ä»¶"') do (
 	set /a NNN+=1
 	set networkname!NNN!=%%i
 )
-rem ÅĞ¶ÏÍøÂç½Ó¿ÚÓÅÏÈ¼¶
+rem åˆ¤æ–­ç½‘ç»œæ¥å£ä¼˜å…ˆçº§
 if %NNN% equ 2 (
 for /f %%i in ('netsh int ipv4 show interfaces ^|findstr /c:%networkname1%') do set networkname1id=%%i
 for /f %%i in ('netsh int ipv4 show interfaces ^|findstr /c:%networkname2%') do set networkname2id=%%i
@@ -250,134 +250,134 @@ for /f "tokens=4" %%i in ('powercfg /LIST ^|findstr /v "Active" ^|findstr "*"') 
 set powerstate=!powerstate:(=! 2>nul
 set powerstate=!powerstate:)=! 2>nul
 
-rem Win10ÓÎÏ·Ä£Ê½
+rem Win10æ¸¸æˆæ¨¡å¼
 if "%systemver%"=="10" (
 for /f "tokens=3" %%i in ('reg query "HKEY_CURRENT_USER\Software\Microsoft\GameBar" /v AutoGameModeEnabled 2^>nul') do set gamebar=%%i
 if defined gamebar (
-if !gamebar!==0x0 set gamebar=ÓÎÏ·Ä£Ê½: ¹Ø
-if !gamebar!==0x1 set gamebar=ÓÎÏ·Ä£Ê½: ¿ª
+if !gamebar!==0x0 set gamebar=æ¸¸æˆæ¨¡å¼: å…³
+if !gamebar!==0x1 set gamebar=æ¸¸æˆæ¨¡å¼: å¼€
 ) else (
-set "gamebar=ÓÎÏ·Ä£Ê½: ¿ª"
+set "gamebar=æ¸¸æˆæ¨¡å¼: å¼€"
 )
 ) else (
 echo. >nul
 )
 
-rem ÉèÖÃ´°¿Ú´óĞ¡¼°ÑÕÉ«
+rem è®¾ç½®çª—å£å¤§å°åŠé¢œè‰²
 rem color 2f
 color 70
 mode con cols=128 lines=50
 
 cls
-echo ÏµÍ³Ê±¼ä: %time:~0,8%
-echo ÏµÍ³Ê±Çø: %timezone%
-echo °²×°ÓïÑÔ: %Languages% %SystemLanguages%
-echo µçÔ´Ä£Ê½: %powerstate%
+echo ç³»ç»Ÿæ—¶é—´: %time:~0,8%
+echo ç³»ç»Ÿæ—¶åŒº: %timezone%
+echo å®‰è£…è¯­è¨€: %Languages% %SystemLanguages%
+echo ç”µæºæ¨¡å¼: %powerstate%
 if "%systemver%"=="10" (
 echo %gamebar%
 )
 
-rem Ö÷²Ëµ¥£º¶àºÏÒ»ÏµÍ³Õï¶ÏĞŞ¸´¹¤¾ß
+rem ä¸»èœå•ï¼šå¤šåˆä¸€ç³»ç»Ÿè¯Šæ–­ä¿®å¤å·¥å…·
 
 echo ----------------------------------------------------------------------------------------
-echo                                   ¶àºÏÒ»ÏµÍ³Õï¶ÏĞŞ¸´¹¤¾ß
+echo                                   å¤šåˆä¸€ç³»ç»Ÿè¯Šæ–­ä¿®å¤å·¥å…·
 echo ----------------------------------------------------------------------------------------
 echo.
-echo 0. ¹ØÓÚ½Å±¾µÄÒÉÄÑ½â´ğ£¨²»ÖªµÀÕâÍæÒâ¸ÉÂïµÄ£¬Ñ¡ÎÒ£©
+echo 0. å…³äºè„šæœ¬çš„ç–‘éš¾è§£ç­”ï¼ˆä¸çŸ¥é“è¿™ç©æ„å¹²å˜›çš„ï¼Œé€‰æˆ‘ï¼‰
 echo.
-echo 1. ÏµÍ³Õï¶ÏĞŞ¸´£¨µçÄÔ³£¼ûÎÊÌâÑ¡ÎÒ£©
+echo 1. ç³»ç»Ÿè¯Šæ–­ä¿®å¤ï¼ˆç”µè„‘å¸¸è§é—®é¢˜é€‰æˆ‘ï¼‰
 echo.
-echo 2. ÍøÂçÕï¶ÏĞŞ¸´£¨ÍøÕ¨ÁËÑ¡ÎÒ£©
+echo 2. ç½‘ç»œè¯Šæ–­ä¿®å¤ï¼ˆç½‘ç‚¸äº†é€‰æˆ‘ï¼‰
 echo.
-echo 3. ÏµÍ³ÓÅ»¯µ÷Õû£¨Windows ¹¦ÄÜµ÷ÕûÑ¡ÎÒ£©
+echo 3. ç³»ç»Ÿä¼˜åŒ–è°ƒæ•´ï¼ˆWindows åŠŸèƒ½è°ƒæ•´é€‰æˆ‘ï¼‰
 echo.
-echo 4. ³£ÓÃÈí¼şĞŞ¸´£¨Steam Òì³£µÈÑ¡ÎÒ£©
+echo 4. å¸¸ç”¨è½¯ä»¶ä¿®å¤ï¼ˆSteam å¼‚å¸¸ç­‰é€‰æˆ‘ï¼‰
 echo.
-echo 5. ÆäËû¹¦ÄÜÔÓÏî£¨ÆäËûµÄÑ¡ÎÒ£©
+echo 5. å…¶ä»–åŠŸèƒ½æ‚é¡¹ï¼ˆå…¶ä»–çš„é€‰æˆ‘ï¼‰
 echo ----------------------------------------------------------------------------------------
 echo.
-echo ½Å±¾×÷Õß£º%Author%
-echo ½Å±¾°æ±¾£ºv%progver%
-echo ÉùÃ÷£º½Å±¾ĞŞ¸´¹¦ÄÜ²»Ò»¶¨ÊÊÓÃÓÚÄúµÄÎÊÌâ£¬×÷Õß¶ÔÊ¹ÓÃ½Å±¾ºó¹û¸Å²»¸ºÔğ£¬Çë×ÔĞĞÕå×ÃÊ¹ÓÃ
-echo ÉùÃ÷£º¼ÌĞøÊ¹ÓÃ´ú±íÄúÍ¬ÒâÃâ³ı½Å±¾×÷Õß¶ÔÄúµçÄÔ½øĞĞĞŞ¸ÄËõÔì³Éºó¹ûµÄÔğÈÎ£¬×ÔĞĞ³Ğµ£ºó¹û
-echo ÉùÃ÷£ºÈç¹û²»Í¬Òâ£¬Çëµã»÷ÓÒÉÏ½Ç¹Ø±Õ°´Å¥¹Ø±Õ½Å±¾²¢É¾³ı½Å±¾ÎÄ¼ş
-echo Ê×´ÎÊ¹ÓÃ½¨ÒéÔÄ¶Á¹ØÓÚ½Å±¾µÄÒÉÄÑ½â´ğ
+echo è„šæœ¬ä½œè€…ï¼š%Author%
+echo è„šæœ¬ç‰ˆæœ¬ï¼šv%progver%
+echo å£°æ˜ï¼šè„šæœ¬ä¿®å¤åŠŸèƒ½ä¸ä¸€å®šé€‚ç”¨äºæ‚¨çš„é—®é¢˜ï¼Œä½œè€…å¯¹ä½¿ç”¨è„šæœ¬åæœæ¦‚ä¸è´Ÿè´£ï¼Œè¯·è‡ªè¡Œæ–Ÿé…Œä½¿ç”¨
+echo å£°æ˜ï¼šç»§ç»­ä½¿ç”¨ä»£è¡¨æ‚¨åŒæ„å…é™¤è„šæœ¬ä½œè€…å¯¹æ‚¨ç”µè„‘è¿›è¡Œä¿®æ”¹ç¼©é€ æˆåæœçš„è´£ä»»ï¼Œè‡ªè¡Œæ‰¿æ‹…åæœ
+echo å£°æ˜ï¼šå¦‚æœä¸åŒæ„ï¼Œè¯·ç‚¹å‡»å³ä¸Šè§’å…³é—­æŒ‰é’®å…³é—­è„šæœ¬å¹¶åˆ é™¤è„šæœ¬æ–‡ä»¶
+echo é¦–æ¬¡ä½¿ç”¨å»ºè®®é˜…è¯»å…³äºè„šæœ¬çš„ç–‘éš¾è§£ç­”
 echo.
-echo ±¾³ÌĞò¹©ÁÖ¼äÅ¯Ô·Ë®ÓÑÊ¹ÓÃ£¨QQÈº£º885676509£©
-echo ÈºÀïÕæÈÈÄÖ°¡£¨ÔŞÉÍ¡ü£©
-echo ÕöÑÛ±ÕÑÛÕâ¼¸¸ö¹·ÈºÓÑ£¨ÏÓÆú¡ı£©/doge
+echo æœ¬ç¨‹åºä¾›æ—é—´æš–è‹‘æ°´å‹ä½¿ç”¨ï¼ˆQQç¾¤ï¼š885676509ï¼‰
+echo ç¾¤é‡ŒçœŸçƒ­é—¹å•Šï¼ˆèµèµâ†‘ï¼‰
+echo ççœ¼é—­çœ¼è¿™å‡ ä¸ªç‹—ç¾¤å‹ï¼ˆå«Œå¼ƒâ†“ï¼‰/doge
 echo.
 echo ----------------------------------------------------------------------------------------
-set /p maininput=ÇëÑ¡ÔñÏîÄ¿£º
+set /p maininput=è¯·é€‰æ‹©é¡¹ç›®ï¼š
 if %maininput% equ 0 goto QA
 if %maininput% equ 1 goto menusysrepair
 if %maininput% equ 2 goto menunetfix
 if %maininput% equ 3 goto menusysoptimize
 if %maininput% equ 4 goto menusoft
 if %maininput% equ 5 goto menuother
-echo ÊäÈëÒì³££¬Çë¼ì²éÊäÈëÑ¡Ïî¡£
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·æ£€æŸ¥è¾“å…¥é€‰é¡¹ã€‚
 pause
 goto menu
 
-rem ÏµÍ³Õï¶ÏĞŞ¸´²Ëµ¥
+rem ç³»ç»Ÿè¯Šæ–­ä¿®å¤èœå•
 
 :menusysrepair
 echo ----------------------------------------------------------------------------------------
-echo                                      ÏµÍ³Õï¶ÏĞŞ¸´²Ëµ¥
+echo                                      ç³»ç»Ÿè¯Šæ–­ä¿®å¤èœå•
 echo ----------------------------------------------------------------------------------------
-echo 0. ·µ»ØÖ÷²Ëµ¥
+echo 0. è¿”å›ä¸»èœå•
 echo.
-echo 1. ÏµÍ³»·¾³Õï¶Ï£¨ÎÒÏëÁË½âÏµÍ³°¡ÍøÂç»·¾³°¡´ó¸ÅÉ¶Ñù£©
+echo 1. ç³»ç»Ÿç¯å¢ƒè¯Šæ–­ï¼ˆæˆ‘æƒ³äº†è§£ç³»ç»Ÿå•Šç½‘ç»œç¯å¢ƒå•Šå¤§æ¦‚å•¥æ ·ï¼‰
 echo.
-echo 2. ÏµÍ³ĞŞ¸´£¨µçÄÔÕâ¸ö²»ĞĞÄÇ¸ö²»ĞĞ£¬ÓÖ²»ÏëÖØ×°£¬ÊÔÊÔÎÒ£©
+echo 2. ç³»ç»Ÿä¿®å¤ï¼ˆç”µè„‘è¿™ä¸ªä¸è¡Œé‚£ä¸ªä¸è¡Œï¼Œåˆä¸æƒ³é‡è£…ï¼Œè¯•è¯•æˆ‘ï¼‰
 echo.
-echo 3. ÏÔÊ¾³ÌĞòÁĞ±í£¨¿´¿´ÀÏ×Ó/ÀÏÄïµçÄÔÀï×°ÁËĞ©É¶£©
+echo 3. æ˜¾ç¤ºç¨‹åºåˆ—è¡¨ï¼ˆçœ‹çœ‹è€å­/è€å¨˜ç”µè„‘é‡Œè£…äº†äº›å•¥ï¼‰
 echo.
-echo 4. ÖØÖÃIE£¨ÉÏ¹ÅÉñÆ÷ieä¯ÀÀÆ÷£¬Ã»ÈËÓÃ£¬µ«ÊÇÓĞÊ±ºòÍø¼ÄÁËÒ²¿ÉÒÔÑ¡ÎÒÊÔÊÔ£©
+echo 4. é‡ç½®IEï¼ˆä¸Šå¤ç¥å™¨ieæµè§ˆå™¨ï¼Œæ²¡äººç”¨ï¼Œä½†æ˜¯æœ‰æ—¶å€™ç½‘å¯„äº†ä¹Ÿå¯ä»¥é€‰æˆ‘è¯•è¯•ï¼‰
 echo.
-echo 5. XboxÆ½Ì¨ĞŞ¸´£¨´òÓÎÏ·ÓÃµ½xboxÁË£¬ÕâÍæÒâ³öÎÊÌâÑ¡ÎÒ£©
+echo 5. Xboxå¹³å°ä¿®å¤ï¼ˆæ‰“æ¸¸æˆç”¨åˆ°xboxäº†ï¼Œè¿™ç©æ„å‡ºé—®é¢˜é€‰æˆ‘ï¼‰
 echo.
-echo 6. Í¼±ê±ä°×ĞŞ¸´£¨×ÀÃæÍ¼±êÕ¦¶¼±ä³É°×É«µÄÁË£¿Ñ¡ÎÒ£©
+echo 6. å›¾æ ‡å˜ç™½ä¿®å¤ï¼ˆæ¡Œé¢å›¾æ ‡å’‹éƒ½å˜æˆç™½è‰²çš„äº†ï¼Ÿé€‰æˆ‘ï¼‰
 echo.
-echo 7. Windows¾Û½¹±ÚÖ½ĞŞ¸´£¨ÎÒµÄËøÆÁ±ÚÖ½Ö®Ç°×ÜÊÇ»á×Ô¶¯»»µÄ£¬Õ¦²»»»ÁË»òÕß±äÄ¬ÈÏÁË£¿Ñ¡ÎÒ£©
+echo 7. Windowsèšç„¦å£çº¸ä¿®å¤ï¼ˆæˆ‘çš„é”å±å£çº¸ä¹‹å‰æ€»æ˜¯ä¼šè‡ªåŠ¨æ¢çš„ï¼Œå’‹ä¸æ¢äº†æˆ–è€…å˜é»˜è®¤äº†ï¼Ÿé€‰æˆ‘ï¼‰
 echo.
-echo 8. WindowsµçÔ´Ñ¡Ïî»Ö¸´£¨ÏëÒª¸ßĞÔÄÜ¡¢½ÚÄÜ¡¢Æ½ºâµÈÄÇĞ©µçÔ´Ñ¡Ïî£¬ÕÒ²»µ½ÁË£¬Ñ¡ÎÒ£©
+echo 8. Windowsç”µæºé€‰é¡¹æ¢å¤ï¼ˆæƒ³è¦é«˜æ€§èƒ½ã€èŠ‚èƒ½ã€å¹³è¡¡ç­‰é‚£äº›ç”µæºé€‰é¡¹ï¼Œæ‰¾ä¸åˆ°äº†ï¼Œé€‰æˆ‘ï¼‰
 echo.
-echo 9. Windows Update¸üĞÂ°²×°ÎÊÌâ£¨0x80070002/0x80070005£©ÆäËû¹ÊÕÏÇëÊ¹ÓÃÏµÍ³ĞŞ¸´£¨¸üĞÂ´ò²»ÉÏÑ¡ÎÒ£©
+echo 9. Windows Updateæ›´æ–°å®‰è£…é—®é¢˜ï¼ˆ0x80070002/0x80070005ï¼‰å…¶ä»–æ•…éšœè¯·ä½¿ç”¨ç³»ç»Ÿä¿®å¤ï¼ˆæ›´æ–°æ‰“ä¸ä¸Šé€‰æˆ‘ï¼‰
 echo.
-echo 10. taskmgr.exeÃ»ÓĞÓëÖ®¹ØÁªµÄ³ÌĞòÔËĞĞ£¨ÈÎÎñ¹ÜÀíÆ÷¶¨Î»³ÌĞò½ø³ÌÂ·¾¶³öÎÊÌâ£¬Ñ¡ÎÒ£©
+echo 10. taskmgr.exeæ²¡æœ‰ä¸ä¹‹å…³è”çš„ç¨‹åºè¿è¡Œï¼ˆä»»åŠ¡ç®¡ç†å™¨å®šä½ç¨‹åºè¿›ç¨‹è·¯å¾„å‡ºé—®é¢˜ï¼Œé€‰æˆ‘ï¼‰
 echo.
-echo 11. ¶àÖÖexeÃ»ÓĞÓëÖ®¹ØÁªµÄ³ÌĞòÔËĞĞ£¨´ò¿ªÈí¼ş±¨Õâ¸ö´íÑ¡ÎÒ£©
+echo 11. å¤šç§exeæ²¡æœ‰ä¸ä¹‹å…³è”çš„ç¨‹åºè¿è¡Œï¼ˆæ‰“å¼€è½¯ä»¶æŠ¥è¿™ä¸ªé”™é€‰æˆ‘ï¼‰
 echo.
-echo 12. È¡ÏûWindows¼¤»î×´Ì¬²¢ÖØÖÃÆÀ¹ÀÆÚ£¨É÷ÓÃ£¡»áÊ¹Windows±äÎªÎ´¼¤»î×´Ì¬£¡£©£¨Ğ¡°×±ğµã£©
+echo 12. å–æ¶ˆWindowsæ¿€æ´»çŠ¶æ€å¹¶é‡ç½®è¯„ä¼°æœŸï¼ˆæ…ç”¨ï¼ä¼šä½¿Windowså˜ä¸ºæœªæ¿€æ´»çŠ¶æ€ï¼ï¼‰ï¼ˆå°ç™½åˆ«ç‚¹ï¼‰
 echo.
-echo 13. ×é²ßÂÔÌí¼Ó¡¢ĞŞ¸´£¨ÊÊÓÃÓÚ¼ÒÍ¥°æÌí¼Ó×é²ßÂÔ»òÕßÉı¼¶×¨Òµ°æºó×é²ßÂÔ¶ªÊ§Òì³£µÈÎÊÌâ£©
+echo 13. ç»„ç­–ç•¥æ·»åŠ ã€ä¿®å¤ï¼ˆé€‚ç”¨äºå®¶åº­ç‰ˆæ·»åŠ ç»„ç­–ç•¥æˆ–è€…å‡çº§ä¸“ä¸šç‰ˆåç»„ç­–ç•¥ä¸¢å¤±å¼‚å¸¸ç­‰é—®é¢˜ï¼‰
 echo.
-echo 14. ĞŞ¸´×ÀÃæÍ¼±ê¼ä¾àÒì³£¡¢´°¿ÚÓÒÉÏ½Ç¹Ø±Õ×î´ó»¯×îĞ¡»¯°´Å¥Òì³££¨×ÀÃæÍ¼±ê¼ä¾àºÃ´ó£¬¹Ö¹ÖµÄ£¬ÓÒÉÏ½Ç¹Ø±ÕÍ¼±êÒ²¹Ö¹ÖµÄ£¬Ñ¡ÎÒ£©
+echo 14. ä¿®å¤æ¡Œé¢å›¾æ ‡é—´è·å¼‚å¸¸ã€çª—å£å³ä¸Šè§’å…³é—­æœ€å¤§åŒ–æœ€å°åŒ–æŒ‰é’®å¼‚å¸¸ï¼ˆæ¡Œé¢å›¾æ ‡é—´è·å¥½å¤§ï¼Œæ€ªæ€ªçš„ï¼Œå³ä¸Šè§’å…³é—­å›¾æ ‡ä¹Ÿæ€ªæ€ªçš„ï¼Œé€‰æˆ‘ï¼‰
 echo.
-echo 15. ĞŞ¸´Î¢ÈíÉÌµê´ò²»¿ª¡¢×ªÈ¦¡¢°×ÆÁµÈÎÊÌâ£¨Î¢ÈíÉÌµê´ò²»¿ªÑ¡ÎÒ£©
+echo 15. ä¿®å¤å¾®è½¯å•†åº—æ‰“ä¸å¼€ã€è½¬åœˆã€ç™½å±ç­‰é—®é¢˜ï¼ˆå¾®è½¯å•†åº—æ‰“ä¸å¼€é€‰æˆ‘ï¼‰
 echo.
-echo 16. IEÖ÷Ò³½Ù³ÖĞŞ¸´£¨Ö÷Ò³±»ÂÒ¸ÄÁË£©
+echo 16. IEä¸»é¡µåŠ«æŒä¿®å¤ï¼ˆä¸»é¡µè¢«ä¹±æ”¹äº†ï¼‰
 echo.
-echo 17. ĞŞ¸´ÓÉÓÚÔ¶³ÌÁ¬½Óµ¼ÖÂµÄ¼ôÌù°å¸´ÖÆÕ³ÌùÊ§Ğ§ÎÊÌâ
+echo 17. ä¿®å¤ç”±äºè¿œç¨‹è¿æ¥å¯¼è‡´çš„å‰ªè´´æ¿å¤åˆ¶ç²˜è´´å¤±æ•ˆé—®é¢˜
 echo.
-echo 18. Í£ÓÃvmmem£¬½â¾övmmemÕ¼ÓÃ¹ı¸ßÎÊÌâ
+echo 18. åœç”¨vmmemï¼Œè§£å†³vmmemå ç”¨è¿‡é«˜é—®é¢˜
 echo.
-echo 19. ¼ÓÈëWindowsÔ¤ÀÀÌåÑé¼Æ»®£¨Windows Insider Channel£©
+echo 19. åŠ å…¥Windowsé¢„è§ˆä½“éªŒè®¡åˆ’ï¼ˆWindows Insider Channelï¼‰
 echo.
-echo 20. ²é¿´µç³Ø½¡¿µ¶È£¨¿´¿´µçÄÔµç³ØËğºÄÈçºÎ£©
+echo 20. æŸ¥çœ‹ç”µæ± å¥åº·åº¦ï¼ˆçœ‹çœ‹ç”µè„‘ç”µæ± æŸè€—å¦‚ä½•ï¼‰
 echo.
-echo 21. ÔËĞĞÏµÍ³×Ô´ø´ÅÅÌÇåÀí¹¤¾ß£¨Cleanmgr£©
+echo 21. è¿è¡Œç³»ç»Ÿè‡ªå¸¦ç£ç›˜æ¸…ç†å·¥å…·ï¼ˆCleanmgrï¼‰
 echo.
-echo 22. MAS Î¢Èí¼¤»î½Å±¾£¨ÏµÍ³¼¤»îÓÃÎÒ£©
+echo 22. MAS å¾®è½¯æ¿€æ´»è„šæœ¬ï¼ˆç³»ç»Ÿæ¿€æ´»ç”¨æˆ‘ï¼‰
 echo.
-echo 23. ÁĞ³öµ±Ç°¼ÆËã»úÕıÔÚÔËĞĞµÄËùÓĞ½ø³Ì
+echo 23. åˆ—å‡ºå½“å‰è®¡ç®—æœºæ­£åœ¨è¿è¡Œçš„æ‰€æœ‰è¿›ç¨‹
 echo.
-echo 24. ÁĞ³öËùÓĞ½ø³Ì£¨²»ÂÛ»îÔ¾Óë·ñ£©
+echo 24. åˆ—å‡ºæ‰€æœ‰è¿›ç¨‹ï¼ˆä¸è®ºæ´»è·ƒä¸å¦ï¼‰
 echo.
-echo 25. ÁĞ³ö´Ë¼ÆËã»úµÄËùÓĞÓÃ»§
+echo 25. åˆ—å‡ºæ­¤è®¡ç®—æœºçš„æ‰€æœ‰ç”¨æˆ·
 echo ----------------------------------------------------------------------------------------
-set /p sysdiaginput=ÇëÑ¡ÔñÏîÄ¿£º
+set /p sysdiaginput=è¯·é€‰æ‹©é¡¹ç›®ï¼š
 if %sysdiaginput% equ 0 goto menu
 if %sysdiaginput% equ 1 goto envdiag
 if %sysdiaginput% equ 2 goto systemrepair
@@ -404,37 +404,37 @@ if %sysdiaginput% equ 22 goto MAS_ACTIVATOR
 if %sysdiaginput% equ 23 goto allprocessrunning
 if %sysdiaginput% equ 24 goto allprocess
 if %sysdiaginput% equ 25 goto userlist
-echo ÊäÈëÒì³££¬Çë¼ì²éÊäÈëÑ¡Ïî¡£
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·æ£€æŸ¥è¾“å…¥é€‰é¡¹ã€‚
 pause
 goto menusysrepair
 
-rem ÍøÂçÕï¶ÏĞŞ¸´²Ëµ¥
+rem ç½‘ç»œè¯Šæ–­ä¿®å¤èœå•
 
 :menunetfix
 echo ----------------------------------------------------------------------------------------
-echo                                      ÍøÂçÕï¶ÏĞŞ¸´²Ëµ¥
+echo                                      ç½‘ç»œè¯Šæ–­ä¿®å¤èœå•
 echo ----------------------------------------------------------------------------------------
-echo 0. ·µ»ØÖ÷²Ëµ¥
+echo 0. è¿”å›ä¸»èœå•
 echo.
-echo 1. ´úÀí³ÌĞòÕï¶Ï£¨ÓĞÃ»ÓĞÆæ¹ÖµÄ´úÀí³ÌĞòÓ°ÏìÎÒÉÏÍøÑ¡ÎÒ£©
+echo 1. ä»£ç†ç¨‹åºè¯Šæ–­ï¼ˆæœ‰æ²¡æœ‰å¥‡æ€ªçš„ä»£ç†ç¨‹åºå½±å“æˆ‘ä¸Šç½‘é€‰æˆ‘ï¼‰
 echo.
-echo 2. hostsĞŞ¸´¹¤¾ß£¨¸ß¼¶²Ù×÷£¬¸Ä¸ÄÓ°ÏìÍøÂç½âÎöµÄÍæÒâ£©
+echo 2. hostsä¿®å¤å·¥å…·ï¼ˆé«˜çº§æ“ä½œï¼Œæ”¹æ”¹å½±å“ç½‘ç»œè§£æçš„ç©æ„ï¼‰
 echo.
-echo 3. DNSÉèÖÃ¹¤¾ß£¨ÉÏÍø´ò¿ªÍøÒ³Âı£¬»»¸ödnsÒ²Ğí¿ÉÒÔ½â¾ö£¿£©
+echo 3. DNSè®¾ç½®å·¥å…·ï¼ˆä¸Šç½‘æ‰“å¼€ç½‘é¡µæ…¢ï¼Œæ¢ä¸ªdnsä¹Ÿè®¸å¯ä»¥è§£å†³ï¼Ÿï¼‰
 echo.
-echo 4. ÍøÂçĞ­ÒéÕ»ÖØÖÃ£¨ÍøÕ¨ÁËÑ¡ÎÒ£©
+echo 4. ç½‘ç»œåè®®æ ˆé‡ç½®ï¼ˆç½‘ç‚¸äº†é€‰æˆ‘ï¼‰
 echo.
-echo 5. LSPĞŞ¸´£¨ÍøÕ¨ÁËÑ¡ÎÒÏÈ£¬²»ĞĞÑ¡ÉÏÃæµÄÄÇ¸ö£©
+echo 5. LSPä¿®å¤ï¼ˆç½‘ç‚¸äº†é€‰æˆ‘å…ˆï¼Œä¸è¡Œé€‰ä¸Šé¢çš„é‚£ä¸ªï¼‰
 echo.
-echo 6. ¹Ø±ÕWindows·À»ğÇ½£¨°­ÊÖ°­½Å×Üµ¯´°ÎÊÁªÍøÈ¨ÏŞ£¿Ñ¡ÎÒ¹Øµô£¬µ±È»²»ÊÇÄÇÃ´ÍÆ¼ö£©
+echo 6. å…³é—­Windowsé˜²ç«å¢™ï¼ˆç¢æ‰‹ç¢è„šæ€»å¼¹çª—é—®è”ç½‘æƒé™ï¼Ÿé€‰æˆ‘å…³æ‰ï¼Œå½“ç„¶ä¸æ˜¯é‚£ä¹ˆæ¨èï¼‰
 echo.
-echo 7. ¿ªÆôWindows·À»ğÇ½£¨ÎÒºó»ÚÁË£¬»òÕßÓöµ½ÎÊÌâÁË£¬ÖØĞÂ´ò¿ªÑ¡ÎÒ£©
+echo 7. å¼€å¯Windowsé˜²ç«å¢™ï¼ˆæˆ‘åæ‚”äº†ï¼Œæˆ–è€…é‡åˆ°é—®é¢˜äº†ï¼Œé‡æ–°æ‰“å¼€é€‰æˆ‘ï¼‰
 echo.
-echo 8. ÖØÖÃIE£¨ÉÏ¹ÅÉñÆ÷ieä¯ÀÀÆ÷£¬Ã»ÈËÓÃ£¬µ«ÊÇÓĞÊ±ºòÍø¼ÄÁËÒ²¿ÉÒÔÑ¡ÎÒÊÔÊÔ£©
+echo 8. é‡ç½®IEï¼ˆä¸Šå¤ç¥å™¨ieæµè§ˆå™¨ï¼Œæ²¡äººç”¨ï¼Œä½†æ˜¯æœ‰æ—¶å€™ç½‘å¯„äº†ä¹Ÿå¯ä»¥é€‰æˆ‘è¯•è¯•ï¼‰
 echo.
-echo 9. DNS»º´æÓòÃû¼ÇÂ¼£¨¿´¿´ÍøÒ³½âÎö£©
+echo 9. DNSç¼“å­˜åŸŸåè®°å½•ï¼ˆçœ‹çœ‹ç½‘é¡µè§£æï¼‰
 echo ----------------------------------------------------------------------------------------
-set /p netdiaginput=ÇëÑ¡ÔñÏîÄ¿£º
+set /p netdiaginput=è¯·é€‰æ‹©é¡¹ç›®ï¼š
 if %netdiaginput% equ 0 goto menu
 if %netdiaginput% equ 1 goto proxydiag
 if %netdiaginput% equ 2 goto hsfile
@@ -445,65 +445,65 @@ if %netdiaginput% equ 6 goto systemfirewalloff
 if %netdiaginput% equ 7 goto systemfirewallon
 if %netdiaginput% equ 8 goto iereset
 if %netdiaginput% equ 9 goto dnscachelist
-echo ÊäÈëÒì³££¬Çë¼ì²éÊäÈëÑ¡Ïî¡£
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·æ£€æŸ¥è¾“å…¥é€‰é¡¹ã€‚
 pause
 goto menunetfix
 
-rem ÏµÍ³ÓÅ»¯µ÷Õû²Ëµ¥
+rem ç³»ç»Ÿä¼˜åŒ–è°ƒæ•´èœå•
 
 :menusysoptimize
 echo ----------------------------------------------------------------------------------------
-echo                                      ÏµÍ³ÓÅ»¯µ÷Õû²Ëµ¥
+echo                                      ç³»ç»Ÿä¼˜åŒ–è°ƒæ•´èœå•
 echo ----------------------------------------------------------------------------------------
-echo 0. ·µ»ØÖ÷²Ëµ¥
+echo 0. è¿”å›ä¸»èœå•
 echo.
-echo 1. ¹Ø±ÕWindows·À»ğÇ½£¨°­ÊÖ°­½Å×Üµ¯´°ÎÊÁªÍøÈ¨ÏŞ£¿Ñ¡ÎÒ¹Øµô£¬µ±È»²»ÊÇÄÇÃ´ÍÆ¼ö£©
+echo 1. å…³é—­Windowsé˜²ç«å¢™ï¼ˆç¢æ‰‹ç¢è„šæ€»å¼¹çª—é—®è”ç½‘æƒé™ï¼Ÿé€‰æˆ‘å…³æ‰ï¼Œå½“ç„¶ä¸æ˜¯é‚£ä¹ˆæ¨èï¼‰
 echo.
-echo 2. ¿ªÆôWindows·À»ğÇ½£¨ÎÒºó»ÚÁË£¬»òÕßÓöµ½ÎÊÌâÁË£¬ÖØĞÂ´ò¿ªÑ¡ÎÒ£©
+echo 2. å¼€å¯Windowsé˜²ç«å¢™ï¼ˆæˆ‘åæ‚”äº†ï¼Œæˆ–è€…é‡åˆ°é—®é¢˜äº†ï¼Œé‡æ–°æ‰“å¼€é€‰æˆ‘ï¼‰
 echo.
-echo 3. ×¿Ô½ĞÔÄÜÄ£Ê½£¨½âËøµçÄÔÏµÍ³²ãÃæµÄÒ»Ğ©¹¦ºÄÏŞÖÆ£¬ÈÃµçÄÔ¾¡¿ÉÄÜÂú¹¦ºÄÔËĞĞ£©
+echo 3. å“è¶Šæ€§èƒ½æ¨¡å¼ï¼ˆè§£é”ç”µè„‘ç³»ç»Ÿå±‚é¢çš„ä¸€äº›åŠŸè€—é™åˆ¶ï¼Œè®©ç”µè„‘å°½å¯èƒ½æ»¡åŠŸè€—è¿è¡Œï¼‰
 echo.
-echo 4. »Ö¸´UAC£¨ÎÒºó»Ú½ûÓÃÁË£¬»¹ÊÇÏëÒªÈ¨ÏŞÔÚ×Ô¼ºÊÖÀï¿ØÖÆÊæ·ş£©
+echo 4. æ¢å¤UACï¼ˆæˆ‘åæ‚”ç¦ç”¨äº†ï¼Œè¿˜æ˜¯æƒ³è¦æƒé™åœ¨è‡ªå·±æ‰‹é‡Œæ§åˆ¶èˆ’æœï¼‰
 echo.
-echo 5. ½ûÓÃUAC£¨¹ØÁËuac£¬´ò¿ªÈí¼ş²»»áÔÙÉêÇë¹ÜÀíÔ±È¨ÏŞ£¬Ê¡µÄÑ¡ÊÇÑ¡·ñ²»ÖªµÀ£©
+echo 5. ç¦ç”¨UACï¼ˆå…³äº†uacï¼Œæ‰“å¼€è½¯ä»¶ä¸ä¼šå†ç”³è¯·ç®¡ç†å‘˜æƒé™ï¼Œçœçš„é€‰æ˜¯é€‰å¦ä¸çŸ¥é“ï¼‰
 echo.
-echo 6. ×Ô¶¨Òå¿ª»úÑ¡ÔñÏµÍ³Æô¶¯ÏîµÈ´ıÊ±¼ä£¨¸ß¼¶²Ù×÷£º²»Ïë¿ª»úµÈ30ÃëÑ¡ÔñÏµÍ³£¬Ñ¡ÎÒÊäÈë×Ô¶¨ÒåÃëÊı£©
+echo 6. è‡ªå®šä¹‰å¼€æœºé€‰æ‹©ç³»ç»Ÿå¯åŠ¨é¡¹ç­‰å¾…æ—¶é—´ï¼ˆé«˜çº§æ“ä½œï¼šä¸æƒ³å¼€æœºç­‰30ç§’é€‰æ‹©ç³»ç»Ÿï¼Œé€‰æˆ‘è¾“å…¥è‡ªå®šä¹‰ç§’æ•°ï¼‰
 echo.
-echo 7. ´ò¿ª¿ÉÒÆ¶¯´ÅÅÌ×Ô¶¯ÔËĞĞ£¨ÏëÒ»²åuÅÌ×Ô¶¯²¥·ÅÑ¡ÎÒ£¬¿ÉÄÜ»áÈÃ²¡¶¾Ò²×Ô¶¯Æô¶¯à»£©
+echo 7. æ‰“å¼€å¯ç§»åŠ¨ç£ç›˜è‡ªåŠ¨è¿è¡Œï¼ˆæƒ³ä¸€æ’uç›˜è‡ªåŠ¨æ’­æ”¾é€‰æˆ‘ï¼Œå¯èƒ½ä¼šè®©ç—…æ¯’ä¹Ÿè‡ªåŠ¨å¯åŠ¨å—·ï¼‰
 echo.
-echo 8. ¹Ø±Õ¿ÉÒÆ¶¯´ÅÅÌ×Ô¶¯ÔËĞĞ£¨²»Òª×Ô¶¯²¥·ÅÑ¡ÎÒ£©
+echo 8. å…³é—­å¯ç§»åŠ¨ç£ç›˜è‡ªåŠ¨è¿è¡Œï¼ˆä¸è¦è‡ªåŠ¨æ’­æ”¾é€‰æˆ‘ï¼‰
 echo.
-echo 9. ¿ªÆôÏµÍ³ĞİÃß£¨ÏëÒªÒ»¸ÇµçÄÔ¾Í¶³½á£¬´ò¿ªµçÄÔ¾Í»Ö¸´Ö®Ç°Ñù×Ó£¬Ñ¡ÎÒ£¬Ä¬ÈÏ¿ª£©
+echo 9. å¼€å¯ç³»ç»Ÿä¼‘çœ ï¼ˆæƒ³è¦ä¸€ç›–ç”µè„‘å°±å†»ç»“ï¼Œæ‰“å¼€ç”µè„‘å°±æ¢å¤ä¹‹å‰æ ·å­ï¼Œé€‰æˆ‘ï¼Œé»˜è®¤å¼€ï¼‰
 echo.
-echo 10. ¹Ø±ÕÏµÍ³ĞİÃß£¨¼«ÖÂĞÔÄÜ£¬ÎÒ¾ÍÒ»¸ö³ô´òÓÎÏ·µÄ£¬Ì¨Ê½»ú°ÍÀ­°ÍÀ­£¬Ñ¡ÎÒ£©
+echo 10. å…³é—­ç³»ç»Ÿä¼‘çœ ï¼ˆæè‡´æ€§èƒ½ï¼Œæˆ‘å°±ä¸€ä¸ªè‡­æ‰“æ¸¸æˆçš„ï¼Œå°å¼æœºå·´æ‹‰å·´æ‹‰ï¼Œé€‰æˆ‘ï¼‰
 echo.
-echo 11. ÏµÍ³ÅÌ»º´æÀ¬»øÇåÀí£¨Ê¹ÓÃÓĞ·çÏÕ£¬»áÇåÀíÈÕÖ¾ÎÄ¼şµÈ£¬Çë×öºÃ±¸·İ£©£¨É¾¸öÀ¬»øÑ¡ÎÒ£©
+echo 11. ç³»ç»Ÿç›˜ç¼“å­˜åƒåœ¾æ¸…ç†ï¼ˆä½¿ç”¨æœ‰é£é™©ï¼Œä¼šæ¸…ç†æ—¥å¿—æ–‡ä»¶ç­‰ï¼Œè¯·åšå¥½å¤‡ä»½ï¼‰ï¼ˆåˆ ä¸ªåƒåœ¾é€‰æˆ‘ï¼‰
 echo.
-echo 12. £¨WIN7ÏŞ¶¨£©ÔÚ½ÏÀÏµÄµçÄÔÉÏ¿ªÆôAeroÍ¸Ã÷Ã«²£Á§Ğ§¹û
+echo 12. ï¼ˆWIN7é™å®šï¼‰åœ¨è¾ƒè€çš„ç”µè„‘ä¸Šå¼€å¯Aeroé€æ˜æ¯›ç»ç’ƒæ•ˆæœ
 echo.
-echo 13. Çå³ı¿ì½İ·½Ê½Ğ¡¼ıÍ·£¨ÃÀ»¯Àà£º²»Òª×ÀÃæÉÏ¿ì½İ·½Ê½×óÏÂ½ÇµÄĞ¡¼ıÍ·£©
+echo 13. æ¸…é™¤å¿«æ·æ–¹å¼å°ç®­å¤´ï¼ˆç¾åŒ–ç±»ï¼šä¸è¦æ¡Œé¢ä¸Šå¿«æ·æ–¹å¼å·¦ä¸‹è§’çš„å°ç®­å¤´ï¼‰
 echo.
-echo 14. »Ö¸´¿ì½İ·½Ê½Ğ¡¼ıÍ·£¨ÃÀ»¯Àà£º»Ö¸´×ÀÃæÉÏ¿ì½İ·½Ê½×óÏÂ½ÇµÄĞ¡¼ıÍ·£©
+echo 14. æ¢å¤å¿«æ·æ–¹å¼å°ç®­å¤´ï¼ˆç¾åŒ–ç±»ï¼šæ¢å¤æ¡Œé¢ä¸Šå¿«æ·æ–¹å¼å·¦ä¸‹è§’çš„å°ç®­å¤´ï¼‰
 echo.
-echo 15. Í£ÓÃvmmem£¬½â¾övmmemÕ¼ÓÃ¹ı¸ßÎÊÌâ
+echo 15. åœç”¨vmmemï¼Œè§£å†³vmmemå ç”¨è¿‡é«˜é—®é¢˜
 echo.
-echo 16. Í£ÓÃTabletPC¹¦ÄÜ
+echo 16. åœç”¨TabletPCåŠŸèƒ½
 echo.
-echo 17. ¼ÇÊÂ±¾Ä¬ÈÏ±£´æ±àÂëĞŞ¸Ä£¨¸ß°æ±¾Windows²»Ò»¶¨ÊÊÓÃ£©
+echo 17. è®°äº‹æœ¬é»˜è®¤ä¿å­˜ç¼–ç ä¿®æ”¹ï¼ˆé«˜ç‰ˆæœ¬Windowsä¸ä¸€å®šé€‚ç”¨ï¼‰
 echo.
-echo 18. ¼ÓÈëWindowsÔ¤ÀÀÌåÑé¼Æ»®£¨Windows Insider Channel£©
+echo 18. åŠ å…¥Windowsé¢„è§ˆä½“éªŒè®¡åˆ’ï¼ˆWindows Insider Channelï¼‰
 echo.
-echo 19. ÔËĞĞÏµÍ³×Ô´ø´ÅÅÌÇåÀí¹¤¾ß£¨Cleanmgr£©
+echo 19. è¿è¡Œç³»ç»Ÿè‡ªå¸¦ç£ç›˜æ¸…ç†å·¥å…·ï¼ˆCleanmgrï¼‰
 echo.
-echo 20. ½ûÓÃÒ£²âÏµÍ³¸ú×ÙµÈ·şÎñ£¨ÏµÍ³ÒşË½ÓÅ»¯£©
+echo 20. ç¦ç”¨é¥æµ‹ç³»ç»Ÿè·Ÿè¸ªç­‰æœåŠ¡ï¼ˆç³»ç»Ÿéšç§ä¼˜åŒ–ï¼‰
 echo.
-echo 21. »Ö¸´Ò£²âÏµÍ³¸ú×ÙµÈ·şÎñ£¨Óöµ½Òì³£ÁËÑ¡ÎÒ»Ö¸´£©
+echo 21. æ¢å¤é¥æµ‹ç³»ç»Ÿè·Ÿè¸ªç­‰æœåŠ¡ï¼ˆé‡åˆ°å¼‚å¸¸äº†é€‰æˆ‘æ¢å¤ï¼‰
 echo.
-echo 22. ½ûÓÃWindows Defender£¨ÎÄ¼şÒ»Ö±±»ÏµÍ³À¹½ØÑ¡ÎÒ£©
+echo 22. ç¦ç”¨Windows Defenderï¼ˆæ–‡ä»¶ä¸€ç›´è¢«ç³»ç»Ÿæ‹¦æˆªé€‰æˆ‘ï¼‰
 echo.
-echo 23. ÆôÓÃWindows Defender£¨»Ö¸´Defender¹¦ÄÜÑ¡ÎÒ£©
+echo 23. å¯ç”¨Windows Defenderï¼ˆæ¢å¤DefenderåŠŸèƒ½é€‰æˆ‘ï¼‰
 echo ----------------------------------------------------------------------------------------
-set /p sysoptiinput=ÇëÑ¡ÔñÏîÄ¿£º
+set /p sysoptiinput=è¯·é€‰æ‹©é¡¹ç›®ï¼š
 if %sysoptiinput% equ 0 goto menu
 if %sysoptiinput% equ 1 goto systemfirewalloff
 if %sysoptiinput% equ 2 goto systemfirewallon
@@ -528,37 +528,37 @@ if %sysoptiinput% equ 20 goto PrivCtrloff
 if %sysoptiinput% equ 21 goto PrivCtrlon
 if %sysoptiinput% equ 22 goto defenderoff
 if %sysoptiinput% equ 23 goto defenderon
-echo ÊäÈëÒì³££¬Çë¼ì²éÊäÈëÑ¡Ïî¡£
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·æ£€æŸ¥è¾“å…¥é€‰é¡¹ã€‚
 pause
 goto menusysoptimize
 
-rem ³£ÓÃÈí¼şĞŞ¸´²Ëµ¥
+rem å¸¸ç”¨è½¯ä»¶ä¿®å¤èœå•
 
 :menusoft
 echo ----------------------------------------------------------------------------------------
-echo                                      ³£ÓÃÈí¼şĞŞ¸´²Ëµ¥
+echo                                      å¸¸ç”¨è½¯ä»¶ä¿®å¤èœå•
 echo ----------------------------------------------------------------------------------------
-echo 0. ·µ»ØÖ÷²Ëµ¥
+echo 0. è¿”å›ä¸»èœå•
 echo.
-echo 1. ÏÔÊ¾³ÌĞòÁĞ±í£¨¿´¿´ÀÏ×Ó/ÀÏÄïµçÄÔÀï×°ÁËĞ©É¶£©
+echo 1. æ˜¾ç¤ºç¨‹åºåˆ—è¡¨ï¼ˆçœ‹çœ‹è€å­/è€å¨˜ç”µè„‘é‡Œè£…äº†äº›å•¥ï¼‰
 echo.
-echo 2. XboxÆ½Ì¨ĞŞ¸´£¨´òÓÎÏ·ÓÃµ½xboxÁË£¬ÕâÍæÒâ³öÎÊÌâÑ¡ÎÒ£©
+echo 2. Xboxå¹³å°ä¿®å¤ï¼ˆæ‰“æ¸¸æˆç”¨åˆ°xboxäº†ï¼Œè¿™ç©æ„å‡ºé—®é¢˜é€‰æˆ‘ï¼‰
 echo.
-echo 3. Steam VACÆÁ±ÎĞŞ¸´ÓëÉÁÍËÎÊÌâĞŞ¸´¹¤¾ß£¨´òcsgo±¨vacÑéÖ¤´íÎó¶Ï¿ªÁ¬½ÓÖ®ÀàµÄÑ¡ÎÒ£©
+echo 3. Steam VACå±è”½ä¿®å¤ä¸é—ªé€€é—®é¢˜ä¿®å¤å·¥å…·ï¼ˆæ‰“csgoæŠ¥vacéªŒè¯é”™è¯¯æ–­å¼€è¿æ¥ä¹‹ç±»çš„é€‰æˆ‘ï¼‰
 echo.
-echo 4. ÇåÀí±¾µØFlashPlayer²¥·ÅÆ÷¼ÇÂ¼£¨µ¥ÎÄ¼şFlashPlayer²¥·ÅÆ÷µÄ¼ÇÂ¼ÇåÀí£©
+echo 4. æ¸…ç†æœ¬åœ°FlashPlayeræ’­æ”¾å™¨è®°å½•ï¼ˆå•æ–‡ä»¶FlashPlayeræ’­æ”¾å™¨çš„è®°å½•æ¸…ç†ï¼‰
 echo.
-echo 5. ¼ÇÊÂ±¾Ä¬ÈÏ±£´æ±àÂëĞŞ¸Ä
+echo 5. è®°äº‹æœ¬é»˜è®¤ä¿å­˜ç¼–ç ä¿®æ”¹
 echo.
-echo 6. »ñÈ¡ÎÄ¼şHASHÖµ
+echo 6. è·å–æ–‡ä»¶HASHå€¼
 echo.
-echo 7. É±ËÀÌØ¶¨½ø³Ì
+echo 7. æ€æ­»ç‰¹å®šè¿›ç¨‹
 echo.
-echo 8. EasyAntiCheat Òì³£¡¢Æô¶¯Ê§°Ü¡¢Ğ¶ÔØ£¨EACĞ¡À¶ĞÜÉ¾³ıÖØ×°£©
+echo 8. EasyAntiCheat å¼‚å¸¸ã€å¯åŠ¨å¤±è´¥ã€å¸è½½ï¼ˆEACå°è“ç†Šåˆ é™¤é‡è£…ï¼‰
 echo.
-echo 9. Apex Legends ÉÌµêÍ¼Æ¬²»ÏÔÊ¾³öÏÖ½ûÓÃ±êÖ¾£¨ASSET FAILED TO LOAD£©
+echo 9. Apex Legends å•†åº—å›¾ç‰‡ä¸æ˜¾ç¤ºå‡ºç°ç¦ç”¨æ ‡å¿—ï¼ˆASSET FAILED TO LOADï¼‰
 echo ----------------------------------------------------------------------------------------
-set /p softinput=ÇëÑ¡ÔñÏîÄ¿£º
+set /p softinput=è¯·é€‰æ‹©é¡¹ç›®ï¼š
 if %softinput% equ 0 goto menu
 if %softinput% equ 1 goto programlist
 if %softinput% equ 2 goto xboxfix
@@ -569,37 +569,37 @@ if %softinput% equ 6 goto GETHASH
 if %softinput% equ 7 goto killprocess
 if %softinput% equ 8 goto eacuninstall
 if %softinput% equ 9 goto apexshopimgerr
-echo ÊäÈëÒì³££¬Çë¼ì²éÊäÈëÑ¡Ïî¡£
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·æ£€æŸ¥è¾“å…¥é€‰é¡¹ã€‚
 pause
 goto menusoft
 
-rem ÆäËû¹¦ÄÜÔÓÏî²Ëµ¥
+rem å…¶ä»–åŠŸèƒ½æ‚é¡¹èœå•
 
 :menuother
 echo ----------------------------------------------------------------------------------------
-echo                                      ÆäËû¹¦ÄÜÔÓÏî²Ëµ¥
+echo                                      å…¶ä»–åŠŸèƒ½æ‚é¡¹èœå•
 echo ----------------------------------------------------------------------------------------
-echo 0. ·µ»ØÖ÷²Ëµ¥
+echo 0. è¿”å›ä¸»èœå•
 echo.
-echo 1. ½«¹ÜÀíÔ±È¡µÃËùÓĞÈ¨Ìí¼Óµ½ÓÒ¼ü²Ëµ¥£¨ÎÄ¼ş¼Ğ´ò²»¿ª£¿É¾ÎÄ¼şÈ¨ÏŞ²»¹»£¿ÊÔÊÔÕâ¸ö£¬Ìí¼ÓºóÓÒ¼üÎÄ¼şÈ¡µÃËùÓĞÈ¨ÔÙÊÔÊÔ£©
+echo 1. å°†ç®¡ç†å‘˜å–å¾—æ‰€æœ‰æƒæ·»åŠ åˆ°å³é”®èœå•ï¼ˆæ–‡ä»¶å¤¹æ‰“ä¸å¼€ï¼Ÿåˆ æ–‡ä»¶æƒé™ä¸å¤Ÿï¼Ÿè¯•è¯•è¿™ä¸ªï¼Œæ·»åŠ åå³é”®æ–‡ä»¶å–å¾—æ‰€æœ‰æƒå†è¯•è¯•ï¼‰
 echo.
-echo 2. ½«¹ÜÀíÔ±È¡µÃËùÓĞÈ¨´ÓÓÒ¼ü²Ëµ¥É¾³ı£¨²»ÏëÒªÁË£©
+echo 2. å°†ç®¡ç†å‘˜å–å¾—æ‰€æœ‰æƒä»å³é”®èœå•åˆ é™¤ï¼ˆä¸æƒ³è¦äº†ï¼‰
 echo.
-echo 3. »ñÈ¡ÎÄ¼şHASHÖµ
+echo 3. è·å–æ–‡ä»¶HASHå€¼
 echo.
-echo 4. ÁĞ³öµ±Ç°¼ÆËã»úÕıÔÚÔËĞĞµÄËùÓĞ½ø³Ì
+echo 4. åˆ—å‡ºå½“å‰è®¡ç®—æœºæ­£åœ¨è¿è¡Œçš„æ‰€æœ‰è¿›ç¨‹
 echo.
-echo 5. ÁĞ³öËùÓĞ½ø³Ì£¨²»ÂÛ»îÔ¾Óë·ñ£©
+echo 5. åˆ—å‡ºæ‰€æœ‰è¿›ç¨‹ï¼ˆä¸è®ºæ´»è·ƒä¸å¦ï¼‰
 echo.
-echo 6. É±ËÀÌØ¶¨½ø³Ì
+echo 6. æ€æ­»ç‰¹å®šè¿›ç¨‹
 echo.
-echo 7. Æô¶¯CMD.exe£¨¹ÜÀíÔ±Éí·İÔËĞĞ£©
+echo 7. å¯åŠ¨CMD.exeï¼ˆç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼‰
 echo.
-echo 8. Æô¶¯Powershell.exe£¨¹ÜÀíÔ±Éí·İÔËĞĞ£©
+echo 8. å¯åŠ¨Powershell.exeï¼ˆç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼‰
 echo.
-echo 9. ÁĞ³ö´Ë¼ÆËã»úµÄËùÓĞÓÃ»§
+echo 9. åˆ—å‡ºæ­¤è®¡ç®—æœºçš„æ‰€æœ‰ç”¨æˆ·
 echo ----------------------------------------------------------------------------------------
-set /p otherinput=ÇëÑ¡ÔñÏîÄ¿£º
+set /p otherinput=è¯·é€‰æ‹©é¡¹ç›®ï¼š
 if %otherinput% equ 0 goto menu
 if %otherinput% equ 1 goto rightadmadd
 if %otherinput% equ 2 goto rightadmdel
@@ -610,40 +610,40 @@ if %otherinput% equ 6 goto killprocess
 if %otherinput% equ 7 goto cmdstart
 if %otherinput% equ 8 goto psstart
 if %otherinput% equ 9 goto userlist
-echo ÊäÈëÒì³££¬Çë¼ì²éÊäÈëÑ¡Ïî¡£
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·æ£€æŸ¥è¾“å…¥é€‰é¡¹ã€‚
 pause
 goto menuother
 
-rem ¹¦ÄÜÇø
+rem åŠŸèƒ½åŒº
 
 :QA
 cls
 echo ----------------------------------------------------------------------------------
 echo.
-echo ³£¼ûÎÊÌâ£ºÎªÊ²Ã´»á±¨¶¾£¿
-echo ½Å±¾ÄÚÈİÉæ¼°µ½ÏµÍ³Ãô¸ĞÎÄ¼ş¼°ÉèÖÃ»¹Ô­£¬Òò´ËĞèÒª¹ÜÀíÔ±È¨ÏŞÌáÈ¨£¬±¾ÖÊÓëÉ±¶¾Èí¼şµÄÏµÍ³
-echo ĞŞ¸´¹¦ÄÜÒ»ÖÂ£¬²¢²»Éæ¼°ÆäËû²Ù×÷¡£É±¶¾Èí¼ş¼ì²âµ½ÌáÈ¨´úÂëÒÔ¼°ĞŞ¸ÄÏµÍ³ÉèÖÃ²Ù×÷£¬»áÈÏ¶¨
-echo ½Å±¾¾ßÓĞ¶ñÒâĞĞÎª£¬¶øÊµ¼ÊÉÏ½Å±¾½ö½öÊÇ»¹Ô­±»¶ñÒâÈí¼şĞŞ¸Ä¹ıµÄÏµÍ³ÉèÖÃ¡£
+echo å¸¸è§é—®é¢˜ï¼šä¸ºä»€ä¹ˆä¼šæŠ¥æ¯’ï¼Ÿ
+echo è„šæœ¬å†…å®¹æ¶‰åŠåˆ°ç³»ç»Ÿæ•æ„Ÿæ–‡ä»¶åŠè®¾ç½®è¿˜åŸï¼Œå› æ­¤éœ€è¦ç®¡ç†å‘˜æƒé™ææƒï¼Œæœ¬è´¨ä¸æ€æ¯’è½¯ä»¶çš„ç³»ç»Ÿ
+echo ä¿®å¤åŠŸèƒ½ä¸€è‡´ï¼Œå¹¶ä¸æ¶‰åŠå…¶ä»–æ“ä½œã€‚æ€æ¯’è½¯ä»¶æ£€æµ‹åˆ°ææƒä»£ç ä»¥åŠä¿®æ”¹ç³»ç»Ÿè®¾ç½®æ“ä½œï¼Œä¼šè®¤å®š
+echo è„šæœ¬å…·æœ‰æ¶æ„è¡Œä¸ºï¼Œè€Œå®é™…ä¸Šè„šæœ¬ä»…ä»…æ˜¯è¿˜åŸè¢«æ¶æ„è½¯ä»¶ä¿®æ”¹è¿‡çš„ç³»ç»Ÿè®¾ç½®ã€‚
 echo.
-echo ³£¼ûÎÊÌâ£ºÎªÊ²Ã´ÓÃÕâ¸ö²»ÓÃÉ±¶¾Èí¼ş£¿
-echo É±¶¾Èí¼şĞŞ¸´¹¦ÄÜÓĞÏŞ£¬²¢²»ÄÜĞŞ¸´ËùÓĞÎÊÌâ¡£¶øÒ»Ğ©³£¼ûÎÊÌâÔÚ±¾ÈËÊ¹ÓÃÏµÍ³¹ı³ÌÖĞÓö¼û£¬
-echo ×ÔĞĞĞŞ¸´Ö®ºóÎªÁË·½±ãÒÔºóÓöµ½ÏàÍ¬ÎÊÌâÄÜ¿ìËÙĞŞ¸´£¬ÓÚÊÇÀûÓÃÃüÁîĞĞÖÆ×÷ÁËÒ»¼üĞŞ¸´½Å±¾¡£
-echo ½Å±¾»á²»¶Ï¸üĞÂ¼ÓÈëĞÂµÄ¹¦ÄÜ£¬µ«Ò²²¢·ÇÈ«ÄÜ¡£Í¬ÑùÒ²ÏàĞÅ²¿·ÖÓÃ»§ÉîÊÜÄ³Ğ©³§¼ÒµÄ°²È«Èí¼ş
-echo ´ò×ÅÃâ·ÑÉ±¶¾µÄÆìºÅ·è¿ñÕ¼ÓÃÓÃ»§ÏµÍ³×ÊÔ´»¹µ¯³ö´óÁ¿¹ã¸æ£¬ÒÔ´ËÀ´Ä±È¡ÀûÒæ¡£´Ë½Å±¾±ãÊÇÎª
-echo ·½±ãÒ»Ğ©Âã±¼ÓÃ»§¶øÖÆ³ÉµÄ£¬ÎÄ¼şÌå»ıĞ¡¡¢¹¦ÄÜÇ¿´ó¡¢ĞŞ¸´·½±ã¿ì½İ£¬Ò²ÊÇ¶Ô±¾ÈËµÄÊ¹ÓÃĞŞ¸´
-echo µÄÒ»Ğ©ĞÄµÃ×öµÄ×Ü½á£¬Ï£ÍûÄÜ°ïµ½¸÷Î»¡£
+echo å¸¸è§é—®é¢˜ï¼šä¸ºä»€ä¹ˆç”¨è¿™ä¸ªä¸ç”¨æ€æ¯’è½¯ä»¶ï¼Ÿ
+echo æ€æ¯’è½¯ä»¶ä¿®å¤åŠŸèƒ½æœ‰é™ï¼Œå¹¶ä¸èƒ½ä¿®å¤æ‰€æœ‰é—®é¢˜ã€‚è€Œä¸€äº›å¸¸è§é—®é¢˜åœ¨æœ¬äººä½¿ç”¨ç³»ç»Ÿè¿‡ç¨‹ä¸­é‡è§ï¼Œ
+echo è‡ªè¡Œä¿®å¤ä¹‹åä¸ºäº†æ–¹ä¾¿ä»¥åé‡åˆ°ç›¸åŒé—®é¢˜èƒ½å¿«é€Ÿä¿®å¤ï¼Œäºæ˜¯åˆ©ç”¨å‘½ä»¤è¡Œåˆ¶ä½œäº†ä¸€é”®ä¿®å¤è„šæœ¬ã€‚
+echo è„šæœ¬ä¼šä¸æ–­æ›´æ–°åŠ å…¥æ–°çš„åŠŸèƒ½ï¼Œä½†ä¹Ÿå¹¶éå…¨èƒ½ã€‚åŒæ ·ä¹Ÿç›¸ä¿¡éƒ¨åˆ†ç”¨æˆ·æ·±å—æŸäº›å‚å®¶çš„å®‰å…¨è½¯ä»¶
+echo æ‰“ç€å…è´¹æ€æ¯’çš„æ——å·ç–¯ç‹‚å ç”¨ç”¨æˆ·ç³»ç»Ÿèµ„æºè¿˜å¼¹å‡ºå¤§é‡å¹¿å‘Šï¼Œä»¥æ­¤æ¥è°‹å–åˆ©ç›Šã€‚æ­¤è„šæœ¬ä¾¿æ˜¯ä¸º
+echo æ–¹ä¾¿ä¸€äº›è£¸å¥”ç”¨æˆ·è€Œåˆ¶æˆçš„ï¼Œæ–‡ä»¶ä½“ç§¯å°ã€åŠŸèƒ½å¼ºå¤§ã€ä¿®å¤æ–¹ä¾¿å¿«æ·ï¼Œä¹Ÿæ˜¯å¯¹æœ¬äººçš„ä½¿ç”¨ä¿®å¤
+echo çš„ä¸€äº›å¿ƒå¾—åšçš„æ€»ç»“ï¼Œå¸Œæœ›èƒ½å¸®åˆ°å„ä½ã€‚
 echo.
-echo ³£¼ûÎÊÌâ£ºÓĞÕâ¸ö½Å±¾ÊÇ²»ÊÇ¿ÉÒÔ²»ÓÃ×°É±¶¾Èí¼şÁË£¿
-echo ½Å±¾ºÍÉ±¶¾Èí¼ş²¢²»³åÍ»£¬Ö®ËùÒÔ½Å±¾»á¼ì²âÉ±¶¾Èí¼ş½ø³Ì£¬ÊÇÒòÎª²¿·ÖĞÂÊÖÓÃ»§ºÜÈİÒ×»áÈÃ
-echo É±¶¾Èí¼ş×öÄ¬ÈÏµÄ¾Ü¾ø²Ù×÷£¬¶ø²»ÊÇ·ÅĞĞ¡£Ò»µ©É±¶¾Èí¼ş¶Ô½Å±¾µÄĞŞ¸´²Ù×÷½øĞĞÀ¹½Ø²Ù×÷£¬ÄÇ
-echo ½Å±¾µÄĞŞ¸´¹¦ÄÜ±ã²»ÄÜÕı³£¹¤×÷£¬¸ü²»ÒªËµ¶ÔÎÊÌâ½øĞĞĞŞ¸´ÁË¡£Èç¹ûÊÇÉÔÎ¢×¨ÒµÒ»µãµÄÓÃ»§£¬
-echo ÍêÈ«¿ÉÒÔÓÃÉ±¶¾Èí¼şÀ´¼àÊÓ½Å±¾²Ù×÷£¬Ö»ÊÇĞèÒªÆµ·±·ÅĞĞ°ÕÁË¡£½Å±¾½ö½öÖ»ÊÇĞŞ¸´Ò»Ğ©ÏµÍ³µÄ
-echo Òì³£ÎÊÌâ£¬²¢²»¾ß±¸É±¶¾ÄÜÁ¦£¬²»¿ÉÌæ´úÉ±¶¾Èí¼ş£¬É±¶¾»¹ÇëÊ¹ÓÃ×¨ÒµµÄÉ±¶¾Èí¼ş¡£Èç¹ûÊÇ¶Ô
-echo ×Ô¼ºµÄ¼¼ÊõÓĞĞÅĞÄ£¬ÄÇµ±È»ÁíÌ¸¡£
+echo å¸¸è§é—®é¢˜ï¼šæœ‰è¿™ä¸ªè„šæœ¬æ˜¯ä¸æ˜¯å¯ä»¥ä¸ç”¨è£…æ€æ¯’è½¯ä»¶äº†ï¼Ÿ
+echo è„šæœ¬å’Œæ€æ¯’è½¯ä»¶å¹¶ä¸å†²çªï¼Œä¹‹æ‰€ä»¥è„šæœ¬ä¼šæ£€æµ‹æ€æ¯’è½¯ä»¶è¿›ç¨‹ï¼Œæ˜¯å› ä¸ºéƒ¨åˆ†æ–°æ‰‹ç”¨æˆ·å¾ˆå®¹æ˜“ä¼šè®©
+echo æ€æ¯’è½¯ä»¶åšé»˜è®¤çš„æ‹’ç»æ“ä½œï¼Œè€Œä¸æ˜¯æ”¾è¡Œã€‚ä¸€æ—¦æ€æ¯’è½¯ä»¶å¯¹è„šæœ¬çš„ä¿®å¤æ“ä½œè¿›è¡Œæ‹¦æˆªæ“ä½œï¼Œé‚£
+echo è„šæœ¬çš„ä¿®å¤åŠŸèƒ½ä¾¿ä¸èƒ½æ­£å¸¸å·¥ä½œï¼Œæ›´ä¸è¦è¯´å¯¹é—®é¢˜è¿›è¡Œä¿®å¤äº†ã€‚å¦‚æœæ˜¯ç¨å¾®ä¸“ä¸šä¸€ç‚¹çš„ç”¨æˆ·ï¼Œ
+echo å®Œå…¨å¯ä»¥ç”¨æ€æ¯’è½¯ä»¶æ¥ç›‘è§†è„šæœ¬æ“ä½œï¼Œåªæ˜¯éœ€è¦é¢‘ç¹æ”¾è¡Œç½¢äº†ã€‚è„šæœ¬ä»…ä»…åªæ˜¯ä¿®å¤ä¸€äº›ç³»ç»Ÿçš„
+echo å¼‚å¸¸é—®é¢˜ï¼Œå¹¶ä¸å…·å¤‡æ€æ¯’èƒ½åŠ›ï¼Œä¸å¯æ›¿ä»£æ€æ¯’è½¯ä»¶ï¼Œæ€æ¯’è¿˜è¯·ä½¿ç”¨ä¸“ä¸šçš„æ€æ¯’è½¯ä»¶ã€‚å¦‚æœæ˜¯å¯¹
+echo è‡ªå·±çš„æŠ€æœ¯æœ‰ä¿¡å¿ƒï¼Œé‚£å½“ç„¶å¦è°ˆã€‚
 echo.
 echo ----------------------------------------------------------------------------------
 timeout /t 3 /nobreak > NUL
-echo °´ÈÎÒâ¼ü¼´¿É·µ»Ø²Ëµ¥
+echo æŒ‰ä»»æ„é”®å³å¯è¿”å›èœå•
 pause
 goto menu
 
@@ -652,7 +652,7 @@ cls
 call:systemver
 call:tracerttable
 call:securitysoft
-call:dnsserver ±¾µØDNS·şÎñÆ÷: 
+call:dnsserver æœ¬åœ°DNSæœåŠ¡å™¨: 
 call:dnseventlog
 call:minidump
 call:nicinterface
@@ -661,27 +661,27 @@ call:ieproxy
 rem call:systemfirewalloff 9
 call:hostsdiag
 call:ipv6state
-echo ±¾µØDNS½âÎö²âÊÔ (Ô¤¼ÆºÄÊ±5-10Ãë): 
+echo æœ¬åœ°DNSè§£ææµ‹è¯• (é¢„è®¡è€—æ—¶5-10ç§’): 
 ipconfig /flushdns >nul 2>nul
-rem ÏîÄ¿6
+rem é¡¹ç›®6
 call:nslookvalue www.people.com.cn www.xinhuanet.com www.cctv.com www.cac.gov.cn www.china.com.cn www.gmw.cn
 set /a sum1=sum
-rem ÏîÄ¿6
+rem é¡¹ç›®6
 call:nslookvalue www.qstheory.cn www.ce.cn www.cri.cn www.cnr.cn www.youth.cn cn.chinadaily.com.cn
 set /a sum2=sum
-rem ÏîÄ¿6
+rem é¡¹ç›®6
 call:nslookvalue www.163.com www.sina.com.cn www.qq.com www.taobao.com www.jd.com www.iqiyi.com
 set /a sum3=sum
-rem ÏîÄ¿6
+rem é¡¹ç›®6
 call:nslookvalue www.baidu.com www.bing.com www.sohu.com
 set /a sum4=sum
 
 set /a sumall=sum1+sum2+sum3+sum4
 set /a sumavg=sumall*100/24
-echo     ³É¹¦ÂÊ: %sumavg%%%
+echo     æˆåŠŸç‡: %sumavg%%%
 echo.
 call:systemtime
-call:ipaddress ÔËÓªÉÌ: http://myip.ipip.net/
+call:ipaddress è¿è¥å•†: http://myip.ipip.net/
 call:infocollect
 echo.
 pause
@@ -694,7 +694,7 @@ call:minidump
 call:ieproxy
 call:ipv6state
 rem call:systemfirewalloff
-call:dnsserver ±¾µØDNS·şÎñÆ÷: 
+call:dnsserver æœ¬åœ°DNSæœåŠ¡å™¨: 
 call:dnseventlog
 call:systemtime
 pause
@@ -705,9 +705,9 @@ cls
 taskkill /F /IM VeryKuai.exe >nul 2>nul
 taskkill /F /IM Leigod.exe >nul 2>nul
 taskkill /F /IM uu.exe >nul 2>nul
-echo Çë¹Ø±Õ¼ÓËÙÆ÷ÒÔ»ñµÃ×î¼ÑĞŞ¸´Ğ§¹û
+echo è¯·å…³é—­åŠ é€Ÿå™¨ä»¥è·å¾—æœ€ä½³ä¿®å¤æ•ˆæœ
 echo.
-echo Ç°ÖÃĞŞ¸´£ºÖØÖÃLSP
+echo å‰ç½®ä¿®å¤ï¼šé‡ç½®LSP
 netsh winsock reset >nul 2>nul
 echo.
 
@@ -715,21 +715,21 @@ goto modeselect
 
 :modeselect
 cls
-set /p a=ÇëÑ¡ÔñÖØÖÃÄ£Ê½£¨Ä£Ê½1ÆÕÍ¨ÖØÖÃ£¬Ä£Ê½2±©Á¦ÖØÖÃ£©: 
+set /p a=è¯·é€‰æ‹©é‡ç½®æ¨¡å¼ï¼ˆæ¨¡å¼1æ™®é€šé‡ç½®ï¼Œæ¨¡å¼2æš´åŠ›é‡ç½®ï¼‰: 
 if %a% equ 1 goto regularreset
 if %a% equ 2 goto brutereset
 
 :brutereset
 echo.
-echo ÖØÖÃTCP/IPĞ­Òé
-rem »ñÈ¡ÍøÂçÃû³ÆºÍÍøÂçIPĞÅÏ¢
+echo é‡ç½®TCP/IPåè®®
+rem è·å–ç½‘ç»œåç§°å’Œç½‘ç»œIPä¿¡æ¯
 netsh interface IP Show Address %networkname1% > %temp%\ip.txt 2>nul
 for /f "tokens=3" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr "IP"') do set ipsetaddress=%%i
-for /f "tokens=2" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr /r "Ä¬ÈÏÍø¹Ø Gateway"') do set ipgateway=%%i
-for /f "tokens=4" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr /r "×ÓÍø Mask"') do set ipmask=%%i
+for /f "tokens=2" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr /r "é»˜è®¤ç½‘å…³ Gateway"') do set ipgateway=%%i
+for /f "tokens=4" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr /r "å­ç½‘ Mask"') do set ipmask=%%i
 
-rem ÅĞ¶ÏÕıÔÚÁ¬½ÓÍøÂçdhcp»¹ÊÇÊÖ¶¯
-netsh interface IP Show Address %networkname1% |findstr /r "·ñ No" 2>nul >nul && set ipsetmode=yes || set ipsetmode=no
+rem åˆ¤æ–­æ­£åœ¨è¿æ¥ç½‘ç»œdhcpè¿˜æ˜¯æ‰‹åŠ¨
+netsh interface IP Show Address %networkname1% |findstr /r "å¦ No" 2>nul >nul && set ipsetmode=yes || set ipsetmode=no
 netsh int ipv4 reset >nul 2>nul
 netsh int ipv6 reset >nul 2>nul
 
@@ -750,7 +750,7 @@ netsh interface ip set dns name=%networkname1% source=dhcp >nul 2>nul
 del /f /q %temp%\ip.txt >nul 2>nul
 echo.
 
-echo ½ûÓÃKiller·şÎñ
+echo ç¦ç”¨KilleræœåŠ¡
 sc config "Killer Network Service x64" start= disabled >nul 2>nul
 sc config "Killer Network Service" start= disabled >nul 2>nul
 sc config "Killer Bandwidth Service" start= disabled >nul 2>nul
@@ -758,16 +758,16 @@ sc config "Rivet Bandwidth Service" start= disabled >nul 2>nul
 
 :regularreset
 echo.
-echo ÔÙ´ÎÖØÖÃLSP
+echo å†æ¬¡é‡ç½®LSP
 netsh winsock reset >nul 2>nul
 netsh winsock reset >nul 2>nul
 echo.
 
-echo ÖØÖÃhostsÎÄ¼şÈ¨ÏŞ²¢Çå¿Õ
+echo é‡ç½®hostsæ–‡ä»¶æƒé™å¹¶æ¸…ç©º
 echo y| cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:F >nul
 cd. > %WINDIR%\system32\drivers\etc\hosts
 
-rem Í£Ö¹²¢É¾³ıÇı¶¯·şÎñ
+rem åœæ­¢å¹¶åˆ é™¤é©±åŠ¨æœåŠ¡
 set drivername=vkdpi xunyoufilter xunyounpf QeeYouPacket npf uuwfp uupacket networktunnel10_x64 ylwfp TP2CNNetFilter lgdcatcher lgdcatchertdi xfilter savitar netrtp
 for %%i in (%drivername%) do (
 sc stop %%i >nul 2>nul
@@ -776,36 +776,36 @@ sc delete %%i >nul 2>nul
 )
 echo.
 
-rem echo WindowsÏµÍ³·À»ğÇ½: ÒÑ»¹Ô­Ä¬ÈÏÉèÖÃ²¢¹Ø±Õ
+rem echo Windowsç³»ç»Ÿé˜²ç«å¢™: å·²è¿˜åŸé»˜è®¤è®¾ç½®å¹¶å…³é—­
 rem netsh advfirewall reset >nul 2>nul
 rem netsh advfirewall set allprofiles state off >nul 2>nul
 rem echo.
 
 call:ieproxy
 
-echo Ë¢ĞÂDNS/ARP»º´æ
+echo åˆ·æ–°DNS/ARPç¼“å­˜
 ipconfig /flushdns >nul 2>nul
 arp -d >nul 2>nul
 echo.
 
-echo ÕıÔÚÍ¬²½ÍøÂçÊ±¼ä...
+echo æ­£åœ¨åŒæ­¥ç½‘ç»œæ—¶é—´...
 call:systemtimereset
 echo.
 
-rem ÇåÀí×¢²á±íĞÅÏ¢
+rem æ¸…ç†æ³¨å†Œè¡¨ä¿¡æ¯
 reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\vkdpi" /f >nul 2>nul
 reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ylwfp" /f >nul 2>nul
 reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\networktunnel10_x64" /f >nul 2>nul
 reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XunYouFilter" /f >nul 2>nul
 
-echo IE×é¼şĞŞ¸´
+echo IEç»„ä»¶ä¿®å¤
 regsvr32 /s jscript.dll
 regsvr32 /s vbscript.dll
 echo.
 set var=0
-for /l %%i in (15,-1,1) do echo ÕıÔÚÍ£Ö¹Çı¶¯·şÎñ: %var%%%i && ping -n 2 127.1>nul
+for /l %%i in (15,-1,1) do echo æ­£åœ¨åœæ­¢é©±åŠ¨æœåŠ¡: %var%%%i && ping -n 2 127.1>nul
 
-rem É¾³ıÇı¶¯ÎÄ¼şÊ§°ÜºóÖØÃüÃû
+rem åˆ é™¤é©±åŠ¨æ–‡ä»¶å¤±è´¥åé‡å‘½å
 del %userprofile%\appData\local\QiYou\processFilter.sys %userprofile%\appData\local\QiYou\npf.sys >nul 2>nul
 
 set driverFile=vkdpi.sys uuwfp.sys uupacket.sys XunYouFilter.sys networktunnel10_x64.sys ylwfp.sys xunyounpf.sys TP2CNNetFilter.sys LgdCatcher.sys LgdCatcherTdi.sys xfilter.sys savitar.sys netrtp.sys
@@ -820,10 +820,10 @@ echo. >nul 2>nul
 )
 cd /d %WINDIR%\system32\ >nul 2>nul
 echo.
-echo ¼ÓËÙÆ÷Çı¶¯·şÎñÍ£Ö¹³É¹¦
+echo åŠ é€Ÿå™¨é©±åŠ¨æœåŠ¡åœæ­¢æˆåŠŸ
 echo.
-echo ²Ù×÷³É¹¦, ÇëÖØĞÂÆô¶¯¼ÆËã»ú
-mshta vbscript:msgbox("²Ù×÷³É¹¦, ÇëÖØĞÂÆô¶¯¼ÆËã»ú",64,"ÏûÏ¢"^)(window.close^)
+echo æ“ä½œæˆåŠŸ, è¯·é‡æ–°å¯åŠ¨è®¡ç®—æœº
+mshta vbscript:msgbox("æ“ä½œæˆåŠŸ, è¯·é‡æ–°å¯åŠ¨è®¡ç®—æœº",64,"æ¶ˆæ¯"^)(window.close^)
 
 echo.
 pause
@@ -832,12 +832,12 @@ goto menu
 :lspfix
 cls
 echo.
-echo LSPĞŞ¸´
+echo LSPä¿®å¤
 netsh winsock reset
 netsh winsock reset
 netsh winsock reset
 echo.
-echo ÒÑĞŞ¸´
+echo å·²ä¿®å¤
 echo.
 pause
 goto menu
@@ -845,103 +845,103 @@ goto menu
 :systemrepair
 cls
 echo.
-echo 0. Ç°ÖÃ·şÎñĞŞ¸´
-echo 1. SFCĞŞ¸´£¨»ù´¡ĞŞ¸´£©
-echo 2. DISM¼ì²éĞŞ¸´£¨¸ß¼¶ĞŞ¸´£©
-echo 3. ·µ»ØÖ÷²Ëµ¥
+echo 0. å‰ç½®æœåŠ¡ä¿®å¤
+echo 1. SFCä¿®å¤ï¼ˆåŸºç¡€ä¿®å¤ï¼‰
+echo 2. DISMæ£€æŸ¥ä¿®å¤ï¼ˆé«˜çº§ä¿®å¤ï¼‰
+echo 3. è¿”å›ä¸»èœå•
 
-set /p user_input=ÇëÑ¡ÔñÒ»¸öÏîÄ¿£º
+set /p user_input=è¯·é€‰æ‹©ä¸€ä¸ªé¡¹ç›®ï¼š
 if %user_input% equ 0 goto PreSFix
 if %user_input% equ 1 goto SFCFIX
 if %user_input% equ 2 goto DISMFIX
 if %user_input% equ 3 goto menu
 echo.
-echo ÎŞĞ§µÄ´úÂë£¬ÇëÖØĞÂÊäÈë¡£
+echo æ— æ•ˆçš„ä»£ç ï¼Œè¯·é‡æ–°è¾“å…¥ã€‚
 timeout /t 3 /nobreak > NUL
 goto systemrepair
 
 :PreSFix
 echo.
-echo Ç°ÖÃĞŞ¸´£ºÕï¶Ï²ßÂÔ·şÎñĞŞ¸´
+echo å‰ç½®ä¿®å¤ï¼šè¯Šæ–­ç­–ç•¥æœåŠ¡ä¿®å¤
 sc config DPS start = AUTO > NUL
 sc config diagsvc start = Demand > NUL
 sc config WdiServiceHost start = Demand > NUL
 sc config WdiSystemHost start = Demand > NUL
 sc start DPS >nul
-echo Ç°ÖÃ·şÎñĞŞ¸´Íê³É
+echo å‰ç½®æœåŠ¡ä¿®å¤å®Œæˆ
 goto systemrepair
 
 :SFCFIX
-echo ¼´½«Ê¹ÓÃSFC¹¤¾ß½øĞĞĞŞ¸´£¬ÈçÓö·şÎñÒì³£ÇëÏÈÔËĞĞÇ°ÖÃ·şÎñĞŞ¸´
-echo ÈçÓö½ø¶ÈÌõ¿¨ËÀ³¬¹ı10·ÖÖÓ£¬ÇëÍË³ö³ÌĞòÖØĞÂÔËĞĞ²¢Ñ¡ÔñDISM¹¤¾ßĞŞ¸´
+echo å³å°†ä½¿ç”¨SFCå·¥å…·è¿›è¡Œä¿®å¤ï¼Œå¦‚é‡æœåŠ¡å¼‚å¸¸è¯·å…ˆè¿è¡Œå‰ç½®æœåŠ¡ä¿®å¤
+echo å¦‚é‡è¿›åº¦æ¡å¡æ­»è¶…è¿‡10åˆ†é’Ÿï¼Œè¯·é€€å‡ºç¨‹åºé‡æ–°è¿è¡Œå¹¶é€‰æ‹©DISMå·¥å…·ä¿®å¤
 timeout /t 3 /nobreak > NUL
-echo ÔËĞĞSCANNOWÃüÁîĞŞ¸´ÏµÍ³
+echo è¿è¡ŒSCANNOWå‘½ä»¤ä¿®å¤ç³»ç»Ÿ
 sfc /scannow
-echo SFC»ù´¡ĞŞ¸´Íê³É
+echo SFCåŸºç¡€ä¿®å¤å®Œæˆ
 goto menu
 
 :DISMFIX
 echo.
-echo ¼´½«Ê¹ÓÃDISM¹¤¾ß½øĞĞĞŞ¸´£¬ÈçÓö·şÎñÒì³£ÇëÏÈÔËĞĞÇ°ÖÃ·şÎñĞŞ¸´
-echo ÈçÓö½ø¶ÈÌõ¿¨ËÀ³¬¹ı10·ÖÖÓ£¬ÇëÍË³ö³ÌĞòÖØĞÂÔËĞĞDISM¹¤¾ßĞŞ¸´
-echo Èô³öÏÖDISM¹¤¾ßÒì³£»òÕßÈÔÈ»¿¨ËÀ£¬Çë¿¼ÂÇÊ¹ÓÃÔ­°æÏµÍ³¾µÏñ¸²¸Ç°²×°ÏµÍ³ĞŞ¸´ÎÄ¼ş£¨ÏµÍ³ÎÄ¼şÔâµ½DISM¹¤¾ß²»¿ÉĞŞ¸´µÄÆÆ»µ£©
+echo å³å°†ä½¿ç”¨DISMå·¥å…·è¿›è¡Œä¿®å¤ï¼Œå¦‚é‡æœåŠ¡å¼‚å¸¸è¯·å…ˆè¿è¡Œå‰ç½®æœåŠ¡ä¿®å¤
+echo å¦‚é‡è¿›åº¦æ¡å¡æ­»è¶…è¿‡10åˆ†é’Ÿï¼Œè¯·é€€å‡ºç¨‹åºé‡æ–°è¿è¡ŒDISMå·¥å…·ä¿®å¤
+echo è‹¥å‡ºç°DISMå·¥å…·å¼‚å¸¸æˆ–è€…ä»ç„¶å¡æ­»ï¼Œè¯·è€ƒè™‘ä½¿ç”¨åŸç‰ˆç³»ç»Ÿé•œåƒè¦†ç›–å®‰è£…ç³»ç»Ÿä¿®å¤æ–‡ä»¶ï¼ˆç³»ç»Ÿæ–‡ä»¶é­åˆ°DISMå·¥å…·ä¸å¯ä¿®å¤çš„ç ´åï¼‰
 timeout /t 3 /nobreak > NUL
-echo Ê¹ÓÃDISM¹¤¾ßĞ£ÑéÏµÍ³ÎÄ¼ş
+echo ä½¿ç”¨DISMå·¥å…·æ ¡éªŒç³»ç»Ÿæ–‡ä»¶
 Dism /Online /Cleanup-Image /ScanHealth
-echo DISMÉ¨ÃèÍê³É
+echo DISMæ‰«æå®Œæˆ
 
 :dismbreak
-echo DISM¹¤¾ßÉ¨ÃèÍê³É£¬Çë¼ì²é½á¹û²¢Ñ¡Ôñ£º
-echo 1. ¿ÉÒÔĞŞ¸´×é¼ş´æ´¢
-echo 2. Î´¼ì²âµ½×é¼ş´æ´¢Ëğ»µ
-echo 3. ÆäËûÎÊÌâ
-set /p host=Çë¸ù¾İÇé¿öÑ¡ÔñÏîÄ¿£º
+echo DISMå·¥å…·æ‰«æå®Œæˆï¼Œè¯·æ£€æŸ¥ç»“æœå¹¶é€‰æ‹©ï¼š
+echo 1. å¯ä»¥ä¿®å¤ç»„ä»¶å­˜å‚¨
+echo 2. æœªæ£€æµ‹åˆ°ç»„ä»¶å­˜å‚¨æŸå
+echo 3. å…¶ä»–é—®é¢˜
+set /p host=è¯·æ ¹æ®æƒ…å†µé€‰æ‹©é¡¹ç›®ï¼š
 if %host% equ 1 goto DISMRestore
 if %host% equ 2 goto DISMFin
 if %host% equ 3 goto DISMother
 echo.
-echo ÎŞĞ§µÄ´úÂë£¬ÇëÖØĞÂÊäÈë¡£
+echo æ— æ•ˆçš„ä»£ç ï¼Œè¯·é‡æ–°è¾“å…¥ã€‚
 timeout /t 3 /nobreak > NUL
 goto dismbreak
 
 :DISMRestore
-echo Ê¹ÓÃDISM¹¤¾ßĞŞ¸´ÏµÍ³ÎÄ¼ş
+echo ä½¿ç”¨DISMå·¥å…·ä¿®å¤ç³»ç»Ÿæ–‡ä»¶
 Dism /Online /Cleanup-Image /RestoreHealth
-echo DISMĞŞ¸´×é¼ş´æ´¢Íê³É
+echo DISMä¿®å¤ç»„ä»¶å­˜å‚¨å®Œæˆ
 goto DISMFin
 
 :DISMother
-echo ÒÔÏÂÁĞ³ö¼¸ÖÖ³£¼ûÎÊÌâ£º
-echo 1. ´æ´¢×é¼şÒÑËğ»µ£¬½¨ÒéÏÂÔØÔ­°æ¾µÏñ¸²¸Ç°²×°ÏµÍ³ĞŞ¸´
-echo 2. ÕÒ²»µ½Ó³ÏñÔ´£¬ÕÒ²»µ½Ô´ÎÄ¼ş£¬ÏÈ¼ì²éÍøÂçÊÇ·ñÍ¨³©£¬ÖØĞÂÔËĞĞ
-echo ÈôÈÔ´æÔÚÎÊÌâ£¬ÇëÕÒÔ­°æ¾µÏñÀïµÄinstall.wimÎÄ¼ş¹ÒÔØ£¬ÔÙÀûÓÃStartComponent²ÎÊıĞŞ¸´
-echo ×îÍÆ¼öµÄ·½·¨ÊÇÏÂÔØÔ­°æ¾µÏñ¸²¸Ç°²×°ÏµÍ³ĞŞ¸´
-echo 3. Õï¶Ï²ßÂÔ·şÎñÎ´ÔËĞĞ£¬ÇëÏÈÔËĞĞÇ°ÖÃĞŞ¸´£¬Èç¹ûÈÔ´æÔÚÎÊÌâ£¬½¨ÒéÏÂÔØÔ­°æ¾µÏñÎÄ¼ş¸²¸Ç°²×°ÏµÍ³ĞŞ¸´
-echo ÆÕÍ¨ÓÃ»§ÍÆ¼öÊ¹ÓÃÎ¢Èí¹Ù·½µÄMediaCreationToolÎŞËğ¸²¸Ç¡¢°²×°¡¢Éı¼¶ÏµÍ³
-echo ×¨ÒµÓÃ»§¿É×ÔĞĞÑ°ÕÒisoÎÄ¼şÍ¨¹ı¶àÖÖ·½Ê½ĞŞ¸´ÏµÍ³£¬²»¶à×¸Êö
+echo ä»¥ä¸‹åˆ—å‡ºå‡ ç§å¸¸è§é—®é¢˜ï¼š
+echo 1. å­˜å‚¨ç»„ä»¶å·²æŸåï¼Œå»ºè®®ä¸‹è½½åŸç‰ˆé•œåƒè¦†ç›–å®‰è£…ç³»ç»Ÿä¿®å¤
+echo 2. æ‰¾ä¸åˆ°æ˜ åƒæºï¼Œæ‰¾ä¸åˆ°æºæ–‡ä»¶ï¼Œå…ˆæ£€æŸ¥ç½‘ç»œæ˜¯å¦é€šç•…ï¼Œé‡æ–°è¿è¡Œ
+echo è‹¥ä»å­˜åœ¨é—®é¢˜ï¼Œè¯·æ‰¾åŸç‰ˆé•œåƒé‡Œçš„install.wimæ–‡ä»¶æŒ‚è½½ï¼Œå†åˆ©ç”¨StartComponentå‚æ•°ä¿®å¤
+echo æœ€æ¨èçš„æ–¹æ³•æ˜¯ä¸‹è½½åŸç‰ˆé•œåƒè¦†ç›–å®‰è£…ç³»ç»Ÿä¿®å¤
+echo 3. è¯Šæ–­ç­–ç•¥æœåŠ¡æœªè¿è¡Œï¼Œè¯·å…ˆè¿è¡Œå‰ç½®ä¿®å¤ï¼Œå¦‚æœä»å­˜åœ¨é—®é¢˜ï¼Œå»ºè®®ä¸‹è½½åŸç‰ˆé•œåƒæ–‡ä»¶è¦†ç›–å®‰è£…ç³»ç»Ÿä¿®å¤
+echo æ™®é€šç”¨æˆ·æ¨èä½¿ç”¨å¾®è½¯å®˜æ–¹çš„MediaCreationToolæ— æŸè¦†ç›–ã€å®‰è£…ã€å‡çº§ç³»ç»Ÿ
+echo ä¸“ä¸šç”¨æˆ·å¯è‡ªè¡Œå¯»æ‰¾isoæ–‡ä»¶é€šè¿‡å¤šç§æ–¹å¼ä¿®å¤ç³»ç»Ÿï¼Œä¸å¤šèµ˜è¿°
 timeout /t 5 /nobreak > NUL
-echo °´ÈÎÒâ¼ü·µ»Ø²Ëµ¥
+echo æŒ‰ä»»æ„é”®è¿”å›èœå•
 echo pause
 goto menu
 
 :DISMFin
-echo DISMĞŞ¸´Íê³É£¬ÍÆ¼öÖØÆôÏµÍ³
+echo DISMä¿®å¤å®Œæˆï¼Œæ¨èé‡å¯ç³»ç»Ÿ
 timeout /t 3 /nobreak > NUL
 goto menu
 
 :hsfile
 cls
 echo.
-echo 0. ·µ»ØÖ÷²Ëµ¥
-echo 1. ĞŞ¸Ähosts
-echo 2. ĞŞ¸´È¨ÏŞ²¢Çå¿Õhosts
-echo 3. Ê¹hostsÖ»¶Á
-echo 4. Ê¹hosts¿ÉĞ´
-echo 5. ÉèÖÃÖ¸¶¨Â·¾¶ÎÄ¼ş¾Ü¾ø·ÃÎÊ
-echo 6. ÉèÖÃÖ¸¶¨Â·¾¶ÎÄ¼şÍêÈ«·ÃÎÊ
+echo 0. è¿”å›ä¸»èœå•
+echo 1. ä¿®æ”¹hosts
+echo 2. ä¿®å¤æƒé™å¹¶æ¸…ç©ºhosts
+echo 3. ä½¿hostsåªè¯»
+echo 4. ä½¿hostså¯å†™
+echo 5. è®¾ç½®æŒ‡å®šè·¯å¾„æ–‡ä»¶æ‹’ç»è®¿é—®
+echo 6. è®¾ç½®æŒ‡å®šè·¯å¾„æ–‡ä»¶å®Œå…¨è®¿é—®
 
 echo.
-set /p host=ÇëÑ¡Ôñ: 
+set /p host=è¯·é€‰æ‹©: 
 if %host% equ 0 goto host0
 if %host% equ 1 goto host1
 if %host% equ 2 goto host2
@@ -958,21 +958,21 @@ echo.
 goto menu
 :host1
 echo.
-rem Çå³ı¿ÕĞĞ
+rem æ¸…é™¤ç©ºè¡Œ
 type %WINDIR%\system32\drivers\etc\hosts 2>nul |findstr "." >> %WINDIR%\system32\drivers\etc\hosts_bak
 copy /y %WINDIR%\system32\drivers\etc\hosts_bak %WINDIR%\system32\drivers\etc\hosts >nul
-rem Ê¹hosts¿ÉĞ´
+rem ä½¿hostså¯å†™
 cacls.exe %WINDIR%\system32\drivers\etc\hosts /e /t /g Administrators:F
-rem É¾³ı±¸·İÎÄ¼ş
+rem åˆ é™¤å¤‡ä»½æ–‡ä»¶
 del /s /q %WINDIR%\system32\drivers\etc\hosts_bak >nul 2>nul
 start notepad.exe %WINDIR%\system32\drivers\etc\hosts
-echo ÒÑÆô¶¯¼ÇÊÂ±¾£¬hostsĞŞ¸ÄÍê³ÉºóÇë°´ÈÎÒâ¼ü¼ÌĞø
+echo å·²å¯åŠ¨è®°äº‹æœ¬ï¼Œhostsä¿®æ”¹å®Œæˆåè¯·æŒ‰ä»»æ„é”®ç»§ç»­
 echo.
 pause
 ipconfig /flushdns >nul 2>nul
 goto menu
 :host2
-echo ĞŞ¸´È¨ÏŞ²¢Çå¿Õhosts
+echo ä¿®å¤æƒé™å¹¶æ¸…ç©ºhosts
 echo y| cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:F >nul
 cd. > %WINDIR%\system32\drivers\etc\hosts
 echo.
@@ -980,16 +980,16 @@ pause
 goto menu
 :host3
 echo.
-rem Ê¹hostsÖ»¶Á
-echo °´YÊ¹hostsÖ»¶Á: 
+rem ä½¿hostsåªè¯»
+echo æŒ‰Yä½¿hostsåªè¯»: 
 cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:R
 echo.
 pause
 goto menu
 :host4
 echo.
-rem Ê¹hosts¿ÉĞ´
-echo °´YÊ¹hosts¿ÉĞ´: 
+rem ä½¿hostså¯å†™
+echo æŒ‰Yä½¿hostså¯å†™: 
 cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:F
 cd. > %WINDIR%\system32\drivers\etc\hosts 2>nul
 echo.
@@ -997,17 +997,17 @@ pause
 goto menu
 :host5
 echo.
-set /p files=ÇëÊäÈëÎÄ¼şÍêÕûÂ·¾¶: 
+set /p files=è¯·è¾“å…¥æ–‡ä»¶å®Œæ•´è·¯å¾„: 
 cacls.exe "%files%" /e /t /p Administrators:N
-echo ÉèÖÃÖ¸¶¨Â·¾¶ÎÄ¼ş¾Ü¾ø·ÃÎÊ
+echo è®¾ç½®æŒ‡å®šè·¯å¾„æ–‡ä»¶æ‹’ç»è®¿é—®
 echo.
 pause
 goto menu
 :host6
 echo.
-set /p files=ÇëÊäÈëÎÄ¼şÍêÕûÂ·¾¶: 
+set /p files=è¯·è¾“å…¥æ–‡ä»¶å®Œæ•´è·¯å¾„: 
 cacls.exe "%files%" /e /t /g Administrators:F
-echo ÉèÖÃÖ¸¶¨Â·¾¶ÎÄ¼şÍêÈ«·ÃÎÊ
+echo è®¾ç½®æŒ‡å®šè·¯å¾„æ–‡ä»¶å®Œå…¨è®¿é—®
 echo.
 pause
 goto menu
@@ -1016,14 +1016,14 @@ goto menu
 cls
 echo.
 del /f /q "%temp%\mb" >nul 2>nul
-echo Miniblink»º´æÇåÀí³É¹¦
+echo Miniblinkç¼“å­˜æ¸…ç†æˆåŠŸ
 Rundll32 InetCpl.cpl,ClearMyTracksByProcess 255
-echo IE»º´æÇåÀí³É¹¦
+echo IEç¼“å­˜æ¸…ç†æˆåŠŸ
 RunDll32.exe InetCpl.cpl,ResetIEtoDefaults
-echo IEÒÑÖØÖÃ
+echo IEå·²é‡ç½®
 regsvr32 /s jscript.dll
 regsvr32 /s vbscript.dll
-echo IE×é¼şÒÑĞŞ¸´
+echo IEç»„ä»¶å·²ä¿®å¤
 echo.
 pause
 goto menu
@@ -1031,18 +1031,18 @@ goto menu
 :dnsfix
 cls
 echo.
-echo 0. ·µ»ØÖ÷²Ëµ¥
-echo 1. Ê×Ñ¡: 119.29.29.29    ±¸ÓÃ: 8.8.8.8
-echo 2. Ê×Ñ¡: 223.5.5.5       ±¸ÓÃ: 8.8.8.8
-echo 3. Ê×Ñ¡: 114.114.114.114 ±¸ÓÃ: 8.8.8.8
-echo 4. Ê×Ñ¡: 180.76.76.76    ±¸ÓÃ: 8.8.8.8
-echo 5. Ê×Ñ¡: 8.8.8.8         ±¸ÓÃ: 223.5.5.5
-echo 6. Ê×Ñ¡: 9.9.9.9         ±¸ÓÃ: 223.5.5.5(·ÀÔËÓªÉÌ½Ù³Ö^)
-echo 7. Ê×Ñ¡: 4.2.2.2         ±¸ÓÃ: 223.5.5.5
-echo 8. ÒÆ¶¯: 101.226.4.6     ±¸ÓÃ: 223.5.5.5
-echo 9. Ê×Ñ¡: 80.80.80.80     ±¸ÓÃ: 223.5.5.5(·ÀÔËÓªÉÌ½Ù³Ö^)
+echo 0. è¿”å›ä¸»èœå•
+echo 1. é¦–é€‰: 119.29.29.29    å¤‡ç”¨: 8.8.8.8
+echo 2. é¦–é€‰: 223.5.5.5       å¤‡ç”¨: 8.8.8.8
+echo 3. é¦–é€‰: 114.114.114.114 å¤‡ç”¨: 8.8.8.8
+echo 4. é¦–é€‰: 180.76.76.76    å¤‡ç”¨: 8.8.8.8
+echo 5. é¦–é€‰: 8.8.8.8         å¤‡ç”¨: 223.5.5.5
+echo 6. é¦–é€‰: 9.9.9.9         å¤‡ç”¨: 223.5.5.5(é˜²è¿è¥å•†åŠ«æŒ^)
+echo 7. é¦–é€‰: 4.2.2.2         å¤‡ç”¨: 223.5.5.5
+echo 8. ç§»åŠ¨: 101.226.4.6     å¤‡ç”¨: 223.5.5.5
+echo 9. é¦–é€‰: 80.80.80.80     å¤‡ç”¨: 223.5.5.5(é˜²è¿è¥å•†åŠ«æŒ^)
 echo.
-set /p dns=ÇëÑ¡Ôñ: 
+set /p dns=è¯·é€‰æ‹©: 
 if %dns% equ 0 goto dnsip0
 if %dns% equ 1 goto dnsip1
 if %dns% equ 2 goto dnsip2
@@ -1067,7 +1067,7 @@ goto menu
 call:dnssetting 114.114.114.114 8.8.8.8
 nslookup whether.114dns.com 114.114.114.114 2>nul |findstr 127.0.0 >nul
 If %ERRORLEVEL% equ 0 (
-echo    ¾¯¸æ: ISP½Ù³ÖÁË114DNS
+echo    è­¦å‘Š: ISPåŠ«æŒäº†114DNS
 echo.
 ) else (
 echo. >nul 2>nul
@@ -1103,23 +1103,23 @@ goto menu
 netsh interface ip set dnsservers %networkname1% static %1 >nul 2>nul
 netsh interface ip add dnsservers %networkname1% %2 >nul 2>nul
 echo.
-call:dnsserver DNSÒÑÉèÖÃ³É¹¦: 
+call:dnsserver DNSå·²è®¾ç½®æˆåŠŸ: 
 ipconfig /flushdns >nul 2>nul
-echo DNS»º´æÒÑË¢ĞÂ
+echo DNSç¼“å­˜å·²åˆ·æ–°
 echo.
 goto:eof
 
 :programlist
-echo ¿ªÊ¼µ¼³öÓÃ»§³ÌĞòÁĞ±í
+echo å¼€å§‹å¯¼å‡ºç”¨æˆ·ç¨‹åºåˆ—è¡¨
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 echo.
-(for /f "tokens=3,4*" %%i in ('reg query HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<Î¢Èí \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
-(for /f "tokens=3,4*" %%i in ('reg query HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<Î¢Èí \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
-(for /f "tokens=3,4*" %%i in ('reg query HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<Î¢Èí \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
+(for /f "tokens=3,4*" %%i in ('reg query HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<å¾®è½¯ \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
+(for /f "tokens=3,4*" %%i in ('reg query HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<å¾®è½¯ \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
+(for /f "tokens=3,4*" %%i in ('reg query HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<å¾®è½¯ \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
 
-echo µ¼³öÓÃ»§³ÌĞòÁĞ±íÍê³É£¬Çë²é¿´×ÀÃæ MDT ÎÄ¼ş¼ĞÖĞµÄ ProgramList.log ÎÄ¼ş
+echo å¯¼å‡ºç”¨æˆ·ç¨‹åºåˆ—è¡¨å®Œæˆï¼Œè¯·æŸ¥çœ‹æ¡Œé¢ MDT æ–‡ä»¶å¤¹ä¸­çš„ ProgramList.log æ–‡ä»¶
 start %userprofile%\desktop\MDT\ProgramList.log
-echo Â·¾¶£º%userprofile%\desktop\MDT\ProgramList.log
+echo è·¯å¾„ï¼š%userprofile%\desktop\MDT\ProgramList.log
 pause
 goto menu
 
@@ -1131,39 +1131,39 @@ goto powercfgwin10
 goto powercfgwin7
 )
 :powercfgwin10
-powercfg /LIST |findstr "×¿Ô½ĞÔÄÜ"
+powercfg /LIST |findstr "å“è¶Šæ€§èƒ½"
 if "%errorlevel%"=="1" (
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
 echo.
 ) else (
 echo. >nul 2>nul
 )
-for /f "tokens=3" %%i in ('powercfg /LIST ^|findstr "×¿Ô½ĞÔÄÜ"') do set powerguid=%%i
+for /f "tokens=3" %%i in ('powercfg /LIST ^|findstr "å“è¶Šæ€§èƒ½"') do set powerguid=%%i
 powercfg -s %powerguid%
 echo.
 goto powerlabelexit
 :powercfgwin7
-for /f "tokens=3" %%i in ('powercfg /LIST ^|findstr "¸ßĞÔÄÜ"') do set powerguid=%%i
+for /f "tokens=3" %%i in ('powercfg /LIST ^|findstr "é«˜æ€§èƒ½"') do set powerguid=%%i
 powercfg -s %powerguid%
 echo.
-echo µçÔ´¹ÜÀí: ¸ßĞÔÄÜ(ÉèÖÃ³É¹¦)
+echo ç”µæºç®¡ç†: é«˜æ€§èƒ½(è®¾ç½®æˆåŠŸ)
 echo.
 :powerlabelexit
-echo ÌáĞÑ£ºÈç¹ûÖ¡ÂÊÈÔÈ»±ÈÔ¤ÏëµÄÒªµÍ»òÕß²»Õı³££¬Çë¼ì²éÏµÍ³ÎÊÌâ
-echo °üÀ¨µ«²»ÏŞÓÚÈí¼ş²ãÃæ£ºOEM¶¨ÖÆÇı¶¯Èí¼şÏŞÖÆ¹¦ºÄÓ°ÏìÖ¡ÂÊ£¨½ÚÄÜÄ£Ê½¡¢°ì¹«Ä£Ê½µÈ£©
-echo NVIDIA Experience¡¢AMDµÈ¿ØÖÆÃæ°åÏŞÖÆ¹¦ºÄÓ°ÏìÖ¡ÂÊ
-echo ÏµÍ³ĞéÄâÄÚ´æÉèÖÃÒì³£¡¢¸÷ÖÖÏµÍ³Ğ¡ÎÊÌâ¶Ñ»ıµ¼ÖÂ´óÒì³£
-echo Ä³Ğ©Èí¼ş»·¾³ºóÌ¨£¨²»Ò»¶¨ÏÔÊ¾£©Õ¼ÓÃ´óÁ¿ÏµÍ³×ÊÔ´½øĞĞÔËËã£¨Ä£ĞÍÑµÁ·¡¢ÍÚ¿óÈí¼ş¡¢Ä¾Âí²¡¶¾µÈ£©
-echo Ó²¼ş²ãÃæ£ºµç³ØµçÑ¹²»ÎÈ£¬¼ÆËã»ú¹©µçÒì³££¬ÔËĞĞÄÚ´æ¹ıĞ¡¡¢ÄÚ´æÌõ½Ó´¥Òì³£Ê¶±ğÒì³£
-echo ¹ÌÌ¬Ó²ÅÌËğ»µ£¬»úĞµÓ²ÅÌÀÏ»¯£¨ÍÆ¼ö³ıÁËÎÄ¼ş´æ´¢ĞèÇóÍâ£¬Èí¼ş¾ù°²×°ÖÁ¹ÌÌ¬Ó²ÅÌÄÚ£©
-echo Çë×ÔĞĞÅÅ²éÖØÊÔ£¬Èô¾ùÄÑÒÔ½â¾ö£¬ÇëÁªÏµ×¨ÒµÓÃ»§¡£
+echo æé†’ï¼šå¦‚æœå¸§ç‡ä»ç„¶æ¯”é¢„æƒ³çš„è¦ä½æˆ–è€…ä¸æ­£å¸¸ï¼Œè¯·æ£€æŸ¥ç³»ç»Ÿé—®é¢˜
+echo åŒ…æ‹¬ä½†ä¸é™äºè½¯ä»¶å±‚é¢ï¼šOEMå®šåˆ¶é©±åŠ¨è½¯ä»¶é™åˆ¶åŠŸè€—å½±å“å¸§ç‡ï¼ˆèŠ‚èƒ½æ¨¡å¼ã€åŠå…¬æ¨¡å¼ç­‰ï¼‰
+echo NVIDIA Experienceã€AMDç­‰æ§åˆ¶é¢æ¿é™åˆ¶åŠŸè€—å½±å“å¸§ç‡
+echo ç³»ç»Ÿè™šæ‹Ÿå†…å­˜è®¾ç½®å¼‚å¸¸ã€å„ç§ç³»ç»Ÿå°é—®é¢˜å †ç§¯å¯¼è‡´å¤§å¼‚å¸¸
+echo æŸäº›è½¯ä»¶ç¯å¢ƒåå°ï¼ˆä¸ä¸€å®šæ˜¾ç¤ºï¼‰å ç”¨å¤§é‡ç³»ç»Ÿèµ„æºè¿›è¡Œè¿ç®—ï¼ˆæ¨¡å‹è®­ç»ƒã€æŒ–çŸ¿è½¯ä»¶ã€æœ¨é©¬ç—…æ¯’ç­‰ï¼‰
+echo ç¡¬ä»¶å±‚é¢ï¼šç”µæ± ç”µå‹ä¸ç¨³ï¼Œè®¡ç®—æœºä¾›ç”µå¼‚å¸¸ï¼Œè¿è¡Œå†…å­˜è¿‡å°ã€å†…å­˜æ¡æ¥è§¦å¼‚å¸¸è¯†åˆ«å¼‚å¸¸
+echo å›ºæ€ç¡¬ç›˜æŸåï¼Œæœºæ¢°ç¡¬ç›˜è€åŒ–ï¼ˆæ¨èé™¤äº†æ–‡ä»¶å­˜å‚¨éœ€æ±‚å¤–ï¼Œè½¯ä»¶å‡å®‰è£…è‡³å›ºæ€ç¡¬ç›˜å†…ï¼‰
+echo è¯·è‡ªè¡Œæ’æŸ¥é‡è¯•ï¼Œè‹¥å‡éš¾ä»¥è§£å†³ï¼Œè¯·è”ç³»ä¸“ä¸šç”¨æˆ·ã€‚
 pause
 goto menu
 
 :dnscachelist
 cls
 echo.
-echo DNS»º´æ²éÑ¯(½ü30s^): 
+echo DNSç¼“å­˜æŸ¥è¯¢(è¿‘30s^): 
 set dnsexclude=adguard sougou 360safe .cm.steampowered .cm.wmsjsteam. twitch media : images .arpa facebook pcs-sdk qq-web mousegesturesapi fanyi adtidy url.cn xunyou tyjsq .360. acfun aixifan gitee wps qhmsg azureedge sina weibo kdocs office wyjsq qy.net .ngaa. ithome img qq.com ppstream msedge smtcdns qiyi proxy-cnc xboxlive 321fenx nvidia .yy. gting map. youku ipip ip138 bilibili hdslb. microsoft toutiao news18a 126.net 163.com 127.net netease ixigua pstatp snssdk .msn. h5. googletagmanager msedge.api bdimg onedrive .live. zyx.qq digicert qzone teamviewer qun.qq lamyu qpic sobot qlogo idqqimg twitter youtube iqiyi cibntv bilivideo tdnsv6 shifen report bing bdstatic baidu xunyou taobao windows twitter vkjsq verykuai
 if "%systemver%"=="10" (
 powershell -executionpolicy bypass Get-DnsClientCache ^|select Entry,Data ^|Sort-Object -Property Entry -unique |findstr /v /i "%dnsexclude%"
@@ -1174,12 +1174,12 @@ pause
 goto menu
 
 :securitysoft
-echo °²È«/²¦ºÅ/´úÀí/Ä£ÄâÆ÷/ÏŞËÙÈí¼ş: && for /f "tokens=1,10 delims=," %%i in ('tasklist /v /fo csv ^|findstr /I "%securitysoftwareprocess%"') do echo    %%i Ãû³Æ:%%j
+echo å®‰å…¨/æ‹¨å·/ä»£ç†/æ¨¡æ‹Ÿå™¨/é™é€Ÿè½¯ä»¶: && for /f "tokens=1,10 delims=," %%i in ('tasklist /v /fo csv ^|findstr /I "%securitysoftwareprocess%"') do echo    %%i åç§°:%%j
 
-rem Êı¾İÕï¶Ï
+rem æ•°æ®è¯Šæ–­
 tasklist /v /fo csv |findstr /I "2345" >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	set softwareresult2345=´æÔÚ2345È«¼ÒÍ°ÏµÁĞ
+	set softwareresult2345=å­˜åœ¨2345å…¨å®¶æ¡¶ç³»åˆ—
 ) else (
 	echo. >nul 2>nul
 )
@@ -1188,40 +1188,40 @@ echo.
 goto:eof
 
 :minidump
-echo MinidumpÄ¿Â¼: && dir %WINDIR%\Minidump |findstr ÎÄ¼ş
+echo Minidumpç›®å½•: && dir %WINDIR%\Minidump |findstr æ–‡ä»¶
 echo.
 goto:eof
 
 :ipv6state
 wmic nicConfig where "IPEnabled='True'" get IPAddress |find ":" |findstr /i "[0-9][a-f]*: [a-f][0-9]*:" >nul
 if "%errorlevel%"=="0" (
-echo IPv6Ğ­Òé: ¿ªÆôÖĞ (ÒÑÉèÖÃIPv4ÓÅÏÈ^)
+echo IPv6åè®®: å¼€å¯ä¸­ (å·²è®¾ç½®IPv4ä¼˜å…ˆ^)
 for /f "tokens=1,2,3" %%i in ('netsh interface ipv6 show prefixpolicies ^|findstr [0-9]') do netsh interface ipv6 set prefixpolicy %%k %%i %%j >nul 2>nul
 netsh interface ipv6 set prefixpolicy ::ffff:0:0/96 100 4 >nul 2>nul
 ) else (
-echo IPv6Ğ­Òé: ÒÑ¹Ø±Õ
+echo IPv6åè®®: å·²å…³é—­
 )
 echo.
 goto:eof
 
 :ieproxy
-rem ¶ÁÈ¡´úÀíÅäÖÃĞÅÏ¢
+rem è¯»å–ä»£ç†é…ç½®ä¿¡æ¯
 reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v AutoConfigURL 2>nul >nul
 if %ERRORLEVEL%==0 (
 for /f "tokens=3" %%i in ('reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v AutoConfigURL 2^>nul') do set autoconfigurl=%%i
 ) else (
-set autoconfigurl=ÎŞ
+set autoconfigurl=æ— 
 )
 
-rem ´úÀíÅäÖÃ×´Ì¬
+rem ä»£ç†é…ç½®çŠ¶æ€
 reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v AutoConfigURL 2>nul >nul
 if %ERRORLEVEL% equ 0 (
 	reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v AutoConfigURL /f >nul 2>nul
 	reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v AutoConfigURL 2>nul >nul
 	if !ERRORLEVEL! equ 0 (
-		set autoconfigurlresult=±¾µØ´úÀíÅäÖÃÒì³£: ĞŞ¸´Ê§°Ü
+		set autoconfigurlresult=æœ¬åœ°ä»£ç†é…ç½®å¼‚å¸¸: ä¿®å¤å¤±è´¥
 	) else (
-		set autoconfigurlresult=±¾µØ´úÀíÅäÖÃÒì³£: ĞŞ¸´³É¹¦
+		set autoconfigurlresult=æœ¬åœ°ä»£ç†é…ç½®å¼‚å¸¸: ä¿®å¤æˆåŠŸ
 	)
 ) else (
 	echo. >nul 2>nul
@@ -1229,33 +1229,33 @@ if %ERRORLEVEL% equ 0 (
 
 for /f "tokens=3" %%i in ('reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable 2^>nul') do set proxyenable=%%i
 if DEFINED proxyenable (
-if %proxyenable%==0x0 set proxyenable=¹Ø
-if %proxyenable%==0x1 set proxyenable=¿ª
+if %proxyenable%==0x0 set proxyenable=å…³
+if %proxyenable%==0x1 set proxyenable=å¼€
 ) else (
 echo. >nul 2>nul
 )
 
 for /f "tokens=3" %%i in ('reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer 2^>nul') do set proxyserver=%%i
-rem ½ØÈ¡±äÁ¿×îºó10¸ö×Ö·û´®
-echo ´úÀíÅäÖÃ: AutoConfigURL: %autoconfigurl:~0,20% %autoconfigurlresult%
-echo    ´úÀí×´Ì¬: %proxyenable%
+rem æˆªå–å˜é‡æœ€å10ä¸ªå­—ç¬¦ä¸²
+echo ä»£ç†é…ç½®: AutoConfigURL: %autoconfigurl:~0,20% %autoconfigurlresult%
+echo    ä»£ç†çŠ¶æ€: %proxyenable%
 if not "!proxyserver!" == "" (
-echo    µØÖ·/¶Ë¿Ú: %proxyserver%
+echo    åœ°å€/ç«¯å£: %proxyserver%
 )
 set autoconfigurl=<nul
 echo.
 
 if "%systemver%"=="10" (
-rem ½ûÓÃ×Ô¶¯¼ì²âÉèÖÃ
+rem ç¦ç”¨è‡ªåŠ¨æ£€æµ‹è®¾ç½®
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 4600000000 /f >nul 2>nul
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Connections" /v SavedLegacySettings /t REG_BINARY /d 4600000000 /f >nul 2>nul
 ) else (
 echo. >nul
 )
-rem ½ûÓÃ×Ô¶¯ÅäÖÃURL
+rem ç¦ç”¨è‡ªåŠ¨é…ç½®URL
 reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v AutoConfigURL /f >nul 2>nul
 
-rem ÊÖ¶¯´úÀíÉèÖÃ
+rem æ‰‹åŠ¨ä»£ç†è®¾ç½®
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f >nul 2>nul
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /d "" /f >nul 2>nul
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyOverride /t REG_SZ /d "" /f >nul 2>nul
@@ -1263,13 +1263,13 @@ goto:eof
 
 :systemfirewalloff
 netsh advfirewall set allprofiles state off >nul 2>nul
-echo WindowsÏµÍ³·À»ğÇ½: ÒÑ¹Ø±Õ
+echo Windowsç³»ç»Ÿé˜²ç«å¢™: å·²å…³é—­
 echo.
 goto:eof
 
 :systemfirewallon
 netsh advfirewall set allprofiles state on >nul 2>nul
-echo WindowsÏµÍ³·À»ğÇ½: ÒÑ¿ªÆô
+echo Windowsç³»ç»Ÿé˜²ç«å¢™: å·²å¼€å¯
 echo.
 goto:eof
 
@@ -1281,18 +1281,18 @@ for /f tokens^=4^ delims^=^" %%i in ('curl -s curl -s http://quan.suning.com/get
 		set dateol=%%a
 		set dateol=!dateol:/=!
 	)
-	echo ±¾µØÏµÍ³Ê±¼ä: %date:~0,10% %time:~0,8%  ÔÚÏß±±¾©Ê±¼ä: !timeonline!
+	echo æœ¬åœ°ç³»ç»Ÿæ—¶é—´: %date:~0,10% %time:~0,8%  åœ¨çº¿åŒ—äº¬æ—¶é—´: !timeonline!
 	echo.
 )
 
-rem Êı¾İÕï¶Ï
+rem æ•°æ®è¯Šæ–­
 echo %date% |findstr /c:- >nul 2>nul
 if %ERRORLEVEL% equ 0 (set datedelims=-) else ( echo. >nul 2>nul )
 echo %date% |findstr /c:. >nul 2>nul
 if %ERRORLEVEL% equ 0 (set datedelims=.) else (set datedelims=/)
 for /f "tokens=1" %%i in ('echo %date%') do (
 for /f "tokens=1,2,3 delims=%datedelims%" %%a in ('echo %%i') do (
-rem Äê/ÔÂ/ÈÕ, ÈÕ/ÔÂ/Äê, ÔÂ/ÈÕ/Äê
+rem å¹´/æœˆ/æ—¥, æ—¥/æœˆ/å¹´, æœˆ/æ—¥/å¹´
 set date1=%%a%%b%%c
 set date2=%%c%%b%%a
 set date3=%%b%%c%%a
@@ -1308,7 +1308,7 @@ if "!dateol!" equ "!date1!" (
 		if "!dateol!" equ "!date3!" (
 			echo. >nul 2>nul
 		) else (
-			set dateresult=ÏµÍ³ÈÕÆÚÒì³£%date% 
+			set dateresult=ç³»ç»Ÿæ—¥æœŸå¼‚å¸¸%date% 
 		)
 	)
 )
@@ -1327,7 +1327,7 @@ goto:eof
 
 :ipaddress
 if "%systemver%"=="10" (
-for /f "tokens=2,3 delims=£º" %%i in ('powershell -executionpolicy bypass Invoke-RestMethod %2 -TimeoutSec 15 2^>nul') do (
+for /f "tokens=2,3 delims=ï¼š" %%i in ('powershell -executionpolicy bypass Invoke-RestMethod %2 -TimeoutSec 15 2^>nul') do (
 echo %1 %%i: %%j
 for /f "tokens=2,3*" %%a in ('echo %%j') do set MyNetworkresult=%%a%%b%%c
 )
@@ -1357,30 +1357,30 @@ goto:eof
 :systemver
 ping -n 1 /f -l 1372 www.baidu.com |findstr DF >nul
 if "%errorlevel%"=="0" (
-set mturesult=¾¯¸æ: ÉÏ²ãÉè±¸MTUĞ¡ÓÚ1400
+set mturesult=è­¦å‘Š: ä¸Šå±‚è®¾å¤‡MTUå°äº1400
 ) else (
 set mturesult=
 )
-for /f "tokens=3" %%i in ('netsh int ip show interfaces ^|findstr /r "\<connected" ^|findstr /r "ÒÔÌ«Íø ±¾µØÁ¬½Ó"') do set mtuvalue=%%i
+for /f "tokens=3" %%i in ('netsh int ip show interfaces ^|findstr /r "\<connected" ^|findstr /r "ä»¥å¤ªç½‘ æœ¬åœ°è¿æ¥"') do set mtuvalue=%%i
 for /f "tokens=3" %%i in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /V ReleaseId 2^>nul') do set systemversion=%%i
 for /f "delims=." %%i in ('wmic datafile where name^="C:\\Program Files\\Internet Explorer\\IEXPLORE.EXE" get Version 2^>nul ^|findstr /i /c:"."') do set ieversion=%%i
 
 echo.
 for /f "tokens=1,*" %%i in ('ver') do echo %%i %%j %systemversion%
-echo ¼ÆËã»úÃû: %COMPUTERNAME%
-echo IEä¯ÀÀÆ÷: %ieversion%
-echo Íø¿¨MTU: %mtuvalue%
+echo è®¡ç®—æœºå: %COMPUTERNAME%
+echo IEæµè§ˆå™¨: %ieversion%
+echo ç½‘å¡MTU: %mtuvalue%
 if not "!mturesult!" == "" (
 	echo %mturesult%
 )
 
-rem Êı¾İÕï¶Ï
+rem æ•°æ®è¯Šæ–­
 
 if DEFINED systemversion (
 	if "%systemversion%" GTR "1809" (
 		echo. >nul 2>nul
 	) else (
-		set systemversionresult=Win10ÏµÍ³°æ±¾%systemversion%¹ıµÍ, ½¨ÒéÉı¼¶
+		set systemversionresult=Win10ç³»ç»Ÿç‰ˆæœ¬%systemversion%è¿‡ä½, å»ºè®®å‡çº§
 		echo !systemversionresult!
 	)
 ) else (
@@ -1390,24 +1390,24 @@ echo.
 goto:eof
 
 :tracerttable
-rem IPV4Â·ÓÉĞĞÊıÍ³¼Æ
+rem IPV4è·¯ç”±è¡Œæ•°ç»Ÿè®¡
 for /f %%i in ('route print -4 300.300.300.300 ^|find /c /v ""') do set routeexclude=%%i
 for /f %%i in ('route print -4 ^|find /c /v ""') do set routeall=%%i
 set /a routeall=%routeall%-%routeexclude%-2
-rem vpnÍø¹Ø
+rem vpnç½‘å…³
 for /f "tokens=4" %%i in ('route print 10.33.0.0 ^|findstr "10.33.0.0"') do set vpngateway=%%i
 
-rem Êı¾İÕï¶Ï
+rem æ•°æ®è¯Šæ–­
 if DEFINED vpngateway (
-	if %routeall% GEQ 10 ( echo. >nul 2>nul ) else ( set routeresult=Ä£Ê½BÂ·ÓÉ±íÒì³£ )
+	if %routeall% GEQ 10 ( echo. >nul 2>nul ) else ( set routeresult=æ¨¡å¼Bè·¯ç”±è¡¨å¼‚å¸¸ )
 ) else (
 	echo. >nul 2>nul
 )
 
-echo Â·ÓÉ¸ú×Ù½á¹û
-echo    IPv4Â·ÓÉ±íÍ³¼Æ: %routeall%(ĞĞ)
+echo è·¯ç”±è·Ÿè¸ªç»“æœ
+echo    IPv4è·¯ç”±è¡¨ç»Ÿè®¡: %routeall%(è¡Œ)
 if not "!vpngateway!" == "" (
-	echo    Ä£Ê½BÍø¹Ø: %vpngateway%
+	echo    æ¨¡å¼Bç½‘å…³: %vpngateway%
 )
 set vpngateway=<nul
 if "%powershellver%" GEQ "3" (
@@ -1415,7 +1415,7 @@ for /f "delims==" %%i in ('tracert -d -w 20 -h 5 114.114.114.114 ^|findstr ^[1-9
 set tracestr=%%i
 set tracestr=!tracestr:ms=!
 set tracestr=!tracestr:^<=!
-set tracestr=!tracestr:ºÁÃë=!
+set tracestr=!tracestr:æ¯«ç§’=!
 for /f "tokens=1,2,3,4,5" %%i in ('echo !tracestr!') do (
 for /f %%a in ('powershell -executionpolicy bypass Invoke-RestMethod http://whois.pconline.com.cn/ip.jsp?ip^=%%m -TimeoutSec 15 2^>nul') do set IPquyu=%%a
 echo  %%i   %%j ms   %%k ms   %%l ms    %%m !IPquyu! |%temp%\mtee /a /+ %temp%\traceroute.txt
@@ -1425,14 +1425,14 @@ echo  %%i   %%j ms   %%k ms   %%l ms    %%m !IPquyu! |%temp%\mtee /a /+ %temp%\t
 for /f "tokens=*" %%i in ('tracert -w 100 -d -h 5 114.114.114.114 ^|findstr ^[1-9] ^|findstr /v "114.114.114.114" ^|findstr /i "%ipv4ipv6%"') do echo    %%i |%temp%\mtee /a /+ %temp%\traceroute.txt
 )
 
-rem Õï¶ÏÊı¾İ
+rem è¯Šæ–­æ•°æ®
 type %temp%\traceroute.txt 2>nul |findstr /N "." |findstr "\<2:" |findstr "172.1[0-9]\. 10.[0-9]\. 10.10\." >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	set tracertresult=¶àÖØÄÚÍø
+	set tracertresult=å¤šé‡å†…ç½‘
 ) else (
 	type %temp%\traceroute.txt 2>nul |findstr /N "." |findstr "\<3:" |findstr "192.168\. 172.1[0-9]\. 10.[0-9]\. 10.10\." >nul 2>nul
 	if !ERRORLEVEL! equ 0 (
-		set tracertresult=¶àÖØÄÚÍø
+		set tracertresult=å¤šé‡å†…ç½‘
 	) else (
 		echo. >nul 2>nul
 	)
@@ -1443,8 +1443,8 @@ echo.
 goto:eof
 
 :nicinterface
-echo Íø¿¨: 
-rem Íø¿¨ÁĞ±í
+echo ç½‘å¡: 
+rem ç½‘å¡åˆ—è¡¨
 	for /f "tokens=1,2,4 delims=," %%i in ('Getmac /v /nh /fo csv') do (
 		set networkstatus=%%k
 		echo    %%i %%j  !networkstatus:~1,7! |%temp%\mtee /a /+ %temp%\networkadapter.txt
@@ -1453,7 +1453,7 @@ rem Íø¿¨ÁĞ±í
 netsh wlan show Interfaces |findstr /R "\<SSID" >nul
 if "%errorlevel%"=="0" (
 
-	rem »ñÈ¡ÎŞÏßWIFI×Ö¶ÎĞÅÏ¢
+	rem è·å–æ— çº¿WIFIå­—æ®µä¿¡æ¯
 	set WF=0
 	for /f "tokens=2 delims=:" %%i in ('netsh wlan show Interfaces') do (
 		for /f "tokens=1" %%a in ('echo %%i') do (
@@ -1462,32 +1462,32 @@ if "%errorlevel%"=="0" (
 		)
 	)
 
-	echo    WiFi:!wifi7!   ×´Ì¬:!wifi6!   ĞÅµÀ:!wifi14!   ĞÅºÅ:!wifi17!   ËÙ¶È:!wifi16!Mbps
+	echo    WiFi:!wifi7!   çŠ¶æ€:!wifi6!   ä¿¡é“:!wifi14!   ä¿¡å·:!wifi17!   é€Ÿåº¦:!wifi16!Mbps
 
-	rem WIFIÍøÂçÖÊÁ¿ÅĞ¶Ï
-	if "!wifi17:~0,-1!" LEQ "95" ( set wifiresult1=WIFIĞÅºÅ²»ÎÈ¶¨ ) else ( echo. >nul 2>nul )
-	if "!wifi14!" GEQ "36" ( set wifiresult2=µ±Ç°5GµÄWIFI,ÍøÂçÓÎÏ·½¨ÒéÊ¹ÓÃ2.4G,ÓĞÏß×î¼Ñ ) else ( echo. >nul 2>nul )
+	rem WIFIç½‘ç»œè´¨é‡åˆ¤æ–­
+	if "!wifi17:~0,-1!" LEQ "95" ( set wifiresult1=WIFIä¿¡å·ä¸ç¨³å®š ) else ( echo. >nul 2>nul )
+	if "!wifi14!" GEQ "36" ( set wifiresult2=å½“å‰5Gçš„WIFI,ç½‘ç»œæ¸¸æˆå»ºè®®ä½¿ç”¨2.4G,æœ‰çº¿æœ€ä½³ ) else ( echo. >nul 2>nul )
 
-	rem wifiÇı¶¯ĞÅÏ¢
-	for /f "tokens=2,4 delims=," %%i in ('DRIVERQUERY /fo csv ^|findstr "Wireless" ^|findstr "[0-9]/[0-9]/[0-9]"') do echo    %%i Çı¶¯ÈÕÆÚ%%j
+	rem wifié©±åŠ¨ä¿¡æ¯
+	for /f "tokens=2,4 delims=," %%i in ('DRIVERQUERY /fo csv ^|findstr "Wireless" ^|findstr "[0-9]/[0-9]/[0-9]"') do echo    %%i é©±åŠ¨æ—¥æœŸ%%j
 
 ) else (
 	echo >nul 2>nul
 )
 
-rem Í³¼ÆÍø¿¨¸öÊı
+rem ç»Ÿè®¡ç½‘å¡ä¸ªæ•°
 	call:textlines %temp%\networkadapter.txt -100
 	if "!textlinesnum!" GEQ "2" (
 			type %temp%\networkadapter.txt 2>nul |findstr /i "tap SangforVNIC yltap" >nul 2>nul
 			if !ERRORLEVEL! equ 0 (
-				set networkcardresult1=Íø¿¨ÊıÁ¿:!textlinesnum!,´æÔÚÆäËü¼ÓËÙÆ÷VPNÉè±¸ĞéÄâÍø¿¨
+				set networkcardresult1=ç½‘å¡æ•°é‡:!textlinesnum!,å­˜åœ¨å…¶å®ƒåŠ é€Ÿå™¨VPNè®¾å¤‡è™šæ‹Ÿç½‘å¡
 			) else (
 				echo. >nul 2>nul
 			)
 
 			type %temp%\networkadapter.txt 2>nul |findstr /i "vmware virtualbox" >nul 2>nul
 			if !ERRORLEVEL! equ 0 (
-				set networkcardresult2=´æÔÚĞéÄâ»úÍø¿¨
+				set networkcardresult2=å­˜åœ¨è™šæ‹Ÿæœºç½‘å¡
 			) else (
 				echo. >nul 2>nul
 			)
@@ -1502,26 +1502,26 @@ echo.
 goto:eof
 
 :hardware
-echo Ó²¼şÅäÖÃĞÅÏ¢: 
+echo ç¡¬ä»¶é…ç½®ä¿¡æ¯: 
 for /f "tokens=*" %%i in ('wmic cpu get name ^|findstr /v "Name" ^|findstr "[^\S]"') do echo    CPU:  %%i
 for /f %%i in ('wmic os get TotalVisibleMemorySize ^|findstr [0-9]') do set /a ram=%%i/1024
 for /f %%i in ('wmic os get SizeStoredInPagingFiles ^|findstr [0-9]') do set /a virtualram=%%i/1024
-echo    ÄÚ´æ: %ram% MB; µ±Ç°·ÖÅäĞéÄâÄÚ´æ: %VirtualRAM% MB
+echo    å†…å­˜: %ram% MB; å½“å‰åˆ†é…è™šæ‹Ÿå†…å­˜: %VirtualRAM% MB
 for /f "tokens=2 delims==" %%i in ('wmic path Win32_VideoController get AdapterRAM^,Name /value ^|findstr Name') do set vganame=%%i
-echo    ÏÔ¿¨: %vganame%
-for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do echo    ·Ö±æÂÊ: %%j*%%i
-rem Ó¦ÓÃ³ÌĞò´íÎóĞÅÏ¢
+echo    æ˜¾å¡: %vganame%
+for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do echo    åˆ†è¾¨ç‡: %%j*%%i
+rem åº”ç”¨ç¨‹åºé”™è¯¯ä¿¡æ¯
 if "%systemver%"=="10" (
-for /f "tokens=1,2,4* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName Application -EntryType Error -Newest 2 -After %year%-%month%-%day% -Source 'Application Error' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j ´íÎó: %%k %%l
+for /f "tokens=1,2,4* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName Application -EntryType Error -Newest 2 -After %year%-%month%-%day% -Source 'Application Error' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j é”™è¯¯: %%k %%l
 ) else (
 echo. >nul 2>nul
 )
 
-rem Êı¾İÕï¶Ï
+rem æ•°æ®è¯Šæ–­
 if DEFINED ram (
 	if %ram% LSS 8000 (
 		set /a ram=%ram%/1000
-		set ramresult=ÏµÍ³ÄÚ´æ!ram!G, ½¨ÒéÉı¼¶
+		set ramresult=ç³»ç»Ÿå†…å­˜!ram!G, å»ºè®®å‡çº§
 		echo    !ramresult!
 	) else (
 		echo. >nul 2>nul
@@ -1541,7 +1541,7 @@ set dnsserverip=%dnsserverip:}=%
 
 nslookup whether.114dns.com 114.114.114.114 2>nul |findstr 127.0.0 >nul
 If %ERRORLEVEL% equ 0 (
-set dnsresult=ÔËÓªÉÌ¿ÉÄÜDNS½Ù³Ö
+set dnsresult=è¿è¥å•†å¯èƒ½DNSåŠ«æŒ
 echo.
 ) else (
 echo. >nul 2>nul
@@ -1552,7 +1552,7 @@ goto:eof
 
 :dnseventlog
 if "%systemver%"=="10" (
-for /f "tokens=1,2,4,6* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName System -EntryType Warning -Newest 3 -After %year%-%month%-%day% -Source 'Microsoft-Windows-DNS-Client' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j %%kÏìÓ¦ÓòÃû: %%l %%m
+for /f "tokens=1,2,4,6* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName System -EntryType Warning -Newest 3 -After %year%-%month%-%day% -Source 'Microsoft-Windows-DNS-Client' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j %%kå“åº”åŸŸå: %%l %%m
 ) else (
 echo. >nul 2>nul
 )
@@ -1560,34 +1560,34 @@ echo.
 goto:eof
 
 :hostsdiag
-rem hostsÎÄ¼ş×îºóĞŞ¸ÄÊ±¼ä
+rem hostsæ–‡ä»¶æœ€åä¿®æ”¹æ—¶é—´
 IF EXIST %WINDIR%\system32\drivers\etc\hosts (
 cd /d %WINDIR%\system32\drivers\etc >nul 2>nul
 for /f "tokens=*" %%i in ('forfiles /M hosts /C "cmd /c echo @fdate @ftime" 2^>nul') do set filetime=%%i
-rem Í³¼Æhosts·Ç×¢ÊÍĞĞÊı
+rem ç»Ÿè®¡hostséæ³¨é‡Šè¡Œæ•°
 for /f %%i in ('type %WINDIR%\system32\drivers\etc\hosts 2^>nul ^|findstr /v /b "\<#" ^|findstr "." ^|find /c /v ""') do set hostsnumber=%%i
-rem #UHE¹¤¾ßĞĞ
+rem #UHEå·¥å…·è¡Œ
 for /f %%i in ('type %WINDIR%\system32\drivers\etc\hosts 2^>nul ^|findstr /v /b "\<#" ^|find /c "#UHE_"') do set hostsnumberUHE=%%i
-rem Í³¼Æ127.0.0ĞĞ
+rem ç»Ÿè®¡127.0.0è¡Œ
 for /f %%i in ('type %WINDIR%\system32\drivers\etc\hosts 2^>nul ^|findstr /v /b "\<#" ^|find /c "127.0.0"') do set hostsnumber127=%%i
-rem Í³¼Æ155.89ĞĞ
+rem ç»Ÿè®¡155.89è¡Œ
 for /f %%i in ('type %WINDIR%\system32\drivers\etc\hosts 2^>nul ^|findstr /v /b "\<#" ^|find /c "155.89"') do set hostsnumber155=%%i
-echo hostsĞŞ¸ÄÊ±¼ä:    !filetime!
-echo     ÓĞĞ§½âÎöÌõÄ¿×ÜÊı: !hostsnumber!(ĞĞ^)
-echo     ´øUHE×¢ÊÍÌõÄ¿Êı:  !hostsnumberUHE!(ĞĞ^)
-echo     127¿ªÍ·ÌõÄ¿Êı:    !hostsnumber127!(ĞĞ^)
-echo     155¿ªÍ·ÌõÄ¿Êı:    !hostsnumber155!(ĞĞ^)
+echo hostsä¿®æ”¹æ—¶é—´:    !filetime!
+echo     æœ‰æ•ˆè§£ææ¡ç›®æ€»æ•°: !hostsnumber!(è¡Œ^)
+echo     å¸¦UHEæ³¨é‡Šæ¡ç›®æ•°:  !hostsnumberUHE!(è¡Œ^)
+echo     127å¼€å¤´æ¡ç›®æ•°:    !hostsnumber127!(è¡Œ^)
+echo     155å¼€å¤´æ¡ç›®æ•°:    !hostsnumber155!(è¡Œ^)
 ) else (
-echo hostsÎÄ¼ş: ²»´æÔÚ
+echo hostsæ–‡ä»¶: ä¸å­˜åœ¨
 )
 echo.
 
-rem Êı¾İÕï¶Ï
+rem æ•°æ®è¯Šæ–­
 for /f %%i in ("%WINDIR%\system32\drivers\etc\hosts") do set hostsize1=%%~zi
 echo. >> %WINDIR%\system32\drivers\etc\hosts 2>nul
 for /f %%i in ("%WINDIR%\system32\drivers\etc\hosts") do set hostsize2=%%~zi
 if %hostsize1% equ %hostsize2% (
-set hostsresult=hostsÎÄ¼şÈ¨ÏŞÒì³£
+set hostsresult=hostsæ–‡ä»¶æƒé™å¼‚å¸¸
 ) else (
 echo. >nul 2>nul
 )
@@ -1595,26 +1595,26 @@ goto:eof
 
 :disableuac
 echo.
-echo ³¹µ×½ûÓÃUAC
+echo å½»åº•ç¦ç”¨UAC
 echo.
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d "0" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorAdmin /t REG_DWORD /d "0" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorUser /t REG_DWORD /d "3" /f >nul
 echo.
-echo ÇëÖØĞÂÆô¶¯¼ÆËã»ú
+echo è¯·é‡æ–°å¯åŠ¨è®¡ç®—æœº
 echo.
 pause
 goto menu
 
 :enableuac
 echo.
-echo »Ö¸´UAC
+echo æ¢å¤UAC
 echo.
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d "1" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorAdmin /t REG_DWORD /d "5" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorUser /t REG_DWORD /d "3" /f >nul
 echo.
-echo ÇëÖØĞÂÆô¶¯¼ÆËã»ú
+echo è¯·é‡æ–°å¯åŠ¨è®¡ç®—æœº
 echo.
 pause
 goto menu
@@ -1622,16 +1622,16 @@ goto menu
 
 :xboxfix
 echo.
-echo ĞŞ¸´Xbox¶àÈËÓÎÏ·
+echo ä¿®å¤Xboxå¤šäººæ¸¸æˆ
 echo.
-echo ÁÙÊ±½ûÓÃTeredoËíµÀ
+echo ä¸´æ—¶ç¦ç”¨Teredoéš§é“
 netsh int teredo set state disable > NUL
 
-echo ½ûÓÃ»ªË¶GameFirst(½¨ÒéĞ¶ÔØ£¡)
+echo ç¦ç”¨åç¡•GameFirst(å»ºè®®å¸è½½ï¼)
 sc config AsusGameFirstService start= DISABLED > NUL
 sc stop AsusGameFirstService > NUL
 
-echo ÔİÊ±Í£Ö¹ÏµÍ³·şÎñ
+echo æš‚æ—¶åœæ­¢ç³»ç»ŸæœåŠ¡
 sc stop XblAuthManager > NUL
 sc stop XboxNetApiSvc > NUL
 sc stop iphlpsvc > NUL
@@ -1639,23 +1639,23 @@ sc stop upnphost > NUL
 sc stop SSDPSRV > NUL
 sc stop FDResPub > NUL
 
-echo ĞŞ¸´ÏµÍ³Ê±¼äÍ¬²½·şÎñ
+echo ä¿®å¤ç³»ç»Ÿæ—¶é—´åŒæ­¥æœåŠ¡
 sc stop w32time > NUL
 w32tm /unregister > NUL
 w32tm /register > NUL
 sc start w32time > NUL
 
-echo ÖØÖÃWindows·À»ğÇ½²ßÂÔ
+echo é‡ç½®Windowsé˜²ç«å¢™ç­–ç•¥
 netsh advfirewall reset > NUL
 netsh advfirewall set allprofiles state on > NUL
-echo ÅÅ³ı³åÍ»µÄWindows·À»ğÇ½²ßÂÔ
+echo æ’é™¤å†²çªçš„Windowsé˜²ç«å¢™ç­–ç•¥
 netsh advfirewall set currentprofile firewallpolicy blockinbound,allowoutbound > NUL
 netsh advfirewall firewall set rule name="4jxr4b3r3du76ina39a98x8k2" new enable=no > NUL
 
-echo Í¬²½ÏµÍ³Ê±¼ä
+echo åŒæ­¥ç³»ç»Ÿæ—¶é—´
 w32tm /resync /force > NUL
 
-echo ĞŞ¸´·şÎñ×ÔÆôÏî
+echo ä¿®å¤æœåŠ¡è‡ªå¯é¡¹
 sc config IKEEXT start= AUTO > NUL
 sc config FDResPub start= AUTO > NUL
 sc config SSDPSRV start= AUTO > NUL
@@ -1663,7 +1663,7 @@ sc config upnphost start= AUTO > NUL
 sc config XblAuthManager start= AUTO > NUL
 sc config XboxNetApiSvc start= AUTO > NUL
 
-echo ÖØÖÃÏµÍ³IPv6ÉèÖÃ
+echo é‡ç½®ç³»ç»ŸIPv6è®¾ç½®
 netsh int ipv6 reset
 reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_DefaultQualified /f > NUL
 reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Force_Tunneling /f > NUL
@@ -1679,37 +1679,37 @@ reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transi
 reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v ISATAP_State /f > NUL
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters" /v DisabledComponents /t REG_DWORD /d 0x20 /f > NUL
 
-echo Æô¶¯ÏµÍ³·şÎñ
+echo å¯åŠ¨ç³»ç»ŸæœåŠ¡
 sc start IKEEXT > NUL
 sc start FDResPub > NUL
 sc start SSDPSRV > NUL
 sc start upnphost > NUL
 
-echo ÉèÖÃIPv6Ç°×ºÓÅÏÈ¼¶
+echo è®¾ç½®IPv6å‰ç¼€ä¼˜å…ˆçº§
 netsh int ipv6 set prefix ::1/128 50 0 > NUL
 netsh int ipv6 set prefix ::/0 40 1 > NUL
 netsh int ipv6 set prefix 2002::/16 30 2 > NUL
 netsh int ipv6 set prefix ::/96 20 3 > NUL
 netsh int ipv6 set prefix ::ffff:0:0/96 100 4 > NUL
 
-echo Æô¶¯IP Helper·şÎñ
+echo å¯åŠ¨IP HelperæœåŠ¡
 sc start iphlpsvc > NUL
 
-echo ÅäÖÃTeredoËíµÀ²ÎÊı
+echo é…ç½®Teredoéš§é“å‚æ•°
 route delete ::/0 > NUL
 netsh int teredo set state type=default > NUL
 netsh int teredo set state enterpriseclient teredo.remlab.net 20 0 > NUL
 netsh int ipv6 add route ::/0 "Teredo Tunneling Pseudo-Interface" > NUL
 
-echo Æô¶¯XboxÍøÂç·şÎñ
+echo å¯åŠ¨Xboxç½‘ç»œæœåŠ¡
 sc start XboxNetApiSvc > NUL
 sc start XblAuthManager > NUL
 
-echo ĞŞ¸´¹¤¾ßÔËĞĞ½áÊø£¡
-echo TeredoÅäÖÃ×´Ì¬£º
+echo ä¿®å¤å·¥å…·è¿è¡Œç»“æŸï¼
+echo Teredoé…ç½®çŠ¶æ€ï¼š
 netsh int teredo show state
 echo.
-echo ÒÑĞŞ¸´Xbox¶àÈËÓÎÏ· ÇëÖØÆôÏµÍ³ºó³¢ÊÔÁª»ú
+echo å·²ä¿®å¤Xboxå¤šäººæ¸¸æˆ è¯·é‡å¯ç³»ç»Ÿåå°è¯•è”æœº
 pause
 exit
 
@@ -1736,38 +1736,38 @@ set /a sum=a1+a2+a3+a4+a5+a6
 goto:eof
 
 :infocollect
-rem Win10ÏµÍ³°æ±¾
+rem Win10ç³»ç»Ÿç‰ˆæœ¬
 if DEFINED systemversionresult ( echo *%systemversionresult% >> %temp%\infocollect.txt 2>nul & set systemversionresult=<nul ) else ( echo. >nul 2>nul )
 
-rem ÄÚ´æ´óĞ¡
+rem å†…å­˜å¤§å°
 if DEFINED ramresult ( echo *%ramresult% >> %temp%\infocollect.txt 2>nul ) else ( echo. >nul 2>nul )
 
-rem lspÏà¹Ø
+rem lspç›¸å…³
 if DEFINED lspresult ( echo *%lspresult% >> %temp%\infocollect.txt 2>nul & set lspresult=<nul ) else ( echo. >nul 2>nul )
 if DEFINED wegamelsp ( echo *%wegamelsp% >> %temp%\infocollect.txt 2>nul & set wegamelsp=<nul ) else ( echo. >nul 2>nul )
 
-rem ¶àÖØÄÚÍø
+rem å¤šé‡å†…ç½‘
 if DEFINED tracertresult ( echo *%tracertresult% >> %temp%\infocollect.txt 2>nul & set tracertresult=<nul ) else ( echo. >nul 2>nul )
 
-rem Â·ÓÉ±í
+rem è·¯ç”±è¡¨
 if DEFINED routeresult ( echo *%routeresult% >> %temp%\infocollect.txt 2>nul & set routeresult=<nul ) else ( echo. >nul 2>nul )
 
-rem ÏµÍ³Ê±¼ä
+rem ç³»ç»Ÿæ—¶é—´
 if DEFINED dateresult ( echo *%dateresult% >> %temp%\infocollect.txt 2>nul & set dateresult=<nul ) else ( echo. >nul 2>nul )
 
-rem 2345ÌáÊ¾
+rem 2345æç¤º
 if DEFINED softwareresult2345 ( echo *%softwareresult2345% >> %temp%\infocollect.txt 2>nul & set softwareresult2345=<nul ) else ( echo. >nul 2>nul )
 
-rem ÔËÓªÉÌdns½Ù³Ö
+rem è¿è¥å•†dnsåŠ«æŒ
 if DEFINED dnsresult ( echo *%dnsresult% >> %temp%\infocollect.txt 2>nul & set dnsresult=<nul ) else ( echo. >nul 2>nul )
 
-rem hostsÅĞ¶Ï
+rem hostsåˆ¤æ–­
 if DEFINED hostsresult ( echo *%hostsresult% >> %temp%\infocollect.txt 2>nul & set hostsresult=<nul ) else ( echo. >nul 2>nul )
 
-rem AutoConfigURLÅĞ¶Ï
+rem AutoConfigURLåˆ¤æ–­
 if DEFINED autoconfigurlresult ( echo *%autoconfigurlresult% >> %temp%\infocollect.txt 2>nul & set autoconfigurlresult=<nul ) else ( echo. >nul 2>nul )
 
-rem WIFIĞÅºÅĞÅµÀ
+rem WIFIä¿¡å·ä¿¡é“
 if DEFINED wifiresult1 ( echo *%wifiresult1% >> %temp%\infocollect.txt 2>nul & set wifiresult1=<nul ) else ( echo. >nul 2>nul )
 if DEFINED wifiresult2 ( echo *%wifiresult2% >> %temp%\infocollect.txt 2>nul & set wifiresult2=<nul ) else ( echo. >nul 2>nul )
 if DEFINED networkcardresult1 ( echo *%networkcardresult1% >> %temp%\infocollect.txt 2>nul & set networkcardresult1=<nul ) else ( echo. >nul 2>nul )
@@ -1777,7 +1777,7 @@ type %temp%\netdiag.txt 2>nul >> %temp%\infocollect.txt 2>nul
 type %temp%\gameprocessip.txt 2>nul >> %temp%\infocollect.txt 2>nul
 del /f /q %temp%\netdiag.txt >nul 2>nul
 
-rem ÓÎÏ·Êı¾İĞÅÏ¢±¸·İ×ÀÃæ
+rem æ¸¸æˆæ•°æ®ä¿¡æ¯å¤‡ä»½æ¡Œé¢
 	if EXIST %temp%\infocollect.txt (
 		taskkill /F /FI "WINDOWTITLE eq netdiag.txt*" >nul 2>nul
 		echo F| xcopy "%temp%\infocollect.txt" "%userprofile%\desktop\NetDiagLog\netdiag.txt" /s /c /y /i >nul 2>nul
@@ -1787,7 +1787,7 @@ rem ÓÎÏ·Êı¾İĞÅÏ¢±¸·İ×ÀÃæ
 goto:eof
 
 :systempath
-rem ¼ì²éÏµÍ³»·¾³±äÁ¿
+rem æ£€æŸ¥ç³»ç»Ÿç¯å¢ƒå˜é‡
 for /f "tokens=3" %%i in ('%systemroot%\system32\reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /s ^|%systemroot%\system32\findstr "\<Path"') do set syspath=%%i
 if defined syspath (
 if defined %%1 (
@@ -1798,118 +1798,118 @@ set PATH=!syspath!;%1
 %systemroot%\system32\reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path /t REG_EXPAND_SZ /d "%%SystemRoot%%\system32;%%SystemRoot%%;%%SystemRoot%%\system32\Wbem;%%SystemRoot%%\system32\WindowsPowerShell\v1.0;%%SystemRoot%%\system32\OpenSSH" /f >nul 2>nul
 set PATH=%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\system32\Wbem;%SystemRoot%\system32\WindowsPowerShell\v1.0;%SystemRoot%\system32\OpenSSH
 )
-echo ÒÑĞŞ¸´ÓÃ»§»·¾³±äÁ¿, ÇëÖØÆôÏµÍ³ºóÖØĞÂ´ò¿ª¼ì²é¹¤¾ß
+echo å·²ä¿®å¤ç”¨æˆ·ç¯å¢ƒå˜é‡, è¯·é‡å¯ç³»ç»Ÿåé‡æ–°æ‰“å¼€æ£€æŸ¥å·¥å…·
 pause
 exit
 goto:eof
 
 :textlines
-rem »ñÈ¡ÎÄ¼şÖĞĞĞÊı,²ÎÊı1ÎÄ±¾Â·¾¶ ²ÎÊı2, ÏÔÊ¾×îºónĞĞ, nÎªÊı×Ö, n¿ÉÒÔÎª¸ºÖµ, Íø¿¨¸öÊı±äÁ¿textlinesnum
+rem è·å–æ–‡ä»¶ä¸­è¡Œæ•°,å‚æ•°1æ–‡æœ¬è·¯å¾„ å‚æ•°2, æ˜¾ç¤ºæœ€ånè¡Œ, nä¸ºæ•°å­—, nå¯ä»¥ä¸ºè´Ÿå€¼, ç½‘å¡ä¸ªæ•°å˜é‡textlinesnum
 set LINES=0
 for /f "delims==" %%I in ('type %1 2^>nul') do ( set /a LINES=LINES+1 & set textlinesnum=!LINES! )
-rem ÏÔÊ¾ĞĞÊı
+rem æ˜¾ç¤ºè¡Œæ•°
 set /a LINES=LINES-%2
 more +!LINES! < %1 2>nul
 goto:eof
 
 :IconRepair
 cls
-echo ¿ªÊ¼ĞŞ¸´Í¼±ê±ä°×ÎÊÌâ
+echo å¼€å§‹ä¿®å¤å›¾æ ‡å˜ç™½é—®é¢˜
 timeout /t 3 /nobreak > NUL
-echo ÔİÊ±½áÊø×ÊÔ´¹ÜÀíÆ÷½ø³Ì
+echo æš‚æ—¶ç»“æŸèµ„æºç®¡ç†å™¨è¿›ç¨‹
 taskkill /im explorer.exe /f
-echo ÇåÀíÍ¼±ê»º´æ
+echo æ¸…ç†å›¾æ ‡ç¼“å­˜
 CD /d %userprofile%\AppData\Local
 DEL IconCache.db /a
-echo ÖØÆô×ÊÔ´¹ÜÀíÆ÷
+echo é‡å¯èµ„æºç®¡ç†å™¨
 start explorer.exe
-echo ĞŞ¸´Íê³É£¬°´ÈÎÒâ¼üÍê³ÉĞŞ¸´
+echo ä¿®å¤å®Œæˆï¼ŒæŒ‰ä»»æ„é”®å®Œæˆä¿®å¤
 echo pause
 goto menu
 
 :BootTime
 cls
-echo ÕıÔÚÉèÖÃ¿ª»úÆô¶¯ÏîÑ¡ÔñµÈ´ıÊ±¼ä
-echo ÊäÈëÃëÊıºó»Ø³µÈ·ÈÏ£¬ÇëÎğÊäÈë×ÖÄ¸£¡£¡£¡
-set /p usertime=Éè¶¨¿ª»úÆô¶¯ÏîÑ¡ÔñµÄµÈ´ıÊ±¼ä£¨Ãë£©£º
+echo æ­£åœ¨è®¾ç½®å¼€æœºå¯åŠ¨é¡¹é€‰æ‹©ç­‰å¾…æ—¶é—´
+echo è¾“å…¥ç§’æ•°åå›è½¦ç¡®è®¤ï¼Œè¯·å‹¿è¾“å…¥å­—æ¯ï¼ï¼ï¼
+set /p usertime=è®¾å®šå¼€æœºå¯åŠ¨é¡¹é€‰æ‹©çš„ç­‰å¾…æ—¶é—´ï¼ˆç§’ï¼‰ï¼š
 bcdedit /timeout %usertime%
-echo ÒÑÉèÖÃ¿ª»úÆô¶¯ÏîÑ¡ÔñµÈ´ıÊ±¼äÎª%usertime%Ãë
-echo °´ÈÎÒâ¼ü·µ»Ø²Ëµ¥
+echo å·²è®¾ç½®å¼€æœºå¯åŠ¨é¡¹é€‰æ‹©ç­‰å¾…æ—¶é—´ä¸º%usertime%ç§’
+echo æŒ‰ä»»æ„é”®è¿”å›èœå•
 pause
 goto menu
 
 :WinFocus
 cls
-echo ¿ªÊ¼ĞŞ¸´Windows¾Û½¹Òì³£ÎÊÌâ
-echo ÇåÀí»º´æ
+echo å¼€å§‹ä¿®å¤Windowsèšç„¦å¼‚å¸¸é—®é¢˜
+echo æ¸…ç†ç¼“å­˜
 DEL /F /S /Q /A "%USERPROFILE%/AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets"
 DEL /F /S /Q /A "%USERPROFILE%/AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\Settings"
-echo ÖØĞÂ²¿Êğ³ÌĞò°ü
+echo é‡æ–°éƒ¨ç½²ç¨‹åºåŒ…
 PowerShell -ExecutionPolicy Unrestricted -Command "& {$manifest = (Get-AppxPackage *ContentDeliveryManager*).InstallLocation + '\AppxManifest.xml' ; Add-AppxPackage -DisableDevelopmentMode -Register $manifest}"
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôµçÄÔ£¬±£³ÖÍøÂçÍ¨³©£¬ÄÍĞÄµÈ´ı10·ÖÖÓ¡££¨½¨Òé°×ÌìĞŞ¸´£¬Ò¹¼ä¾Û½¹ÍÆËÍ²»ÎÈ¶¨£©
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯ç”µè„‘ï¼Œä¿æŒç½‘ç»œé€šç•…ï¼Œè€å¿ƒç­‰å¾…10åˆ†é’Ÿã€‚ï¼ˆå»ºè®®ç™½å¤©ä¿®å¤ï¼Œå¤œé—´èšç„¦æ¨é€ä¸ç¨³å®šï¼‰
 pause
 goto menu
 
 :borecover
 cls
-echo ¿ªÊ¼»Ö¸´µçÔ´Ñ¡ÏîÉèÖÃ£¨²¿·Ö»úĞÍ¿ÉÄÜÎŞĞ§£¬ÀıÈçSurface£©
-echo »Ö¸´½ÚÄÜÄ£Ê½
+echo å¼€å§‹æ¢å¤ç”µæºé€‰é¡¹è®¾ç½®ï¼ˆéƒ¨åˆ†æœºå‹å¯èƒ½æ— æ•ˆï¼Œä¾‹å¦‚Surfaceï¼‰
+echo æ¢å¤èŠ‚èƒ½æ¨¡å¼
 powercfg -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a
-echo »Ö¸´Æ½ºâÄ£Ê½
+echo æ¢å¤å¹³è¡¡æ¨¡å¼
 powercfg -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e
-echo »Ö¸´¸ßĞÔÄÜÄ£Ê½
+echo æ¢å¤é«˜æ€§èƒ½æ¨¡å¼
 powercfg -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-echo »Ö¸´×¿Ô½ĞÔÄÜÄ£Ê½£¨½öÏŞÓÚWin10/11×¨Òµ°æÒÔÉÏ£©
+echo æ¢å¤å“è¶Šæ€§èƒ½æ¨¡å¼ï¼ˆä»…é™äºWin10/11ä¸“ä¸šç‰ˆä»¥ä¸Šï¼‰
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
 
-echo ÉèÖÃµçÔ´Ñ¡ÏîÎª¸ßĞÔÄÜ
+echo è®¾ç½®ç”µæºé€‰é¡¹ä¸ºé«˜æ€§èƒ½
 powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-echo µçÔ´Ñ¡Ïî»Ö¸´Íê³É
+echo ç”µæºé€‰é¡¹æ¢å¤å®Œæˆ
 pause
 goto menu
 
 :wu0205
 cls
-echo ¿ªÊ¼ĞŞ¸´Windows UpdateÒì³£ÎÊÌâ
-echo ÅäÖÃÏµÍ³·şÎñ
+echo å¼€å§‹ä¿®å¤Windows Updateå¼‚å¸¸é—®é¢˜
+echo é…ç½®ç³»ç»ŸæœåŠ¡
 SC config wuauserv start= auto
 SC config bits start= auto
 SC config cryptsvc start= auto
 SC config trustedinstaller start= auto
 SC config wuauserv type=share
-echo ÁÙÊ±Í£Ö¹ÏµÍ³·şÎñ
+echo ä¸´æ—¶åœæ­¢ç³»ç»ŸæœåŠ¡
 net stop wuauserv
 net stop cryptSvc
 net stop bits
 net stop msiserver
-echo ±¸·İÏµÍ³²¹¶¡Â·¾¶²¢É¾³ı¾ÉµÄ±¸·İ
+echo å¤‡ä»½ç³»ç»Ÿè¡¥ä¸è·¯å¾„å¹¶åˆ é™¤æ—§çš„å¤‡ä»½
 rd /s /q C:\Windows\SoftwareDistribution.old
 ren C:\Windows\SoftwareDistribution SoftwareDistribution.old
-echo ÖØÆôÏµÍ³·şÎñ
+echo é‡å¯ç³»ç»ŸæœåŠ¡
 net start wuauserv
 net start cryptSvc
 net start bits
 net start msiserver
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôµçÄÔÖØÊÔ¸üĞÂ
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯ç”µè„‘é‡è¯•æ›´æ–°
 pause
 goto menu
 
 :taskmgrexeErr
 cls
-echo ¿ªÊ¼ĞŞ¸´taskmgr.exe¹ØÁªÎÊÌâ
-echo ÖØ½¨×¢²á±íÖµ
+echo å¼€å§‹ä¿®å¤taskmgr.exeå…³è”é—®é¢˜
+echo é‡å»ºæ³¨å†Œè¡¨å€¼
 
 reg add "HKCR\Folder\shell\open" /v "MultiSelectModel" /d "Document" /f >nul
 reg add "HKCR\Folder\shell\open\command" /ve /t REG_EXPAND_SZ /d "%%SystemRoot%%\Explorer.exe" /f >nul
 reg add "HKCR\Folder\shell\open\command" /v "DelegateExecute" /f >nul
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôµçÄÔ
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯ç”µè„‘
 pause
 goto menu
 
 :exeError
 cls
-echo ¿ªÊ¼ĞŞ¸´exe¹ØÁªÎÊÌâ
-echo ÖØ½¨×¢²á±íÖµ
+echo å¼€å§‹ä¿®å¤exeå…³è”é—®é¢˜
+echo é‡å»ºæ³¨å†Œè¡¨å€¼
 timeout /t 1 /nobreak > NUL
 reg add "HKCR\.exe" /ve /d "exefile" /f
 reg add "HKCR\.exe" /v "Content Type" /d "application/x-msdownload" /f
@@ -1946,20 +1946,20 @@ reg add "HKCR\exefile\shellex\PropertySheetHandlers\{B41DB860-64E4-11D2-9906-E49
 reg add "HKCR\exefile\shellex\PropertySheetHandlers\{B41DB860-8EE4-11D2-9906-E49FADC173CA}" /ve /d "" /f
 
 
-echo ÖØ½¨exe¹ØÁª
+echo é‡å»ºexeå…³è”
 assoc .exe=exefile
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôµçÄÔ
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯ç”µè„‘
 pause
 goto menu
 
 :uautorunon
 cls
-echo ¸üĞÂ×¢²á±íĞÅÏ¢
+echo æ›´æ–°æ³¨å†Œè¡¨ä¿¡æ¯
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 149 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 149 /f
 reg add "HKLM\SYSTEM\ControlSet001\Services\cdrom" /v "Autorun" /t REG_DWORD /d 1 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\cdrom" /v "Autorun" /t REG_DWORD /d 1 /f
-echo ÉèÖÃÍê³É£¬¿ÉÒÆ¶¯Éè±¸×Ô¶¯ÔËĞĞÒÑ¿ªÆô
+echo è®¾ç½®å®Œæˆï¼Œå¯ç§»åŠ¨è®¾å¤‡è‡ªåŠ¨è¿è¡Œå·²å¼€å¯
 pause
 goto menu
 
@@ -1967,114 +1967,114 @@ goto menu
 
 :uautorunoff
 cls
-echo ¸üĞÂ×¢²á±íĞÅÏ¢
+echo æ›´æ–°æ³¨å†Œè¡¨ä¿¡æ¯
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 255 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 255 /f
 reg add "HKLM\SYSTEM\ControlSet001\Services\cdrom" /v "Autorun" /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\cdrom" /v "Autorun" /t REG_DWORD /d 0 /f
-echo ÉèÖÃÍê³É£¬¿ÉÒÆ¶¯Éè±¸×Ô¶¯ÔËĞĞÒÑ¹Ø±Õ
+echo è®¾ç½®å®Œæˆï¼Œå¯ç§»åŠ¨è®¾å¤‡è‡ªåŠ¨è¿è¡Œå·²å…³é—­
 pause
 goto menu
 
 :hibernateon
 cls
 powercfg -h on
-echo ÏµÍ³ĞİÃßÒÑ¿ªÆô
+echo ç³»ç»Ÿä¼‘çœ å·²å¼€å¯
 pause
 goto menu
 
 :hibernateoff
 cls
 powercfg -h off
-echo ÏµÍ³ĞİÃßÒÑ¹Ø±Õ
+echo ç³»ç»Ÿä¼‘çœ å·²å…³é—­
 pause
 goto menu
 
 :deactivate
 cls
-echo ¾¯¸æ£ºÊ¹ÓÃ´Ë¹¦ÄÜ½«»áµ¼ÖÂWindows±äÎªÎ´¼¤»î×´Ì¬£¡
-echo Ò»°ãÇé¿öÏÂ£¬´Ë¹¦ÄÜ½öÔÚ³öÏÖ¼¤»îÒì³£»òÕßÃÜÔ¿Òì³£µÄÇé¿öÏÂÊ¹ÓÃ
-echo Èç¹ûÄú²»ÖªµÀÄúÔÚ×öÊ²Ã´£¬ÇëÍË³ö³ÌĞò»òÕßÊäÈëÆäËû²¢È·ÈÏ»Øµ½Ö÷Ò³Ãæ
-echo Èç¹ûÄúÃ÷°×²¢ÄÜ³Ğµ£²Ù×÷ºó¹û£¬ÇëÔÚÏÂ·½ÊäÈë Confirm À´¼ÌĞø²Ù×÷£¨Çø·Ö´óĞ¡Ğ´£©
+echo è­¦å‘Šï¼šä½¿ç”¨æ­¤åŠŸèƒ½å°†ä¼šå¯¼è‡´Windowså˜ä¸ºæœªæ¿€æ´»çŠ¶æ€ï¼
+echo ä¸€èˆ¬æƒ…å†µä¸‹ï¼Œæ­¤åŠŸèƒ½ä»…åœ¨å‡ºç°æ¿€æ´»å¼‚å¸¸æˆ–è€…å¯†é’¥å¼‚å¸¸çš„æƒ…å†µä¸‹ä½¿ç”¨
+echo å¦‚æœæ‚¨ä¸çŸ¥é“æ‚¨åœ¨åšä»€ä¹ˆï¼Œè¯·é€€å‡ºç¨‹åºæˆ–è€…è¾“å…¥å…¶ä»–å¹¶ç¡®è®¤å›åˆ°ä¸»é¡µé¢
+echo å¦‚æœæ‚¨æ˜ç™½å¹¶èƒ½æ‰¿æ‹…æ“ä½œåæœï¼Œè¯·åœ¨ä¸‹æ–¹è¾“å…¥ Confirm æ¥ç»§ç»­æ“ä½œï¼ˆåŒºåˆ†å¤§å°å†™ï¼‰
 timeout /t 3 /nobreak > NUL
-set /p input=ÇëÈ·ÈÏÄúµÄ²Ù×÷£¨Çø·Ö´óĞ¡Ğ´£©£º
+set /p input=è¯·ç¡®è®¤æ‚¨çš„æ“ä½œï¼ˆåŒºåˆ†å¤§å°å†™ï¼‰ï¼š
 if %input% equ Confirm goto deaconfirm
-echo È·ÈÏ²Ù×÷Òì³££¬ÒÑÈ¡Ïû²Ù×÷
+echo ç¡®è®¤æ“ä½œå¼‚å¸¸ï¼Œå·²å–æ¶ˆæ“ä½œ
 pause
 goto menu
 :deaconfirm
-echo Ğ¶ÔØWindowsÃÜÔ¿
+echo å¸è½½Windowså¯†é’¥
 slmgr /upk
-echo ÖØÖÃWindowsÆÀ¹ÀÆÚ
+echo é‡ç½®Windowsè¯„ä¼°æœŸ
 slmgr /rearm
-echo ÖØÖÃÍê³É£¬WindowsÒÑ±äÎªÎ´¼¤»î×´Ì¬£¬ÇëÖØÆô¼ÆËã»ú
+echo é‡ç½®å®Œæˆï¼ŒWindowså·²å˜ä¸ºæœªæ¿€æ´»çŠ¶æ€ï¼Œè¯·é‡å¯è®¡ç®—æœº
 pause
 goto menu
 
 :gpeditfix
 cls
-echo ¿ªÊ¼ĞŞ¸´×é²ßÂÔÎÊÌâ
+echo å¼€å§‹ä¿®å¤ç»„ç­–ç•¥é—®é¢˜
 pushd "%~dp0"
 dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum >List.txt
 dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum >>List.txt
 for /f %%i in ('findstr /i . List.txt 2^>nul') do dism /online /norestart /add-package:"C:\Windows\servicing\Packages\%%i"
-echo Íê³ÉĞŞ¸´£¬ÇëÖØÆô¼ÆËã»ú
+echo å®Œæˆä¿®å¤ï¼Œè¯·é‡å¯è®¡ç®—æœº
 pause
 goto menu
 
 :junkclean
 cls
-echo ¿ªÊ¼À¬»øÇåÀí½ø³Ì
-echo ÏµÍ³ÅÌÉ¨Ãè
+echo å¼€å§‹åƒåœ¾æ¸…ç†è¿›ç¨‹
+echo ç³»ç»Ÿç›˜æ‰«æ
 echo.
 
-echo ÇåÀí×Ô¶¯¸üĞÂ²¹¶¡ÈÕÖ¾
+echo æ¸…ç†è‡ªåŠ¨æ›´æ–°è¡¥ä¸æ—¥å¿—
 del /f /s /q "%windir%\SoftwareDistribution\DataStore\Logs\*.log"
 del /f /s /q "%windir%\SoftwareDistribution\DataStore\Logs\*.jrs"
 echo.
 
-echo ÇåÀí´íÎó±¨¸æ
+echo æ¸…ç†é”™è¯¯æŠ¥å‘Š
 del /f /s /q "%ProgramData%\Microsoft\Windows\WER\ReportArchive\*.wer"
 del /f /q "%ProgramData%\Microsoft\Windows\WER\ReportArchive\*.*"
 echo.
 
-echo ÇåÀíWindows SearchÈÕÖ¾ÎÄ¼ş
+echo æ¸…ç†Windows Searchæ—¥å¿—æ–‡ä»¶
 del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jcp"
 del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jtx"
 del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jr"
 echo.
 
-echo ÇåÀíIISÈÕÖ¾ÎÄ¼ş
+echo æ¸…ç†IISæ—¥å¿—æ–‡ä»¶
 del /f /s /q "%windir%\System32\LogFiles\Fax\Incoming\*.*"
 del /f /s /q "%windir%\System32\LogFiles\Fax\outcoming\*.*"
 del /f /s /q "%windir%\System32\LogFiles\setupcln\setupact.log"
 del /f /s /q "%windir%\System32\LogFiles\setupcln\setuperr.log"
 echo.
 
-echo ÇåÀíWindowsÉèÖÃÈÕÖ¾ÎÄ¼ş
+echo æ¸…ç†Windowsè®¾ç½®æ—¥å¿—æ–‡ä»¶
 del /f /s /q "%windir%\setupact.log"
 del /f /s /q "%windir%\setuperr.log"
 echo.
 
-echo ÇåÀí.Net FrameworkÈÕÖ¾
+echo æ¸…ç†.Net Frameworkæ—¥å¿—
 del /f /s /q "%windir%\Microsoft.NET\Framework\*.log"
 echo.
 
-echo ÇåÀíWindowsÈÕÖ¾
+echo æ¸…ç†Windowsæ—¥å¿—
 del /f /s /q "%windir%\*.log"
 echo.
 
-echo ÇåÀíÏµÍ³ÁÙÊ±ÎÄ¼ş
+echo æ¸…ç†ç³»ç»Ÿä¸´æ—¶æ–‡ä»¶
 rd /s /q %windir%\temp & md %windir%\temp
 del /f /s /q "%userprofile%\AppData\Local\Temp\*.*"
 del /f /s /q "%userprofile%\Local Settings\Temp\*.*"
 echo.
 
-echo ÇåÀí±ÀÀ£×ª´¢ÎÄ¼ş
+echo æ¸…ç†å´©æºƒè½¬å‚¨æ–‡ä»¶
 del /f /q %userprofile%\AppData\Local\CrashDumps\*.*
 echo.
 
-echo ÇåÀíCookies
+echo æ¸…ç†Cookies
 del /f /q %userprofile%\cookies\*.*
 echo Recent & Jump list
 del /f /q %userprofile%\recent\*.*
@@ -2082,40 +2082,40 @@ del /f /s /q "%userprofile%\recent\*.*"
 del /f /s /q "%AppData%\Microsoft\Windows\Recent\CustomDestinations\*.*"
 echo.
 
-echo ÇåÀíÁÙÊ±InternetÎÄ¼ş
+echo æ¸…ç†ä¸´æ—¶Internetæ–‡ä»¶
 del /f /s /q "%userprofile%\Local Settings\Temporary Internet Files\*.*"
 del /f /s /q "%userprofile%\AppData\Local\Temporary Internet Files\*.*"
 echo.
 
-echo ÇåÀí×ÖÌå»º´æ
+echo æ¸…ç†å­—ä½“ç¼“å­˜
 del /f /s /q "%windir%\ServiceProfiles\LocalService\AppData\Local\FontCache\*.dat"
 echo.
 
-echo ÇåÀíCryptoAPIÖ¤Êé»º´æ
+echo æ¸…ç†CryptoAPIè¯ä¹¦ç¼“å­˜
 del /f /s /q "%userprofile%\AppData\LocalLow\Microsoft\CryptnetUrlCache\Content\*.*"
 echo.
 
-echo ÇåÀíÔ¤¼ÓÔØÎÄ¼ş
+echo æ¸…ç†é¢„åŠ è½½æ–‡ä»¶
 del /f /s /q "%windir%\Prefetch\*.pf"
 echo.
 
-echo ÇåÀí×Ô¶¯¸üĞÂ²¹¶¡ÎÄ¼ş
+echo æ¸…ç†è‡ªåŠ¨æ›´æ–°è¡¥ä¸æ–‡ä»¶
 del /f /s /q "%windir%\SoftwareDistribution\Download\*.*"
 echo.
 
-echo ÇåÀíËõÂÔÍ¼»º´æ
+echo æ¸…ç†ç¼©ç•¥å›¾ç¼“å­˜
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\Explorer\*.db"
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete\*.tmp"
 echo.
 
-echo ÇåÀíMicrosoft Edge»º´æ
+echo æ¸…ç†Microsoft Edgeç¼“å­˜
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Extension State\*.*"
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Session Storage\*.*"
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\JumpListIconsRecentClosed\*.tmp"
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Cache\*.*"
 echo.
 
-echo ÇåÀíInternet Explorer»º´æ
+echo æ¸…ç†Internet Explorerç¼“å­˜
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Internet Explorer\DOMStore\*.*"
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\container.dat"
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\deprecated.cookie"
@@ -2123,7 +2123,7 @@ del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCache\IE\*.*"
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\WebCache\*.*"
 echo.
 
-echo ÏµÍ³ÅÌÕûÌåÇåÀí
+echo ç³»ç»Ÿç›˜æ•´ä½“æ¸…ç†
 del /f /s /q %systemdrive%\*.tmp
 del /f /s /q %systemdrive%\*._mp
 del /f /s /q %systemdrive%\*.log
@@ -2135,14 +2135,14 @@ del /f /s /q %windir%\*.bak
 del /f /s /q %windir%\prefetch\*.*
 echo.
 
-echo ÇåÀíÍê³É
+echo æ¸…ç†å®Œæˆ
 pause
 goto menu
 
 :winbutton
 cls
-echo ¿ªÊ¼ĞŞ¸´×ÀÃæÍ¼±ê¼ä¾àÒì³£¡¢´°¿ÚÓÒÉÏ½Ç¹Ø±Õ×î´ó»¯×îĞ¡»¯°´Å¥Òì³£ÎÊÌâ
-echo ĞŞ¸´×¢²á±íÒì³£ĞÅÏ¢(»¹Ô­Ä¬ÈÏÖµ)
+echo å¼€å§‹ä¿®å¤æ¡Œé¢å›¾æ ‡é—´è·å¼‚å¸¸ã€çª—å£å³ä¸Šè§’å…³é—­æœ€å¤§åŒ–æœ€å°åŒ–æŒ‰é’®å¼‚å¸¸é—®é¢˜
+echo ä¿®å¤æ³¨å†Œè¡¨å¼‚å¸¸ä¿¡æ¯(è¿˜åŸé»˜è®¤å€¼)
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "BorderWidth" /d "-15" /f >nul
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "CaptionHeight" /d "-330" /f >nul
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "CaptionWidth" /d "-330" /f >nul
@@ -2158,15 +2158,15 @@ reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "PaddedBorderWidth" /d "-6
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "IconSpacing" /d "-1125" /f >nul
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "IconVerticalSpacing" /d "-1125" /f >nul
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "MinAnimate" /d "1" /f >nul
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôµçÄÔ
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯ç”µè„‘
 pause
 goto menu
 
 :msstorefix
 cls
-echo ¿ªÊ¼ĞŞ¸´Î¢ÈíÉÌµêÒì³£ÎÊÌâ
-echo Ç°ÖÃĞŞ¸´£º×¢²á±íĞŞ¸´
-echo ĞŞ¸´SSL3.0Ñ¡Ïî
+echo å¼€å§‹ä¿®å¤å¾®è½¯å•†åº—å¼‚å¸¸é—®é¢˜
+echo å‰ç½®ä¿®å¤ï¼šæ³¨å†Œè¡¨ä¿®å¤
+echo ä¿®å¤SSL3.0é€‰é¡¹
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "CheckedValue" /t REG_DWORD /d 32 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "HelpID" /d "iexplore.hlp#50129" /f >nul
@@ -2179,10 +2179,10 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "ValueName" /d "SecureProtocols" /f >nul
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
 
-echo ĞŞ¸´TLS1.0Ñ¡Ïî
+echo ä¿®å¤TLS1.0é€‰é¡¹
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "CheckedValue" /t REG_DWORD /d 128 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "DefaultValue" /t REG_DWORD /d 128 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2195,10 +2195,10 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "ValueName" /d "SecureProtocols" /f >nul
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
 
-echo ĞŞ¸´TLS1.1Ñ¡Ïî
+echo ä¿®å¤TLS1.1é€‰é¡¹
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "CheckedValue" /t REG_DWORD /d 512 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "DefaultValue" /t REG_DWORD /d 512 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2212,10 +2212,10 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "ValueName" /d "SecureProtocols" /f >nul
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
 
-echo ĞŞ¸´TLS1.2Ñ¡Ïî
+echo ä¿®å¤TLS1.2é€‰é¡¹
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "CheckedValue" /t REG_DWORD /d 2048 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "DefaultValue" /t REG_DWORD /d 2048 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2229,10 +2229,10 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "ValueName" /d "SecureProtocols" /f >nul
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
 
-echo ĞŞ¸´TLS1.3Ñ¡Ïî
+echo ä¿®å¤TLS1.3é€‰é¡¹
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "CheckedValue" /t REG_DWORD /d 8192 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2246,46 +2246,46 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "ValueName" /d "SecureProtocols" /f >nul
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
-echo Ç°ÖÃĞŞ¸´£ºÖØÖÃIE
+echo å‰ç½®ä¿®å¤ï¼šé‡ç½®IE
 del /f /q "%temp%\mb" >nul 2>nul
-echo Miniblink»º´æÇåÀí³É¹¦
+echo Miniblinkç¼“å­˜æ¸…ç†æˆåŠŸ
 Rundll32 InetCpl.cpl,ClearMyTracksByProcess 255
-echo IE»º´æÇåÀí³É¹¦
+echo IEç¼“å­˜æ¸…ç†æˆåŠŸ
 RunDll32.exe InetCpl.cpl,ResetIEtoDefaults
-echo IEÒÑÖØÖÃ
+echo IEå·²é‡ç½®
 regsvr32 /s jscript.dll
 regsvr32 /s vbscript.dll
-echo IE×é¼şÒÑĞŞ¸´
-echo Çå¿ÕIE´úÀíÉèÖÃ
+echo IEç»„ä»¶å·²ä¿®å¤
+echo æ¸…ç©ºIEä»£ç†è®¾ç½®
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /d "" /f
 echo.
-echo Ç°ÖÃĞŞ¸´£ºÖØÖÃLSPÉèÖÃ
+echo å‰ç½®ä¿®å¤ï¼šé‡ç½®LSPè®¾ç½®
 netsh winsock reset 
-echo ĞŞ¸ÄDNSÎªÎ¢ÈíDNS
+echo ä¿®æ”¹DNSä¸ºå¾®è½¯DNS
 call:dnssetting 4.2.2.2 223.5.5.5
-echo ÔÙ´ÎÖØÖÃLSPÉèÖÃ
+echo å†æ¬¡é‡ç½®LSPè®¾ç½®
 netsh winsock reset 
-echo ÖØĞÂ²¿ÊğÎ¢ÈíÉÌµê
+echo é‡æ–°éƒ¨ç½²å¾®è½¯å•†åº—
 powershell get-appxpackage *store* | remove-Appxpackage 
 powershell add-appxpackage -register "C:\Program Files\WindowsApps\*Store*\AppxManifest.xml" -disabledevelopmentmode 
-echo ÔÚ½ÓÏÂÀ´µÄµ¯´°£¨InternetÊôĞÔ£©ÖĞ£¬Çëµã»÷¸ß¼¶Ñ¡Ïî¿¨£¬¹´Ñ¡ÈçÏÂÑ¡Ïî£º
-echo ¡°Ê¹ÓÃSSL3.0¡±£¨¿ÉÑ¡£©¡¢¡°Ê¹ÓÃTLS1.0¡±¡¢¡°Ê¹ÓÃTLS1.1¡±£¨¿ÉÑ¡£©¡¢¡°Ê¹ÓÃTLS1.2¡±¡¢¡°Ê¹ÓÃTLS1.3¡±
+echo åœ¨æ¥ä¸‹æ¥çš„å¼¹çª—ï¼ˆInternetå±æ€§ï¼‰ä¸­ï¼Œè¯·ç‚¹å‡»é«˜çº§é€‰é¡¹å¡ï¼Œå‹¾é€‰å¦‚ä¸‹é€‰é¡¹ï¼š
+echo â€œä½¿ç”¨SSL3.0â€ï¼ˆå¯é€‰ï¼‰ã€â€œä½¿ç”¨TLS1.0â€ã€â€œä½¿ç”¨TLS1.1â€ï¼ˆå¯é€‰ï¼‰ã€â€œä½¿ç”¨TLS1.2â€ã€â€œä½¿ç”¨TLS1.3â€
 timeout /t 3 /nobreak > NUL
 start inetcpl.cpl
 timeout /t 5 /nobreak > NUL
-echo ¹´Ñ¡Íê³Éºó£¬µã»÷È·¶¨
+echo å‹¾é€‰å®Œæˆåï¼Œç‚¹å‡»ç¡®å®š
 timeout /t 3 /nobreak > NUL
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôµçÄÔºóÔÙ´Î´ò¿ªÎ¢ÈíÉÌ³Ç
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯ç”µè„‘åå†æ¬¡æ‰“å¼€å¾®è½¯å•†åŸ
 pause
 goto menu
 
 :rightadmadd
 cls
-echo Ìí¼ÓÓÒ¼ü²Ëµ¥£¨¹ÜÀíÔ±È¡µÃËùÓĞÈ¨£©
-echo ¸üĞÂ×¢²á±íĞÅÏ¢
+echo æ·»åŠ å³é”®èœå•ï¼ˆç®¡ç†å‘˜å–å¾—æ‰€æœ‰æƒï¼‰
+echo æ›´æ–°æ³¨å†Œè¡¨ä¿¡æ¯
 reg add "HKCR\*\shell\runas" /ve /d "Grant Administrator Access" /f
 reg add "HKCR\*\shell\runas" /v "NoWorkingDirectory" /d "" /f
 reg add "HKCR\*\shell\runas\command" /ve /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
@@ -2298,207 +2298,207 @@ reg add "HKCR\Directory\shell\runas" /ve /d "Grant Administrator Access" /f
 reg add "HKCR\Directory\shell\runas" /v "NoWorkingDirectory" /d "" /f
 reg add "HKCR\Directory\shell\runas\command" /ve /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
 reg add "HKCR\Directory\shell\runas\command" /v "IsolatedCommand" /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
-echo ÓÒ¼ü²Ëµ¥Ìí¼ÓÍê±Ï£¨¹ÜÀíÔ±È¡µÃËùÓĞÈ¨£©
+echo å³é”®èœå•æ·»åŠ å®Œæ¯•ï¼ˆç®¡ç†å‘˜å–å¾—æ‰€æœ‰æƒï¼‰
 pause
 goto menu
 
 :rightadmdel
 cls
-echo È¡ÏûÓÒ¼ü²Ëµ¥£¨¹ÜÀíÔ±È¡µÃËùÓĞÈ¨£©
-echo ¸üĞÂ×¢²á±íĞÅÏ¢
+echo å–æ¶ˆå³é”®èœå•ï¼ˆç®¡ç†å‘˜å–å¾—æ‰€æœ‰æƒï¼‰
+echo æ›´æ–°æ³¨å†Œè¡¨ä¿¡æ¯
 reg delete "HKEY_CLASSES_ROOT\*\shell\runas" /f
 reg delete "HKEY_CLASSES_ROOT\exefile\shell\runas2" /f
 reg delete "HKEY_CLASSES_ROOT\Directory\shell\runas" /f
-echo ÒÑÒÆ³ıÓÒ¼ü²Ëµ¥£¨¹ÜÀíÔ±È¡µÃËùÓĞÈ¨£©
+echo å·²ç§»é™¤å³é”®èœå•ï¼ˆç®¡ç†å‘˜å–å¾—æ‰€æœ‰æƒï¼‰
 pause
 goto menu
 
 :iemainpagefix
 cls
-echo ¿ªÊ¼ĞŞ¸´IEÖ÷Ò³
+echo å¼€å§‹ä¿®å¤IEä¸»é¡µ
 reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Start Page" /d "about:start" /f
 reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Default_Page_URL" /d "https://www.msn.cn/zh-cn" /f
 reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Search Page" /d "http://go.microsoft.com/fwlink/?LinkId=54896" /f
 reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Start Page" /d "http://go.microsoft.com/fwlink/?LinkId=625115" /f
-echo ĞŞ¸´Íê³É
+echo ä¿®å¤å®Œæˆ
 pause
 goto menu
 
 :win7aero
 cls
-echo ÉèÖÃ×¢²á±íĞÅÏ¢£¬Ç¿ÖÆ¿ªÆôAero
+echo è®¾ç½®æ³¨å†Œè¡¨ä¿¡æ¯ï¼Œå¼ºåˆ¶å¼€å¯Aero
 reg add "HKCU\Software\Microsoft\Windows\DWM" /v Composition /t reg_dword /d 00000001 /f
 reg add "HKCU\Software\Microsoft\Windows\DWM" /v CompositionPolicy /t reg_dword /d 00000002 /f
-echo ·şÎñÖØÆô
+echo æœåŠ¡é‡å¯
 net stop uxsms
 net start uxsms
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôµçÄÔ¿ªÆôAeroĞ§¹û
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯ç”µè„‘å¼€å¯Aeroæ•ˆæœ
 pause
 goto menu
 
 :vacfix
 cls
-echo Ç°ÖÃĞŞ¸´£ºÖØÖÃÍøÂç·şÎñ
+echo å‰ç½®ä¿®å¤ï¼šé‡ç½®ç½‘ç»œæœåŠ¡
 netsh winsock reset
-echo Ç°ÖÃĞŞ¸´£ºÇåÀíDNS»º´æ
+echo å‰ç½®ä¿®å¤ï¼šæ¸…ç†DNSç¼“å­˜
 ipconfig /flushdns
 
 goto steam
 
 :steam
-echo ÕıÔÚ¼ì²âSteamÊÇ·ñ¿ªÆô......
+echo æ­£åœ¨æ£€æµ‹Steamæ˜¯å¦å¼€å¯......
 tasklist | find /I "Steam.exe"
 if errorlevel 1 goto steamchina
 if not errorlevel 1 goto startvacfix
 
 :steamchina
-echo ÕıÔÚ¼ì²â¹ú·şÆô¶¯Æ÷ÊÇ·ñ¿ªÆô......
+echo æ­£åœ¨æ£€æµ‹å›½æœå¯åŠ¨å™¨æ˜¯å¦å¼€å¯......
 tasklist | find /I "steamchina.exe"
 if errorlevel 1 goto stopsteam
 if not errorlevel 1 goto startvacfix
 
 :stopsteam
-echo SteamºÍ¹ú·şÆô¶¯Æ÷¾ùÎ´¿ªÆô
+echo Steamå’Œå›½æœå¯åŠ¨å™¨å‡æœªå¼€å¯
 goto startvacfix
 
 :killsteam
-echo SteamÒÑ¿ªÆô
-echo ÕıÔÚÇ¿ÖÆ¹Ø±Õ
+echo Steamå·²å¼€å¯
+echo æ­£åœ¨å¼ºåˆ¶å…³é—­
 taskkill /F /IM Steam.exe
-echo ÒÑÇ¿ÖÆ¹Ø±Õ
+echo å·²å¼ºåˆ¶å…³é—­
 goto startvacfix
 
 :killsteamchina
-echo SteamÒÑ¿ªÆô
-echo ÕıÔÚÇ¿ÖÆ¹Ø±Õ
+echo Steamå·²å¼€å¯
+echo æ­£åœ¨å¼ºåˆ¶å…³é—­
 taskkill /F /IM steamchina.exe
-echo ÒÑÇ¿ÖÆ¹Ø±Õ
+echo å·²å¼ºåˆ¶å…³é—­
 goto startvacfix
 
 :startvacfix
-echo ¿ªÊ¼½â¾öVACÆÁ±Î
+echo å¼€å§‹è§£å†³VACå±è”½
 
-echo ¿ªÆô Network Connections
+echo å¼€å¯ Network Connections
 sc config Netman start= AUTO
 sc start Netman
 
-echo ¿ªÆô Remote Access Connection Manager
+echo å¼€å¯ Remote Access Connection Manager
 sc config RasMan start= AUTO
 sc start RasMan
 
-echo ¿ªÆô Telephony
+echo å¼€å¯ Telephony
 sc config TapiSrv start= AUTO
 sc start TapiSrv
 
-echo ¿ªÆô Windows Firewall
+echo å¼€å¯ Windows Firewall
 sc config MpsSvc start= AUTO
 sc start MpsSvc
 netsh advfirewall set allprofiles state on
 
-echo »Ö¸´ Data Execution Prevention Æô¶¯ÉèÖÃÎªÄ¬ÈÏÖµ
+echo æ¢å¤ Data Execution Prevention å¯åŠ¨è®¾ç½®ä¸ºé»˜è®¤å€¼
 bcdedit /deletevalue nointegritychecks
 bcdedit /deletevalue loadoptions
 bcdedit /debug off
 bcdedit /deletevalue nx
 
-echo ÕıÔÚ»ñÈ¡ÄãµÄSteam»ò¹ú·şÆô¶¯Æ÷Ä¿Â¼
+echo æ­£åœ¨è·å–ä½ çš„Steamæˆ–å›½æœå¯åŠ¨å™¨ç›®å½•
 for /f "tokens=1,2,* " %%i in ('REG QUERY "HKEY_CURRENT_USER\SOFTWARE\Valve\Steam" ^| find /i "SteamPath"') do set "SteamPath=%%k" 
 if "%SteamPath%" NEQ "0x1" (goto Autosteampath) else (goto Manualerr)
 
 :Autosteampath
-echo Steam»ò¹ú·şÆô¶¯Æ÷Ä¿Â¼Îª%SteamPath% 
+echo Steamæˆ–å›½æœå¯åŠ¨å™¨ç›®å½•ä¸º%SteamPath% 
 
-echo ¿ªÊ¼°²×°Steam Services
+echo å¼€å§‹å®‰è£…Steam Services
 cd /d "%SteamPath%\bin"
 steamservice  /install
 ping -n 3 127.0.0.1>nul
-echo ¿ªÊ¼ĞŞ¸´Steam Services
+echo å¼€å§‹ä¿®å¤Steam Services
 steamservice  /repair
 ping -n 3 127.0.0.1>nul
 echo .
-echo ĞŞ¸´Steam ServicesÍê±Ï
-echo ³öÏÖ"Steam client service installation complete"ÇÒÎŞÈÎºÎ"Fail"×ÖÑù
-echo (Èç"Add firewall exception failed for steamservice.exe"³öÏÖ)²Å¿ÉÒÔ½áÊø£¬
-echo ·ñÔòÇë¼ì²éÄúµÄ·À»ğÇ½ÉèÖÃ(¹Ø±Õ¡°²»ÔÊĞíÀıÍâ¡±Ñ¡Ïî)
+echo ä¿®å¤Steam Serviceså®Œæ¯•
+echo å‡ºç°"Steam client service installation complete"ä¸”æ— ä»»ä½•"Fail"å­—æ ·
+echo (å¦‚"Add firewall exception failed for steamservice.exe"å‡ºç°)æ‰å¯ä»¥ç»“æŸï¼Œ
+echo å¦åˆ™è¯·æ£€æŸ¥æ‚¨çš„é˜²ç«å¢™è®¾ç½®(å…³é—­â€œä¸å…è®¸ä¾‹å¤–â€é€‰é¡¹)
 
-echo Æô¶¯Steam Services·şÎñ
+echo å¯åŠ¨Steam ServicesæœåŠ¡
 sc config "Steam Client Service" start= AUTO
 sc start "Steam Client Service"
 
-echo ĞŞ¸´Íê³É£¬ÇëÖØÆôSteam
+echo ä¿®å¤å®Œæˆï¼Œè¯·é‡å¯Steam
 pause
 goto menu
 
 :Manualerr
-echo »ñÈ¡Â·¾¶Òì³££¬ĞŞ¸´ÖÕÖ¹£¬ÇëÖØĞÂ°²×°Steam
+echo è·å–è·¯å¾„å¼‚å¸¸ï¼Œä¿®å¤ç»ˆæ­¢ï¼Œè¯·é‡æ–°å®‰è£…Steam
 pause
 goto menu
 
 :fpclean
 cls
-echo ¿ªÊ¼ÇåÀíFlash Player²¥·ÅÆ÷»º´æ
+echo å¼€å§‹æ¸…ç†Flash Playeræ’­æ”¾å™¨ç¼“å­˜
 reg delete "HKCU\Software\Macromedia\FlashPlayer" /f
-echo ÇåÀíÍê³É
+echo æ¸…ç†å®Œæˆ
 pause
 goto menu
 
 :noshortcut
 cls
-echo ĞŞ¸Ä×¢²á±íÉèÖÃ
+echo ä¿®æ”¹æ³¨å†Œè¡¨è®¾ç½®
 reg delete "HKCR\lnkfile" /v "IsShortcut" /f
 reg delete "HKCR\piffile" /v "IsShortcut" /f
 taskkill /im explorer.exe /F
 start explorer.exe
-echo ¿ì½İ·½Ê½Ğ¡¼ıÍ·Çå³ıÍê³É£¬ÍÆ¼öÖØÆô¼ÆËã»ú
+echo å¿«æ·æ–¹å¼å°ç®­å¤´æ¸…é™¤å®Œæˆï¼Œæ¨èé‡å¯è®¡ç®—æœº
 pause
 goto menu
 
 :restoreshortcut
 cls
-echo »¹Ô­×¢²á±íÉèÖÃ
+echo è¿˜åŸæ³¨å†Œè¡¨è®¾ç½®
 reg add "HKCR\lnkfile" /v "IsShortcut" /d "" /f
 reg add "HKCR\piffile" /v "IsShortcut" /d "" /f
 taskkill /im explorer.exe /F
 start explorer.exe
-echo ¿ì½İ·½Ê½Ğ¡¼ıÍ·»Ö¸´Íê³É£¬ÍÆ¼öÖØÆô¼ÆËã»ú
+echo å¿«æ·æ–¹å¼å°ç®­å¤´æ¢å¤å®Œæˆï¼Œæ¨èé‡å¯è®¡ç®—æœº
 pause
 goto menu
 
 :RDclipboard
 cls
-echo ÖØÆôÔ¶³Ì¼ôÌù°å·şÎñ³ÌĞò
+echo é‡å¯è¿œç¨‹å‰ªè´´æ¿æœåŠ¡ç¨‹åº
 taskkill -im rdpclip.exe -f
 start rdpclip.exe
-echo ĞŞ¸´Íê³É
+echo ä¿®å¤å®Œæˆ
 pause
 goto menu
 
 :vmmemstop
 cls
-echo Í£Ö¹vmmem·şÎñ
+echo åœæ­¢vmmemæœåŠ¡
 sc stop HvHost
-echo Íê³É
+echo å®Œæˆ
 pause
 goto menu
 
 :deltabletpc
 cls
-echo ¿ªÊ¼É¾³ıTabletPC×é¼ş
+echo å¼€å§‹åˆ é™¤TabletPCç»„ä»¶
 dism /NoRestart /Quiet /Online /Disable-Feature /FeatureName:"TabletPCOC"
-echo Íê³É£¬ÈçĞèÖØĞÂÆôÓÃ£¬Çë×ªµ½¡°ÆôÓÃ»ò¹Ø±ÕWindows¹¦ÄÜ¡±Ãæ°åÖĞÔÙ´Î¹´Ñ¡ÆôÓÃ
+echo å®Œæˆï¼Œå¦‚éœ€é‡æ–°å¯ç”¨ï¼Œè¯·è½¬åˆ°â€œå¯ç”¨æˆ–å…³é—­WindowsåŠŸèƒ½â€é¢æ¿ä¸­å†æ¬¡å‹¾é€‰å¯ç”¨
 pause
 goto menu
 
 :notepadsaveencoder
 cls
-echo ¼ÇÊÂ±¾³£¼û±àÂë¸ñÊ½£º
-echo 0. ·µ»ØÖ÷²Ëµ¥
-echo 1. ANSI £¨Win7 Ä¬ÈÏ£©
+echo è®°äº‹æœ¬å¸¸è§ç¼–ç æ ¼å¼ï¼š
+echo 0. è¿”å›ä¸»èœå•
+echo 1. ANSI ï¼ˆWin7 é»˜è®¤ï¼‰
 echo 2. UTF-16 LE
 echo 3. UTF-16 BE
 echo 4. UTF-8 BOM
-echo 5. UTF-8 £¨Win7 ÒÔÉÏÄ¬ÈÏ£©
-set /p encode=ÊäÈëÄãÒªÉèÖÃµÄ±àÂë´úºÅ£º
+echo 5. UTF-8 ï¼ˆWin7 ä»¥ä¸Šé»˜è®¤ï¼‰
+set /p encode=è¾“å…¥ä½ è¦è®¾ç½®çš„ç¼–ç ä»£å·ï¼š
 if %encode% equ 0 goto menu
 if %encode% equ 1 goto npansi
 if %encode% equ 2 goto nputf16le
@@ -2506,43 +2506,43 @@ if %encode% equ 3 goto nputf16be
 if %encode% equ 4 goto nputf8bom
 if %encode% equ 5 goto nputf8
 echo.
-echo ÊäÈëÒì³££¬Çë°´ÈÎÒâ¼ü·µ»ØÑ¡Ôñ²Ëµ¥. . .
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·æŒ‰ä»»æ„é”®è¿”å›é€‰æ‹©èœå•. . .
 echo.
 pause >nul
 goto notepadsaveencoder
 
 :npansi
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 1 /f >nul
-echo ÒÑÉèÖÃ¼ÇÊÂ±¾Ä¬ÈÏ±£´æ±àÂë¸ñÊ½Îª ANSI
+echo å·²è®¾ç½®è®°äº‹æœ¬é»˜è®¤ä¿å­˜ç¼–ç æ ¼å¼ä¸º ANSI
 pause
 goto menu
 
 :nputf16le
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 2 /f >nul
-echo ÒÑÉèÖÃ¼ÇÊÂ±¾Ä¬ÈÏ±£´æ±àÂë¸ñÊ½Îª UTF-16 LE
+echo å·²è®¾ç½®è®°äº‹æœ¬é»˜è®¤ä¿å­˜ç¼–ç æ ¼å¼ä¸º UTF-16 LE
 pause
 goto menu
 
 :nputf16be
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 3 /f >nul
-echo ÒÑÉèÖÃ¼ÇÊÂ±¾Ä¬ÈÏ±£´æ±àÂë¸ñÊ½Îª UTF-16 BE
+echo å·²è®¾ç½®è®°äº‹æœ¬é»˜è®¤ä¿å­˜ç¼–ç æ ¼å¼ä¸º UTF-16 BE
 pause
 goto menu
 
 :nputf8bom
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 4 /f >nul
-echo ÒÑÉèÖÃ¼ÇÊÂ±¾Ä¬ÈÏ±£´æ±àÂë¸ñÊ½Îª UTF-8 BOM
+echo å·²è®¾ç½®è®°äº‹æœ¬é»˜è®¤ä¿å­˜ç¼–ç æ ¼å¼ä¸º UTF-8 BOM
 pause
 goto menu
 
 :nputf8
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 5 /f >nul
-echo ÒÑÉèÖÃ¼ÇÊÂ±¾Ä¬ÈÏ±£´æ±àÂë¸ñÊ½Îª UTF-8
+echo å·²è®¾ç½®è®°äº‹æœ¬é»˜è®¤ä¿å­˜ç¼–ç æ ¼å¼ä¸º UTF-8
 pause
 goto menu
 
 :insiderchannel
-echo ³õÊ¼»¯½Å±¾
+echo åˆå§‹åŒ–è„šæœ¬
 @setlocal DisableDelayedExpansion
 rem @echo off
 set "scriptver=2.6.4"
@@ -2578,7 +2578,7 @@ for /f "tokens=6 delims=[]. " %%i in ('ver') do set build=%%i
 
 if %build% LSS 17763 (
     echo ==========================================
-    echo ´Ë½Å±¾½öÊÊÓÃÓÚ Windows 10 v1809 ¼°¸ü¸ß°æ±¾
+    echo æ­¤è„šæœ¬ä»…é€‚ç”¨äº Windows 10 v1809 åŠæ›´é«˜ç‰ˆæœ¬
     echo ==========================================
     echo.
     pause
@@ -2587,9 +2587,9 @@ if %build% LSS 17763 (
 
 reg query HKU\S-1-5-19 1>nul 2>nul
 if %ERRORLEVEL% equ 0 goto :START_SCRIPT
-rem ´Ë²¿·ÖÈßÓà£¬µ«±£Áô£¬ºóĞøÈ¨ÏŞÑéÖ¤¿É²Î¿¼
+rem æ­¤éƒ¨åˆ†å†—ä½™ï¼Œä½†ä¿ç•™ï¼Œåç»­æƒé™éªŒè¯å¯å‚è€ƒ
 echo ==========================
-echo ´Ë½Å±¾ĞèÒªÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ
+echo æ­¤è„šæœ¬éœ€è¦ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ
 echo ==========================
 echo.
 pause
@@ -2602,18 +2602,18 @@ if %ERRORLEVEL% equ 0 set "FlightSigningEnabled=1"
 
 :CHOICE_MENU
 cls
-title ÀëÏßWindowsÔ¤ÀÀÌåÑé¼Æ»®Ç¿ÖÆ±¨Ãû½Å±¾ v%scriptver% ºº»¯°æ
+title ç¦»çº¿Windowsé¢„è§ˆä½“éªŒè®¡åˆ’å¼ºåˆ¶æŠ¥åè„šæœ¬ v%scriptver% æ±‰åŒ–ç‰ˆ
 set "choice="
 echo.
-echo 0 - Canary Channel ½ğË¿È¸Í¨µÀ£¨×î²»ÎÈ¶¨£¬¸üĞÂ×îÎªÆµ·±£¬´ó¸ÅÂÊÒ»ÌìÒ»¸ü£©
-echo 1 - Dev Channel ¿ª·¢ÕßÍ¨µÀ£¨²»ÎÈ¶¨£¬¸üĞÂ½ÏÎªÆµ·±£¬¼¸ÌìÒ»¸ü£©
-echo 2 - Beta ÇşµÀ ²âÊÔ°æÍ¨µÀ£¨Ïà¶ÔÎÈ¶¨£¬¸üĞÂÏà¶ÔÆµ·±£¬ÖÜ¸ü£©
-echo 3 - Release Preview Channel ·¢²¼Ô¤ÀÀÍ¨µÀ£¨½ÏÎªÎÈ¶¨£¬×î½Ó½üÕıÊ½°æµÄ°æ±¾£©
+echo 0 - Canary Channel é‡‘ä¸é›€é€šé“ï¼ˆæœ€ä¸ç¨³å®šï¼Œæ›´æ–°æœ€ä¸ºé¢‘ç¹ï¼Œå¤§æ¦‚ç‡ä¸€å¤©ä¸€æ›´ï¼‰
+echo 1 - Dev Channel å¼€å‘è€…é€šé“ï¼ˆä¸ç¨³å®šï¼Œæ›´æ–°è¾ƒä¸ºé¢‘ç¹ï¼Œå‡ å¤©ä¸€æ›´ï¼‰
+echo 2 - Beta æ¸ é“ æµ‹è¯•ç‰ˆé€šé“ï¼ˆç›¸å¯¹ç¨³å®šï¼Œæ›´æ–°ç›¸å¯¹é¢‘ç¹ï¼Œå‘¨æ›´ï¼‰
+echo 3 - Release Preview Channel å‘å¸ƒé¢„è§ˆé€šé“ï¼ˆè¾ƒä¸ºç¨³å®šï¼Œæœ€æ¥è¿‘æ­£å¼ç‰ˆçš„ç‰ˆæœ¬ï¼‰
 echo.
-echo 4 - Í£Ö¹½ÓÊÕWindowsÔ¤ÀÀ¼Æ»®µÄÏÈĞĞ°æ±¾
-echo 5 - ²»×öÈÎºÎĞŞ¸ÄÖ±½ÓÍË³ö
+echo 4 - åœæ­¢æ¥æ”¶Windowsé¢„è§ˆè®¡åˆ’çš„å…ˆè¡Œç‰ˆæœ¬
+echo 5 - ä¸åšä»»ä½•ä¿®æ”¹ç›´æ¥é€€å‡º
 echo.
-set /p choice="ÇëÑ¡ÔñÄãµÄÑ¡Ïî£º"
+set /p choice="è¯·é€‰æ‹©ä½ çš„é€‰é¡¹ï¼š"
 echo.
 if /I "%choice%"=="0" goto :ENROLL_CAN
 if /I "%choice%"=="1" goto :ENROLL_DEV
@@ -2755,163 +2755,163 @@ del /f /q "%SystemRoot%\oie.reg"
 goto :EOF
 
 :ENROLL
-echo ÕıÔÚÓ¦ÓÃ¸ü¸Ä...
+echo æ­£åœ¨åº”ç”¨æ›´æ”¹...
 call :RESET_INSIDER_CONFIG 1>NUL 2>NUL
 call :ADD_INSIDER_CONFIG 1>NUL 2>NUL
 bcdedit /set {current} flightsigning yes >nul 2>&1
-echo Íê³É
+echo å®Œæˆ
 
 echo.
 if %FlightSigningEnabled% neq 1 goto :ASK_FOR_REBOOT
-echo Çë°´ÈÎÒâ¼ü»Øµ½Ö÷²Ëµ¥
+echo è¯·æŒ‰ä»»æ„é”®å›åˆ°ä¸»èœå•
 pause >nul
 goto menu
 
 :STOP_INSIDER
-echo ÕıÔÚÓ¦ÓÃ¸ü¸Ä...
+echo æ­£åœ¨åº”ç”¨æ›´æ”¹...
 call :RESET_INSIDER_CONFIG 1>nul 2>nul
 bcdedit /deletevalue {current} flightsigning >nul 2>&1
-echo Íê³É
+echo å®Œæˆ
 
 echo.
 if %FlightSigningEnabled% neq 0 goto :ASK_FOR_REBOOT
-echo Çë°´ÈÎÒâ¼ü»Øµ½Ö÷²Ëµ¥
+echo è¯·æŒ‰ä»»æ„é”®å›åˆ°ä¸»èœå•
 pause >nul
 goto menu
 
 :ASK_FOR_REBOOT
 set "choice="
-echo ĞèÒªÖØÆô¼ÆËã»úÒÔÍê³ÉÓ¦ÓÃ¸ü¸Ä
-set /p choice="ÄãÏëÒªÏÖÔÚÖØÆô¼ÆËã»úÂğ£¿ (y/N) "
+echo éœ€è¦é‡å¯è®¡ç®—æœºä»¥å®Œæˆåº”ç”¨æ›´æ”¹
+set /p choice="ä½ æƒ³è¦ç°åœ¨é‡å¯è®¡ç®—æœºå—ï¼Ÿ (y/N) "
 if /I "%choice%"=="y" shutdown -r -t 0
 goto :EOF
 
 :batteryreport
 cls
 echo ##############################
-echo # ´Ë½Å±¾ÓÃÓÚ²é¿´µç³Ø½¡¿µ±¨¸æ #
+echo # æ­¤è„šæœ¬ç”¨äºæŸ¥çœ‹ç”µæ± å¥åº·æŠ¥å‘Š #
 echo ##############################
 echo.
-echo ²¿·ÖµçÄÔ¿ÉÄÜÖ´ĞĞÊ§°Ü£¬ÇëÏÈ¼ì²éÖ÷°åµçÔ´Ïà¹ØÉèÖÃ
-echo Æô¶¯Õï¶Ï·şÎñ...
+echo éƒ¨åˆ†ç”µè„‘å¯èƒ½æ‰§è¡Œå¤±è´¥ï¼Œè¯·å…ˆæ£€æŸ¥ä¸»æ¿ç”µæºç›¸å…³è®¾ç½®
+echo å¯åŠ¨è¯Šæ–­æœåŠ¡...
 sc start DPS
-echo µ¼³öµç³Ø½¡¿µ±¨¸æ...
+echo å¯¼å‡ºç”µæ± å¥åº·æŠ¥å‘Š...
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 powercfg /batteryreport /output "%userprofile%\Desktop\MDT\battery-report.html"
 echo.
-echo ¶¨Î»±¨¸æÂ·¾¶...
+echo å®šä½æŠ¥å‘Šè·¯å¾„...
 start %userprofile%\Desktop\MDT
 echo.
-echo ÕıÔÚ´ò¿ª±¨¸æ...
+echo æ­£åœ¨æ‰“å¼€æŠ¥å‘Š...
 start %userprofile%\Desktop\MDT\battery-report.html
 echo.
-echo µ¼³ö±¨¸æ²Ù×÷Íê³É£¬ÈçÓöÒì³£ÇëÖØĞÂ¼ì²éBIOSÉèÖÃ¡¢·şÎñÓë×é²ßÂÔÉèÖÃ£¬¾¡Á¿±ÜÃâÊ¹ÓÃ¾«¼ò°æ¡¢¶¨ÖÆ°æÏµÍ³
-echo ´ò¿ªµ¯³öµÄÎÄ¼ş¼ĞÀïµÄbattery-report.html¼´¿É²é¿´µç³Ø½¡¿µ±¨¸æ
-echo ´Ë±¨¸æ¾ßÓĞÊ±Ğ§ĞÔ£¬²»ÊÇ¶¯Ì¬µÄ£¬¸ü»»µç³Ø»òÊÇÒ»¶ÎÊ±¼äºóĞèÒª²é¿´ĞÂµÄ±¨¸æÈÔĞèÔËĞĞ´Ë½Å±¾
+echo å¯¼å‡ºæŠ¥å‘Šæ“ä½œå®Œæˆï¼Œå¦‚é‡å¼‚å¸¸è¯·é‡æ–°æ£€æŸ¥BIOSè®¾ç½®ã€æœåŠ¡ä¸ç»„ç­–ç•¥è®¾ç½®ï¼Œå°½é‡é¿å…ä½¿ç”¨ç²¾ç®€ç‰ˆã€å®šåˆ¶ç‰ˆç³»ç»Ÿ
+echo æ‰“å¼€å¼¹å‡ºçš„æ–‡ä»¶å¤¹é‡Œçš„battery-report.htmlå³å¯æŸ¥çœ‹ç”µæ± å¥åº·æŠ¥å‘Š
+echo æ­¤æŠ¥å‘Šå…·æœ‰æ—¶æ•ˆæ€§ï¼Œä¸æ˜¯åŠ¨æ€çš„ï¼Œæ›´æ¢ç”µæ± æˆ–æ˜¯ä¸€æ®µæ—¶é—´åéœ€è¦æŸ¥çœ‹æ–°çš„æŠ¥å‘Šä»éœ€è¿è¡Œæ­¤è„šæœ¬
 echo.
-echo µç³Ø½¡¿µ¶È¼ÆËã·½·¨£º(FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%
-echo µç³ØËğºÄ¶È¼ÆËã·½·¨£º1 - (FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%
+echo ç”µæ± å¥åº·åº¦è®¡ç®—æ–¹æ³•ï¼š(FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%
+echo ç”µæ± æŸè€—åº¦è®¡ç®—æ–¹æ³•ï¼š1 - (FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%
 echo.
-echo µç³Ø½¡¿µ¶ÈÔÚ95%%ÖÁ100%%Ö®¼ä¿ÉÒÔÈÏÎªÊÇÈ«ĞÂµç³Ø£¬´óÓÚ100%%¿ÉÒÔ¶à³¢ÊÔ¼¸´Î³ä·ÅµçĞ£×¼£¬Èç¹û»¹ÊÇÒ»ÑùÔòÎŞĞèµ£ĞÄ£¬ÊÇÈ«ĞÂµç³Ø
-echo µç³Ø½¡¿µ¶ÈµÍÓÚ80%%Ê±£¬Çë¼ì²éµç³ØÇé¿ö²¢¸ü»»ĞÂµç³Ø
+echo ç”µæ± å¥åº·åº¦åœ¨95%%è‡³100%%ä¹‹é—´å¯ä»¥è®¤ä¸ºæ˜¯å…¨æ–°ç”µæ± ï¼Œå¤§äº100%%å¯ä»¥å¤šå°è¯•å‡ æ¬¡å……æ”¾ç”µæ ¡å‡†ï¼Œå¦‚æœè¿˜æ˜¯ä¸€æ ·åˆ™æ— éœ€æ‹…å¿ƒï¼Œæ˜¯å…¨æ–°ç”µæ± 
+echo ç”µæ± å¥åº·åº¦ä½äº80%%æ—¶ï¼Œè¯·æ£€æŸ¥ç”µæ± æƒ…å†µå¹¶æ›´æ¢æ–°ç”µæ± 
 pause
 goto menu
 
 :diskcleanmgr
 start cleanmgr.exe
-echo ÒÑÆô¶¯Windows´ÅÅÌÇåÀí³ÌĞò£¨ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ£©
+echo å·²å¯åŠ¨Windowsç£ç›˜æ¸…ç†ç¨‹åºï¼ˆä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼‰
 pause
 goto menu
 
 :GETHASH
 cls
-echo HASH»ñÈ¡
+echo HASHè·å–
 echo.
-echo ÇëÔÚÏÂ·½ÊäÈëÒª»ñÈ¡HASHÖµµÄÎÄ¼şÂ·¾¶
-echo ÈôÂ·¾¶º¬¿Õ¸ñ£¬ÇëÓÃÓ¢ÎÄ°ë½ÇË«ÒıºÅ½«Â·¾¶ÒıÓÃ
-echo ²»ÒıÓÃ»áµ¼ÖÂ³ÌĞò±ÀÀ£ÍË³ö
-echo ÀıÈç£º"C:\Test Path\example.exe"
-echo ²»¼æÈİ»·¾³±äÁ¿ÊäÈë£¬¿ÉÄÜ»áµ¼ÖÂ¿ÕÊä³ö
+echo è¯·åœ¨ä¸‹æ–¹è¾“å…¥è¦è·å–HASHå€¼çš„æ–‡ä»¶è·¯å¾„
+echo è‹¥è·¯å¾„å«ç©ºæ ¼ï¼Œè¯·ç”¨è‹±æ–‡åŠè§’åŒå¼•å·å°†è·¯å¾„å¼•ç”¨
+echo ä¸å¼•ç”¨ä¼šå¯¼è‡´ç¨‹åºå´©æºƒé€€å‡º
+echo ä¾‹å¦‚ï¼š"C:\Test Path\example.exe"
+echo ä¸å…¼å®¹ç¯å¢ƒå˜é‡è¾“å…¥ï¼Œå¯èƒ½ä¼šå¯¼è‡´ç©ºè¾“å‡º
 echo.
-echo ÈôÒª·µ»ØÖ÷²Ëµ¥ÇëÔÚÎÄ¼şÂ·¾¶´¦ÊäÈë 0 ²¢»Ø³µÈ·ÈÏ
+echo è‹¥è¦è¿”å›ä¸»èœå•è¯·åœ¨æ–‡ä»¶è·¯å¾„å¤„è¾“å…¥ 0 å¹¶å›è½¦ç¡®è®¤
 
-set /p input=ÇëÊäÈëÎÄ¼şÂ·¾¶£º
+set /p input=è¯·è¾“å…¥æ–‡ä»¶è·¯å¾„ï¼š
 
 if %input% equ 0 goto menu
 
-echo ³ÌĞòÊ¶±ğµ½µÄÎÄ¼şÂ·¾¶Îª£º%input%
+echo ç¨‹åºè¯†åˆ«åˆ°çš„æ–‡ä»¶è·¯å¾„ä¸ºï¼š%input%
 echo.
-echo ÎÄ¼ş MD2 Öµ£º
+echo æ–‡ä»¶ MD2 å€¼ï¼š
 certutil -hashfile %input% MD2 | findstr /v "[^0-9a-z]"
 echo.
-echo ÎÄ¼ş MD4 Öµ£º
+echo æ–‡ä»¶ MD4 å€¼ï¼š
 certutil -hashfile %input% MD4 | findstr /v "[^0-9a-z]"
 echo.
-echo ÎÄ¼ş MD5 Öµ£º
+echo æ–‡ä»¶ MD5 å€¼ï¼š
 certutil -hashfile %input% MD5 | findstr /v "[^0-9a-z]"
 echo.
-echo ÎÄ¼ş SHA1 Öµ£º
+echo æ–‡ä»¶ SHA1 å€¼ï¼š
 certutil -hashfile %input% SHA1 | findstr /v "[^0-9a-z]"
 echo.
-echo ÎÄ¼ş SHA256 Öµ£º
+echo æ–‡ä»¶ SHA256 å€¼ï¼š
 certutil -hashfile %input% SHA256 | findstr /v "[^0-9a-z]"
 echo.
-echo ÎÄ¼ş SHA384 Öµ£º
+echo æ–‡ä»¶ SHA384 å€¼ï¼š
 certutil -hashfile %input% SHA384 | findstr /v "[^0-9a-z]"
 echo.
-echo ÎÄ¼ş SHA512 Öµ£º
+echo æ–‡ä»¶ SHA512 å€¼ï¼š
 certutil -hashfile %input% SHA384 | findstr /v "[^0-9a-z]"
 echo.
 
 :finhash
-echo HASHÖµ»ñÈ¡Íê³É
-echo 1. ¼ÌĞø»ñÈ¡ÆäËûÎÄ¼şµÄHASHÖµ
-echo 2. ·µ»ØÖ÷²Ëµ¥
-set /p cinput=ÇëÊäÈëÑ¡Ïî£º
+echo HASHå€¼è·å–å®Œæˆ
+echo 1. ç»§ç»­è·å–å…¶ä»–æ–‡ä»¶çš„HASHå€¼
+echo 2. è¿”å›ä¸»èœå•
+set /p cinput=è¯·è¾“å…¥é€‰é¡¹ï¼š
 if %cinput% equ 1 goto GETHASH
 if %cinput% equ 2 goto menu
-echo ÊäÈëÒì³££¬ÇëÖØĞÂ¼ì²é
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·é‡æ–°æ£€æŸ¥
 goto finhash
 
 :PrivCtrloff
 cls
-echo ½ûÓÃÒ£²âÏµÍ³¸ú×Ù·şÎñ
+echo ç¦ç”¨é¥æµ‹ç³»ç»Ÿè·Ÿè¸ªæœåŠ¡
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f >nul
 sc stop DiagTrack
 sc config "DiagTrack" start = Disabled
-echo Ò£²â·şÎñÒÑ½ûÓÃ
+echo é¥æµ‹æœåŠ¡å·²ç¦ç”¨
 pause
 goto menu
 
 :PrivCtrlon
 cls
-echo ÆôÓÃÒ£²âÏµÍ³¸ú×Ù·şÎñ
+echo å¯ç”¨é¥æµ‹ç³»ç»Ÿè·Ÿè¸ªæœåŠ¡
 reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /f >nul
 sc config "DiagTrack" start = auto
 sc start DiagTrack
-echo Ò£²â·şÎñÒÑÆôÓÃ
+echo é¥æµ‹æœåŠ¡å·²å¯ç”¨
 pause
 goto menu
 
 :defenderoff
 cls
-echo ¸üĞÂ×¢²á±íĞÅÏ¢
+echo æ›´æ–°æ³¨å†Œè¡¨ä¿¡æ¯
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /d 1 /t REG_DWORD
-echo ÒÑ½ûÓÃWindows Defender
+echo å·²ç¦ç”¨Windows Defender
 pause
 goto menu
 
 :defenderon
 cls
-echo ¸üĞÂ×¢²á±íĞÅÏ¢
+echo æ›´æ–°æ³¨å†Œè¡¨ä¿¡æ¯
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /d 0 /t REG_DWORD
-echo ÒÑÆôÓÃWindows Defender
+echo å·²å¯ç”¨Windows Defender
 pause
 goto menu
 
 
 
-rem Î¢Èí¼¤»î½Å±¾ Start
+rem å¾®è½¯æ¿€æ´»è„šæœ¬ Start
 :MAS_ACTIVATOR
 
 ::  For command line switches, check https://massgrave.dev/command_line_switches.html
@@ -11952,100 +11952,100 @@ exit /b
 
 ::End::
 
-rem Î¢Èí¼¤»î½Å±¾ End
+rem å¾®è½¯æ¿€æ´»è„šæœ¬ End
 
 :allprocessrunning
-echo ÕıÔÚµ¼³ö¼ÆËã»úËùÓĞÕıÔÚÔËĞĞµÄ½ø³Ì
+echo æ­£åœ¨å¯¼å‡ºè®¡ç®—æœºæ‰€æœ‰æ­£åœ¨è¿è¡Œçš„è¿›ç¨‹
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 tasklist /v /fi "STATUS eq running" >%userprofile%\desktop\MDT\AllProcess_Running.log
 echo.
-echo µ¼³öÍê³É£¬Çë²é¿´×ÀÃæ MDT ÎÄ¼ş¼ĞÖĞµÄ AllProcess_Running.log ÎÄ¼ş
+echo å¯¼å‡ºå®Œæˆï¼Œè¯·æŸ¥çœ‹æ¡Œé¢ MDT æ–‡ä»¶å¤¹ä¸­çš„ AllProcess_Running.log æ–‡ä»¶
 start %userprofile%\desktop\MDT\AllProcess_Running.log
-echo Â·¾¶£º%userprofile%\desktop\MDT\AllProcess_Running.log
+echo è·¯å¾„ï¼š%userprofile%\desktop\MDT\AllProcess_Running.log
 pause
 goto menu
 
 :allprocess
-echo ÕıÔÚµ¼³ö¼ÆËã»úËùÓĞ½ø³Ì
+echo æ­£åœ¨å¯¼å‡ºè®¡ç®—æœºæ‰€æœ‰è¿›ç¨‹
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 tasklist >%userprofile%\desktop\MDT\AllProcess.log
 echo.
-echo µ¼³öÍê³É£¬Çë²é¿´×ÀÃæ MDT ÎÄ¼ş¼ĞÖĞµÄ AllProcess.log ÎÄ¼ş
+echo å¯¼å‡ºå®Œæˆï¼Œè¯·æŸ¥çœ‹æ¡Œé¢ MDT æ–‡ä»¶å¤¹ä¸­çš„ AllProcess.log æ–‡ä»¶
 start %userprofile%\desktop\MDT\AllProcess.log
-echo Â·¾¶£º%userprofile%\desktop\MDT\AllProcess.log
+echo è·¯å¾„ï¼š%userprofile%\desktop\MDT\AllProcess.log
 pause
 goto menu
 
 :killprocess
 cls
-echo É±ËÀÌØ¶¨½ø³Ì
+echo æ€æ­»ç‰¹å®šè¿›ç¨‹
 echo.
-echo ÇëÔÚÏÂ·½ÊäÈëÒªÉ±ËÀµÄ½ø³ÌÃû£¬²¢ÓÃÓ¢ÎÄ°ë½ÇË«ÒıºÅ½«Â·¾¶ÒıÓÃ
-echo ²»ÒıÓÃ»áµ¼ÖÂ½áÊø½ø³ÌÊ§°Ü»ò³ÌĞò±ÀÀ£ÍË³ö
-echo ÀıÈç£º"This is sample.exe"¡¢"example.exe"
-echo ²»¼æÈİ»·¾³±äÁ¿ÊäÈë£¬¿ÉÄÜ»áµ¼ÖÂ¿ÕÊä³ö
+echo è¯·åœ¨ä¸‹æ–¹è¾“å…¥è¦æ€æ­»çš„è¿›ç¨‹åï¼Œå¹¶ç”¨è‹±æ–‡åŠè§’åŒå¼•å·å°†è·¯å¾„å¼•ç”¨
+echo ä¸å¼•ç”¨ä¼šå¯¼è‡´ç»“æŸè¿›ç¨‹å¤±è´¥æˆ–ç¨‹åºå´©æºƒé€€å‡º
+echo ä¾‹å¦‚ï¼š"This is sample.exe"ã€"example.exe"
+echo ä¸å…¼å®¹ç¯å¢ƒå˜é‡è¾“å…¥ï¼Œå¯èƒ½ä¼šå¯¼è‡´ç©ºè¾“å‡º
 echo.
-echo ÈôÒª·µ»ØÖ÷²Ëµ¥ÇëÔÚ½ø³ÌÃû´¦ÊäÈë 0 ²¢»Ø³µÈ·ÈÏ
+echo è‹¥è¦è¿”å›ä¸»èœå•è¯·åœ¨è¿›ç¨‹åå¤„è¾“å…¥ 0 å¹¶å›è½¦ç¡®è®¤
 
-set /p input=ÇëÊäÈë½ø³ÌÃû£º
+set /p input=è¯·è¾“å…¥è¿›ç¨‹åï¼š
 
 if %input% equ 0 goto menu
 echo.
-echo ³ÌĞòÊ¶±ğµ½µÄ½ø³ÌÃûÎª£º%input%
+echo ç¨‹åºè¯†åˆ«åˆ°çš„è¿›ç¨‹åä¸ºï¼š%input%
 echo.
-echo ³¢ÊÔÊ¹ÓÃ taskkill ÃüÁî½áÊø½ø³Ì
+echo å°è¯•ä½¿ç”¨ taskkill å‘½ä»¤ç»“æŸè¿›ç¨‹
 taskkill /im %imput% /f
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
-echo Ê¹ÓÃ wmic ÃüÁî»ñÈ¡½ø³ÌĞÅÏ¢
+echo ä½¿ç”¨ wmic å‘½ä»¤è·å–è¿›ç¨‹ä¿¡æ¯
 wmic process where name=%input% get processid,executablepath,name
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
-echo ³¢ÊÔÊ¹ÓÃ wmic ÃüÁî½áÊø½ø³Ì
+echo å°è¯•ä½¿ç”¨ wmic å‘½ä»¤ç»“æŸè¿›ç¨‹
 wmic process where name=%input% call terminate
 wmic process where name=%input% delete
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
-echo Ê¹ÓÃ tasklist ²éÕÒÄ¿±ê½ø³ÌÊÇ·ñ´æÔÚ
+echo ä½¿ç”¨ tasklist æŸ¥æ‰¾ç›®æ ‡è¿›ç¨‹æ˜¯å¦å­˜åœ¨
 tasklist | findstr %input%
-echo ²Ù×÷Íê³É
-echo ËùÓĞ²Ù×÷ÒÑÖ´ĞĞÍê³É
+echo æ“ä½œå®Œæˆ
+echo æ‰€æœ‰æ“ä½œå·²æ‰§è¡Œå®Œæˆ
 echo.
 
 :finkill
-echo ÒÑ³¢ÊÔ½áÊøÄ¿±ê½ø³Ì
-echo 1. ¼ÌĞøÉ±ËÀÆäËûÌØ¶¨½ø³Ì
-echo 2. ·µ»ØÖ÷²Ëµ¥
-set /p cinput=ÇëÊäÈëÑ¡Ïî£º
+echo å·²å°è¯•ç»“æŸç›®æ ‡è¿›ç¨‹
+echo 1. ç»§ç»­æ€æ­»å…¶ä»–ç‰¹å®šè¿›ç¨‹
+echo 2. è¿”å›ä¸»èœå•
+set /p cinput=è¯·è¾“å…¥é€‰é¡¹ï¼š
 if %cinput% equ 1 goto killprocess
 if %cinput% equ 2 goto menu
-echo ÊäÈëÒì³££¬ÇëÖØĞÂ¼ì²é
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·é‡æ–°æ£€æŸ¥
 goto finkill
 
 :eacuninstall
-echo EACĞ¡À¶ĞÜĞ¶ÔØ½Å±¾
+echo EACå°è“ç†Šå¸è½½è„šæœ¬
 echo.
-echo ´Ë²Ù×÷½«Ğ¶ÔØEasyAntiCheat£¨Ğ¡À¶ĞÜ£©²¢Çå³ıËùÓĞÊı¾İ
-echo °üÀ¨µ«²»ÏŞÓÚEpicGames¡¢SteamÆ½Ì¨µÄĞ¡À¶ĞÜÊı¾İ
-set /p eacinput=ÊÇ·ñ¼ÌĞø²Ù×÷£¿£¨Y/n£©
+echo æ­¤æ“ä½œå°†å¸è½½EasyAntiCheatï¼ˆå°è“ç†Šï¼‰å¹¶æ¸…é™¤æ‰€æœ‰æ•°æ®
+echo åŒ…æ‹¬ä½†ä¸é™äºEpicGamesã€Steamå¹³å°çš„å°è“ç†Šæ•°æ®
+set /p eacinput=æ˜¯å¦ç»§ç»­æ“ä½œï¼Ÿï¼ˆY/nï¼‰
 if %eacinput% equ Y goto deleacdata
 if %eacinput% equ y goto deleacdata
 if %eacinput% equ N goto menu
 if %eacinput% equ n goto menu
 
 :deleacdata
-echo Í£Ö¹ EAC Ïà¹Ø·şÎñ
+echo åœæ­¢ EAC ç›¸å…³æœåŠ¡
 sc stop EasyAntiCheat_EOS
 sc stop EasyAntiCheat
-echo É¾³ı EAC Ïà¹Ø·şÎñ
+echo åˆ é™¤ EAC ç›¸å…³æœåŠ¡
 sc delete EasyAntiCheat_EOS
 sc delete EasyAntiCheat
-echo É¾³ı EAC Ïà¹ØÎÄ¼ş
+echo åˆ é™¤ EAC ç›¸å…³æ–‡ä»¶
 rd /s /q "C:\Program Files (x86)\EasyAntiCheat"
 rd /s /q "C:\Program Files (x86)\EasyAntiCheat_EOS"
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
-echo ÇåÀí×¢²á±íĞÅÏ¢
+echo æ¸…ç†æ³¨å†Œè¡¨ä¿¡æ¯
 reg delete "HKLM\SOFTWARE\WOW6432Node\EasyAntiCheat" /f >nul
 reg delete "HKLM\SOFTWARE\WOW6432Node\EasyAntiCheat_EOS" /f >nul
 reg delete "HKLM\SYSTEM\ControlSet001\Services\EasyAntiCheat" /f >nul
@@ -12056,28 +12056,28 @@ reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat" /f >nul
 reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat\Security" /f >nul
 reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat_EOS" /f >nul
 reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat_EOS\Security" /f >nul
-echo ²Ù×÷Íê³É
+echo æ“ä½œå®Œæˆ
 echo.
-echo ÇåÀí³£¼ûÓÎÏ·µÄ EAC ×¢²á±íĞÅÏ¢
+echo æ¸…ç†å¸¸è§æ¸¸æˆçš„ EAC æ³¨å†Œè¡¨ä¿¡æ¯
 reg delete "HKLM\SOFTWARE\WOW6432Node\Valve\Steam\Apps\1172470" /v "EasyAntiCheat" /f >nul
 reg delete "HKLM\SOFTWARE\WOW6432Node\Valve\Steam\Apps\GGD_EAC" /v "easyanticheat" /f >nul
-echo ²Ù×÷Íê³É
-echo ÇëÊÖ¶¯ÖØĞÂ°²×° EAC »òÕßĞ£ÑéÓÎÏ·ÍêÕûĞÔÖØĞÂÔËĞĞÓÎÏ·°²×°²¿Êğ½Å±¾°²×°EAC
+echo æ“ä½œå®Œæˆ
+echo è¯·æ‰‹åŠ¨é‡æ–°å®‰è£… EAC æˆ–è€…æ ¡éªŒæ¸¸æˆå®Œæ•´æ€§é‡æ–°è¿è¡Œæ¸¸æˆå®‰è£…éƒ¨ç½²è„šæœ¬å®‰è£…EAC
 pause
 goto menu
 
 :apexshopimgerr
 cls
-echo Apex Legends ÉÌµêÍ¼Æ¬²»ÏÔÊ¾³öÏÖ½ûÓÃ±êÖ¾£¨ASSET FAILED TO LOAD£©ĞŞ¸´
-echo ÇëÏÈ¹Ø±ÕÓÎÏ·£¬ĞŞ¸´¹ı³Ì»á¹Ø±ÕÓÎÏ·½ø³Ì
-echo Çë±£´æºÃÎÄ¼ş£¬°´ÈÎÒâ¼ü¼ÌĞøĞŞ¸´
+echo Apex Legends å•†åº—å›¾ç‰‡ä¸æ˜¾ç¤ºå‡ºç°ç¦ç”¨æ ‡å¿—ï¼ˆASSET FAILED TO LOADï¼‰ä¿®å¤
+echo è¯·å…ˆå…³é—­æ¸¸æˆï¼Œä¿®å¤è¿‡ç¨‹ä¼šå…³é—­æ¸¸æˆè¿›ç¨‹
+echo è¯·ä¿å­˜å¥½æ–‡ä»¶ï¼ŒæŒ‰ä»»æ„é”®ç»§ç»­ä¿®å¤
 pause
 echo.
-echo ½áÊø Apex Legends ½ø³Ì
+echo ç»“æŸ Apex Legends è¿›ç¨‹
 taskkill /im r5apex.exe /F
 taskkill /im r5apex_dx12.exe /F
 echo.
-echo ĞŞ¸ÄÎÄ¼ş¼ĞÈ¨ÏŞ
+echo ä¿®æ”¹æ–‡ä»¶å¤¹æƒé™
 takeown /f "%userprofile%\Saved Games\Respawn"
 icacls "%userprofile%\Saved Games\Respawn" /grant Everyone:F
 takeown /f "%userprofile%\Saved Games\Respawn\Apex"
@@ -12085,60 +12085,60 @@ icacls "%userprofile%\Saved Games\Respawn\Apex" /grant Everyone:F
 takeown /f "%userprofile%\Saved Games\Respawn\Apex\assets"
 icacls "%userprofile%\Saved Games\Respawn\Apex\assets" /grant Everyone:F
 echo.
-echo È¨ÏŞĞŞ¸ÄÍê³É£¬ÇëÖØĞÂÑéÖ¤ÓÎÏ·ÍêÕûĞÔ
-echo ´ËÎÊÌâ¶à°ëÊÇÓÉ¼ÓËÙÆ÷ĞŞ¸´¿¨ÆÁÔì³ÉµÄ£¬ÇëÉ÷ÓÃ¿¨ÆÁĞŞ¸´¹¤¾ß£¡
+echo æƒé™ä¿®æ”¹å®Œæˆï¼Œè¯·é‡æ–°éªŒè¯æ¸¸æˆå®Œæ•´æ€§
+echo æ­¤é—®é¢˜å¤šåŠæ˜¯ç”±åŠ é€Ÿå™¨ä¿®å¤å¡å±é€ æˆçš„ï¼Œè¯·æ…ç”¨å¡å±ä¿®å¤å·¥å…·ï¼
 pause
 goto menu
 
 :cmdstart
-echo ÕıÔÚÆô¶¯ CMD.exe £¨ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ£©
+echo æ­£åœ¨å¯åŠ¨ CMD.exe ï¼ˆä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼‰
 start cmd.exe
-echo ²Ù×÷Ö´ĞĞÍê³É
+echo æ“ä½œæ‰§è¡Œå®Œæˆ
 pause
 goto menu
 
 :psstart
-echo ÕıÔÚÆô¶¯ Powershell.exe £¨ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ£©
+echo æ­£åœ¨å¯åŠ¨ Powershell.exe ï¼ˆä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼‰
 start powershell.exe
-echo ²Ù×÷Ö´ĞĞÍê³É
+echo æ“ä½œæ‰§è¡Œå®Œæˆ
 pause
 goto menu
 
 :userlist
-echo ÁĞ³öÓÃ»§ÁĞ±í
+echo åˆ—å‡ºç”¨æˆ·åˆ—è¡¨
 echo.
-echo 0. ·µ»ØÖ÷²Ëµ¥
-echo 1. µ¼³öÓÃ»§ÁĞ±í£¨»ù´¡£©
-echo 2. µ¼³öÓÃ»§ÁĞ±í£¨ÏêÏ¸£©
+echo 0. è¿”å›ä¸»èœå•
+echo 1. å¯¼å‡ºç”¨æˆ·åˆ—è¡¨ï¼ˆåŸºç¡€ï¼‰
+echo 2. å¯¼å‡ºç”¨æˆ·åˆ—è¡¨ï¼ˆè¯¦ç»†ï¼‰
 echo.
-set /p ulinput=ÇëÑ¡ÔñÒ»¸öÏîÄ¿£º
+set /p ulinput=è¯·é€‰æ‹©ä¸€ä¸ªé¡¹ç›®ï¼š
 if %ulinput% equ 0 goto menu
 if %ulinput% equ 1 goto ulbasic
 if %ulinput% equ 2 goto uldetail
-echo ÊäÈëÒì³££¬ÇëÖØĞÂ¼ì²é
+echo è¾“å…¥å¼‚å¸¸ï¼Œè¯·é‡æ–°æ£€æŸ¥
 pause
 goto userlist
 
 :ulbasic
-echo ¿ªÊ¼µ¼³öÓÃ»§ÁĞ±í£¨»ù´¡£©
+echo å¼€å§‹å¯¼å‡ºç”¨æˆ·åˆ—è¡¨ï¼ˆåŸºç¡€ï¼‰
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 echo.
 powershell.exe Get-LocalUser >%userprofile%\desktop\MDT\Userlist_Basic.log
 echo.
-echo µ¼³öÓÃ»§ÁĞ±í£¨»ù´¡£©Íê³É£¬Çë²é¿´×ÀÃæ MDT ÎÄ¼ş¼ĞÖĞµÄ Userlist_Basic.log ÎÄ¼ş
+echo å¯¼å‡ºç”¨æˆ·åˆ—è¡¨ï¼ˆåŸºç¡€ï¼‰å®Œæˆï¼Œè¯·æŸ¥çœ‹æ¡Œé¢ MDT æ–‡ä»¶å¤¹ä¸­çš„ Userlist_Basic.log æ–‡ä»¶
 start %userprofile%\desktop\MDT\Userlist_Basic.log
-echo Â·¾¶£º%userprofile%\desktop\MDT\Userlist_Basic.log
+echo è·¯å¾„ï¼š%userprofile%\desktop\MDT\Userlist_Basic.log
 pause
 goto menu
 
 :uldetail
-echo ¿ªÊ¼µ¼³öÓÃ»§ÁĞ±í£¨ÏêÏ¸£©
+echo å¼€å§‹å¯¼å‡ºç”¨æˆ·åˆ—è¡¨ï¼ˆè¯¦ç»†ï¼‰
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 echo.
 powershell.exe "Get-LocalUser | Select *" >%userprofile%\desktop\MDT\Userlist_Detail.log
 echo.
-echo µ¼³öÓÃ»§ÁĞ±í£¨ÏêÏ¸£©Íê³É£¬Çë²é¿´×ÀÃæ MDT ÎÄ¼ş¼ĞÖĞµÄ Userlist_Detail.log ÎÄ¼ş
+echo å¯¼å‡ºç”¨æˆ·åˆ—è¡¨ï¼ˆè¯¦ç»†ï¼‰å®Œæˆï¼Œè¯·æŸ¥çœ‹æ¡Œé¢ MDT æ–‡ä»¶å¤¹ä¸­çš„ Userlist_Detail.log æ–‡ä»¶
 start %userprofile%\desktop\MDT\Userlist_Detail.log
-echo Â·¾¶£º%userprofile%\desktop\MDT\Userlist_Detail.log
+echo è·¯å¾„ï¼š%userprofile%\desktop\MDT\Userlist_Detail.log
 pause
 goto menu
