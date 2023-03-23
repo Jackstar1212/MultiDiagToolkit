@@ -124,12 +124,8 @@ if %ERRORLEVEL% equ 0 (
 )
 
 rem 设置程序版本、作者信息
-set "progver=2.1"
+set "progver=2.3"
 set "Author=LonelyFish"
-
-rem cols 设置宽度；lines 设置长度
-rem 颜色属性由两个十六进制数字指定 -- 第一个对应于背景，第二个对应于前景。每个数字可以为以下任何值:
-rem 0 = 黑色 1 = 蓝色 2 = 绿色 3= 浅绿色 4 = 红色 5 = 紫色 6 = 黄色 7 = 白色 8 = 灰色 9 = 淡蓝色 A = 淡绿色 B = 淡浅绿色 C = 淡红色 D = 淡紫色 E = 淡黄色 F = 亮白色
 
 setlocal enabledelayedexpansion
 powershell -executionpolicy bypass -command "&{$H=get-host;$W=$H.ui.rawui;$B=$W.buffersize;$B.width=128;$B.height=300;$W.buffersize=$B;$W.windowtitle='系统诊断修复工具'}"
@@ -221,10 +217,10 @@ rem Win10游戏模式
 if "%systemver%"=="10" (
 for /f "tokens=3" %%i in ('reg query "HKEY_CURRENT_USER\Software\Microsoft\GameBar" /v AutoGameModeEnabled 2^>nul') do set gamebar=%%i
 if defined gamebar (
-if !gamebar!==0x0 set gamebar=游戏模式: 关
-if !gamebar!==0x1 set gamebar=游戏模式: 开
+if !gamebar!==0x0 set gamebar=游戏模式:         关
+if !gamebar!==0x1 set gamebar=游戏模式:         开
 ) else (
-set "gamebar=游戏模式: 开"
+set "gamebar=游戏模式:         开"
 )
 ) else (
 echo. >nul
@@ -233,23 +229,34 @@ echo. >nul
 rem 设置窗口大小及颜色
 rem color 2f
 color 70
-mode con cols=128 lines=50
+mode con cols=100 lines=50
+
+rem cols 设置宽度；lines 设置长度
+rem 颜色属性由两个十六进制数字指定 -- 第一个对应于背景，第二个对应于前景。每个数字可以为以下任何值:
+rem 0 = 黑色 1 = 蓝色 2 = 绿色 3= 浅绿色 4 = 红色 5 = 紫色 6 = 黄色 7 = 白色 8 = 灰色 9 = 淡蓝色 A = 淡绿色 B = 淡浅绿色 C = 淡红色 D = 淡紫色 E = 淡黄色 F = 亮白色
 
 cls
-echo 系统时间: %time:~0,8%
-echo 系统时区: %timezone%
-echo 安装语言: %Languages% %SystemLanguages%
-echo 电源模式: %powerstate%
+echo.
+echo 基本系统信息: 
+echo.
+systeminfo | findstr /C:"OS"
+echo 登录用户：        %USERNAME%
+echo 计算机名：        %COMPUTERNAME%
+echo 系统时间:         %time:~0,8%
+echo 系统时区:         %timezone%
+echo 安装语言:         %Languages% %SystemLanguages%
+echo 电源模式:         %powerstate%
 if "%systemver%"=="10" (
 echo %gamebar%
 )
-
+echo.
+echo     欢迎使用多合一系统诊断修复工具！
+echo.
 rem 主菜单：多合一系统诊断修复工具
 
 echo ----------------------------------------------------------------------------------------
 echo                                   多合一系统诊断修复工具
 echo ----------------------------------------------------------------------------------------
-echo.
 echo 0. 关于脚本的疑难解答（不知道这玩意干嘛的，选我）
 echo.
 echo 1. 系统诊断修复（电脑常见问题选我）
@@ -265,6 +272,7 @@ echo ---------------------------------------------------------------------------
 echo.
 echo 脚本作者：%Author%
 echo 脚本版本：v%progver%
+echo.
 echo 声明：脚本修复功能不一定适用于您的问题，作者对使用脚本后果概不负责，请自行斟酌使用
 echo 声明：继续使用代表您同意免除脚本作者对您电脑进行修改缩造成后果的责任，自行承担后果
 echo 声明：如果不同意，请点击右上角关闭按钮关闭脚本并删除脚本文件
@@ -273,18 +281,18 @@ echo.
 echo ----------------------------------------------------------------------------------------
 set /p maininput=请选择项目：
 if %maininput% equ 0 goto QA
-if %maininput% equ 1 goto menusysrepair
+if %maininput% equ 1 goto menusysrepairP1
 if %maininput% equ 2 goto menunetfix
-if %maininput% equ 3 goto menusysoptimize
+if %maininput% equ 3 goto menusysoptimizeP1
 if %maininput% equ 4 goto menusoft
-if %maininput% equ 5 goto menuother
+if %maininput% equ 5 goto menuotherP1
 echo 输入异常，请检查输入选项。
 pause
 goto menu
 
 rem 系统诊断修复菜单
 
-:menusysrepair
+:menusysrepairP1
 echo ----------------------------------------------------------------------------------------
 echo                                      系统诊断修复菜单
 echo ----------------------------------------------------------------------------------------
@@ -326,50 +334,68 @@ echo 17. 修复由于远程连接导致的剪贴板复制粘贴失效问题
 echo.
 echo 18. 停用vmmem，解决vmmem占用过高问题
 echo.
-echo 19. 加入Windows预览体验计划（Windows Insider Channel）
+echo 19. 查看电池健康度（看看电脑电池损耗如何）
 echo.
-echo 20. 查看电池健康度（看看电脑电池损耗如何）
-echo.
-echo 21. 运行系统自带磁盘清理工具（Cleanmgr）
-echo.
-echo 22. MAS 微软激活脚本（系统激活用我）
-echo.
-echo 23. 列出当前计算机正在运行的所有进程
-echo.
-echo 24. 列出所有进程（不论活跃与否）
-echo.
-echo 25. 列出此计算机的所有用户
+echo 20. 查看下一页（当前页面为：P1）
 echo ----------------------------------------------------------------------------------------
-set /p sysdiaginput=请选择项目：
-if %sysdiaginput% equ 0 goto menu
-if %sysdiaginput% equ 1 goto envdiag
-if %sysdiaginput% equ 2 goto systemrepair
-if %sysdiaginput% equ 3 goto programlist
-if %sysdiaginput% equ 4 goto iereset
-if %sysdiaginput% equ 5 goto xboxfix
-if %sysdiaginput% equ 6 goto IconRepair
-if %sysdiaginput% equ 7 goto WinFocus
-if %sysdiaginput% equ 8 goto borecover
-if %sysdiaginput% equ 9 goto wu0205
-if %sysdiaginput% equ 10 goto taskmgrexeErr
-if %sysdiaginput% equ 11 goto exeError
-if %sysdiaginput% equ 12 goto deactivate
-if %sysdiaginput% equ 13 goto gpeditfix
-if %sysdiaginput% equ 14 goto winbutton
-if %sysdiaginput% equ 15 goto msstorefix
-if %sysdiaginput% equ 16 goto iemainpagefix
-if %sysdiaginput% equ 17 goto RDclipboard
-if %sysdiaginput% equ 18 goto vmmemstop
-if %sysdiaginput% equ 19 goto insiderchannel
-if %sysdiaginput% equ 20 goto batteryreport
-if %sysdiaginput% equ 21 goto diskcleanmgr
-if %sysdiaginput% equ 22 goto MAS_ACTIVATOR
-if %sysdiaginput% equ 23 goto allprocessrunning
-if %sysdiaginput% equ 24 goto allprocess
-if %sysdiaginput% equ 25 goto userlist
+set /p sysdiaginput1=请选择项目：
+if %sysdiaginput1% equ 0 goto menu
+if %sysdiaginput1% equ 1 goto envdiag
+if %sysdiaginput1% equ 2 goto systemrepair
+if %sysdiaginput1% equ 3 goto programlist
+if %sysdiaginput1% equ 4 goto iereset
+if %sysdiaginput1% equ 5 goto xboxfix
+if %sysdiaginput1% equ 6 goto IconRepair
+if %sysdiaginput1% equ 7 goto WinFocus
+if %sysdiaginput1% equ 8 goto borecover
+if %sysdiaginput1% equ 9 goto wu0205
+if %sysdiaginput1% equ 10 goto taskmgrexeErr
+if %sysdiaginput1% equ 11 goto exeError
+if %sysdiaginput1% equ 12 goto deactivate
+if %sysdiaginput1% equ 13 goto gpeditfix
+if %sysdiaginput1% equ 14 goto winbutton
+if %sysdiaginput1% equ 15 goto msstorefix
+if %sysdiaginput1% equ 16 goto iemainpagefix
+if %sysdiaginput1% equ 17 goto RDclipboard
+if %sysdiaginput1% equ 18 goto vmmemstop
+if %sysdiaginput1% equ 19 goto batteryreport
+if %sysdiaginput1% equ 20 goto menusysrepairP2
 echo 输入异常，请检查输入选项。
 pause
-goto menusysrepair
+goto menusysrepairP1
+
+:menusysrepairP2
+echo ----------------------------------------------------------------------------------------
+echo                                      系统诊断修复菜单
+echo ----------------------------------------------------------------------------------------
+echo 0. 返回主菜单
+echo.
+echo 1. 返回上一页（当前页面为：P2）
+echo.
+echo 2. 加入Windows预览体验计划（Windows Insider Channel）
+echo.
+echo 3. 运行系统自带磁盘清理工具（Cleanmgr）
+echo.
+echo 4. MAS 微软激活脚本（系统激活用我）
+echo.
+echo 5. 列出当前计算机正在运行的所有进程
+echo.
+echo 6. 列出所有进程（不论活跃与否）
+echo.
+echo 7. 列出此计算机的所有用户
+echo ----------------------------------------------------------------------------------------
+set /p sysdiaginput2=请选择项目：
+if %sysdiaginput2% equ 0 goto menu
+if %sysdiaginput2% equ 1 goto menusysrepairP1
+if %sysdiaginput2% equ 2 goto insiderchannel
+if %sysdiaginput2% equ 3 goto diskcleanmgr
+if %sysdiaginput2% equ 4 goto MAS_ACTIVATOR
+if %sysdiaginput2% equ 5 goto allprocessrunning
+if %sysdiaginput2% equ 6 goto allprocess
+if %sysdiaginput2% equ 7 goto userlist
+echo 输入异常，请检查输入选项。
+pause
+goto menusysrepairP2
 
 rem 网络诊断修复菜单
 
@@ -396,6 +422,8 @@ echo.
 echo 8. 重置IE（上古神器ie浏览器，没人用，但是有时候网寄了也可以选我试试）
 echo.
 echo 9. DNS缓存域名记录（看看网页解析）
+echo.
+echo 10. 查看本机网络连接信息详情
 echo ----------------------------------------------------------------------------------------
 set /p netdiaginput=请选择项目：
 if %netdiaginput% equ 0 goto menu
@@ -408,13 +436,14 @@ if %netdiaginput% equ 6 goto systemfirewalloff
 if %netdiaginput% equ 7 goto systemfirewallon
 if %netdiaginput% equ 8 goto iereset
 if %netdiaginput% equ 9 goto dnscachelist
+if %netdiaginput% equ 10 goto ipconfigsys
 echo 输入异常，请检查输入选项。
 pause
 goto menunetfix
 
 rem 系统优化调整菜单
 
-:menusysoptimize
+:menusysoptimizeP1
 echo ----------------------------------------------------------------------------------------
 echo                                      系统优化调整菜单
 echo ----------------------------------------------------------------------------------------
@@ -458,42 +487,66 @@ echo 18. 加入Windows预览体验计划（Windows Insider Channel）
 echo.
 echo 19. 运行系统自带磁盘清理工具（Cleanmgr）
 echo.
-echo 20. 禁用遥测系统跟踪等服务（系统隐私优化）
-echo.
-echo 21. 恢复遥测系统跟踪等服务（遇到异常了选我恢复）
-echo.
-echo 22. 禁用Windows Defender（文件一直被系统拦截选我）
-echo.
-echo 23. 启用Windows Defender（恢复Defender功能选我）
+echo 20. 查看下一页（当前页面为：P1）
 echo ----------------------------------------------------------------------------------------
-set /p sysoptiinput=请选择项目：
-if %sysoptiinput% equ 0 goto menu
-if %sysoptiinput% equ 1 goto systemfirewalloff
-if %sysoptiinput% equ 2 goto systemfirewallon
-if %sysoptiinput% equ 3 goto powercfgperf
-if %sysoptiinput% equ 4 goto enableuac
-if %sysoptiinput% equ 5 goto disableuac
-if %sysoptiinput% equ 6 goto BootTime
-if %sysoptiinput% equ 7 goto uautorunon
-if %sysoptiinput% equ 8 goto uautorunoff
-if %sysoptiinput% equ 9 goto hibernateon
-if %sysoptiinput% equ 10 goto hibernateoff
-if %sysoptiinput% equ 11 goto junkclean
-if %sysoptiinput% equ 12 goto win7aero
-if %sysoptiinput% equ 13 goto noshortcut
-if %sysoptiinput% equ 14 goto restoreshortcut
-if %sysoptiinput% equ 15 goto vmmemstop
-if %sysoptiinput% equ 16 goto deltabletpc
-if %sysoptiinput% equ 17 goto notepadsaveencoder
-if %sysoptiinput% equ 18 goto insiderchannel
-if %sysoptiinput% equ 19 goto diskcleanmgr
-if %sysoptiinput% equ 20 goto PrivCtrloff
-if %sysoptiinput% equ 21 goto PrivCtrlon
-if %sysoptiinput% equ 22 goto defenderoff
-if %sysoptiinput% equ 23 goto defenderon
+set /p sysopt1=请选择项目：
+if %sysopt1% equ 0 goto menu
+if %sysopt1% equ 1 goto systemfirewalloff
+if %sysopt1% equ 2 goto systemfirewallon
+if %sysopt1% equ 3 goto powercfgperf
+if %sysopt1% equ 4 goto enableuac
+if %sysopt1% equ 5 goto disableuac
+if %sysopt1% equ 6 goto BootTime
+if %sysopt1% equ 7 goto uautorunon
+if %sysopt1% equ 8 goto uautorunoff
+if %sysopt1% equ 9 goto hibernateon
+if %sysopt1% equ 10 goto hibernateoff
+if %sysopt1% equ 11 goto junkclean
+if %sysopt1% equ 12 goto win7aero
+if %sysopt1% equ 13 goto noshortcut
+if %sysopt1% equ 14 goto restoreshortcut
+if %sysopt1% equ 15 goto vmmemstop
+if %sysopt1% equ 16 goto deltabletpc
+if %sysopt1% equ 17 goto notepadsaveencoder
+if %sysopt1% equ 18 goto insiderchannel
+if %sysopt1% equ 19 goto diskcleanmgr
+if %sysopt1% equ 20 goto menusysoptimizeP2
 echo 输入异常，请检查输入选项。
 pause
-goto menusysoptimize
+goto menusysoptimizeP1
+
+:menusysoptimizeP2
+echo ----------------------------------------------------------------------------------------
+echo                                      系统优化调整菜单
+echo ----------------------------------------------------------------------------------------
+echo 0. 返回主菜单
+echo.
+echo 1. 返回上一页（当前页面为：P2）
+echo.
+echo 2. 禁用遥测系统跟踪等服务（系统隐私优化）
+echo.
+echo 3. 恢复遥测系统跟踪等服务（遇到异常了选我恢复）
+echo.
+echo 4. 禁用 Windows Defender（文件一直被系统拦截选我）
+echo.
+echo 5. 启用 Windows Defender（恢复Defender功能选我）
+echo.
+echo 6. 禁用 Windows Update
+echo.
+echo 7. 启用、重置、修复 Windows Update
+echo ----------------------------------------------------------------------------------------
+set /p sysopt2=请选择项目：
+if %sysopt2% equ 0 goto menu
+if %sysopt2% equ 1 goto menusysoptimizeP1
+if %sysopt2% equ 2 goto PrivCtrloff
+if %sysopt2% equ 3 goto PrivCtrlon
+if %sysopt2% equ 4 goto defenderoff
+if %sysopt2% equ 5 goto defenderon
+if %sysopt2% equ 6 goto wudisable
+if %sysopt2% equ 7 goto wureset
+echo 输入异常，请检查输入选项。
+pause
+goto menusysoptimizeP2
 
 rem 常用软件修复菜单
 
@@ -538,7 +591,7 @@ goto menusoft
 
 rem 其他功能杂项菜单
 
-:menuother
+:menuotherP1
 echo ----------------------------------------------------------------------------------------
 echo                                      其他功能杂项菜单
 echo ----------------------------------------------------------------------------------------
@@ -548,7 +601,7 @@ echo 1. 将管理员取得所有权添加到右键菜单（文件夹打不开？
 echo.
 echo 2. 将管理员取得所有权从右键菜单删除（不想要了）
 echo.
-echo 3. 获取文件HASH值
+echo 3. 获取文件 HASH 值
 echo.
 echo 4. 列出当前计算机正在运行的所有进程
 echo.
@@ -556,26 +609,107 @@ echo 5. 列出所有进程（不论活跃与否）
 echo.
 echo 6. 杀死特定进程
 echo.
-echo 7. 启动CMD.exe（管理员身份运行）
+echo 7. 启动 CMD 命令行（CMD.exe 管理员身份运行）
 echo.
-echo 8. 启动Powershell.exe（管理员身份运行）
+echo 8. 启动 Windows PowerShell 命令行（Powershell.exe 管理员身份运行）
 echo.
 echo 9. 列出此计算机的所有用户
+echo.
+echo 10. 启动本地组策略编辑器（gpedit.msc）
+echo.
+echo 11. 启动服务管理单元（services.msc）
+echo.
+echo 12. 启动注册表编辑器（regedit.exe）
+echo.
+echo 13. 启动计算机管理（compmgmt.msc）
+echo.
+echo 14. 启动事件查看器（eventvwr.msc）
+echo.
+echo 15. 启动控制面板
+echo.
+echo 16. 查看系统版本信息（关于“Windows”）
+echo.
+echo 17. 打开系统设置页面（老版本 Windows 不适用）
+echo.
+echo 18. 启动磁盘管理（diskmgmt.msc）
+echo.
+echo 19. 启动任务管理器（taskmgr.exe）
+echo.
+echo 20. 查看下一页（当前页面为：P1）
 echo ----------------------------------------------------------------------------------------
-set /p otherinput=请选择项目：
-if %otherinput% equ 0 goto menu
-if %otherinput% equ 1 goto rightadmadd
-if %otherinput% equ 2 goto rightadmdel
-if %otherinput% equ 3 goto GETHASH
-if %otherinput% equ 4 goto allprocessrunning
-if %otherinput% equ 5 goto allprocess
-if %otherinput% equ 6 goto killprocess
-if %otherinput% equ 7 goto cmdstart
-if %otherinput% equ 8 goto psstart
-if %otherinput% equ 9 goto userlist
+set /p otherinput1=请选择项目：
+if %otherinput1% equ 0 goto menu
+if %otherinput1% equ 1 goto rightadmadd
+if %otherinput1% equ 2 goto rightadmdel
+if %otherinput1% equ 3 goto GETHASH
+if %otherinput1% equ 4 goto allprocessrunning
+if %otherinput1% equ 5 goto allprocess
+if %otherinput1% equ 6 goto killprocess
+if %otherinput1% equ 7 goto cmdstart
+if %otherinput1% equ 8 goto psstart
+if %otherinput1% equ 9 goto userlist
+if %otherinput1% equ 10 goto gpeditmsc
+if %otherinput1% equ 11 goto servicesmsc
+if %otherinput1% equ 12 goto regeditexe
+if %otherinput1% equ 13 goto compmgmtmsc
+if %otherinput1% equ 14 goto eventvwrmsc
+if %otherinput1% equ 15 goto ctrlpanel
+if %otherinput1% equ 16 goto winversion
+if %otherinput1% equ 17 goto startmssetting
+if %otherinput1% equ 18 goto startdiskmgr
+if %otherinput1% equ 19 goto starttaskmgr
+if %otherinput1% equ 20 goto menuotherP2
+
 echo 输入异常，请检查输入选项。
 pause
-goto menuother
+goto menuotherP1
+
+
+
+:menuotherP2
+echo ----------------------------------------------------------------------------------------
+echo                                      其他功能杂项菜单
+echo ----------------------------------------------------------------------------------------
+echo 0. 返回主菜单
+echo.
+echo 1. 返回上一页（当前页面为：P2）
+echo.
+echo 2. 启动 Windows 功能管理（启用或关闭 Windows 功能）
+echo.
+echo 3. 启动系统配置（启动、引导管理）
+echo.
+echo 4. 启动系统信息
+echo.
+echo 5. 启动 Windows 内存诊断
+echo.
+echo 6. 启动组件服务管理
+echo.
+echo 7. 启动共享文件夹管理（fsmgmt.msc）
+echo.
+echo 8. 启动性能监视器（perfmon.msc）
+echo.
+echo 9. 启动本地安全组策略（secpol.msc）
+echo.
+echo 10. 启动 DirectX 检测工具（dxdiag）
+echo.
+echo 11. 启动远程桌面连接
+echo ----------------------------------------------------------------------------------------
+set /p otherinput2=请选择项目：
+if %otherinput2% equ 0 goto menu
+if %otherinput2% equ 1 goto menuotherP1
+if %otherinput2% equ 2 goto optionalfunc
+if %otherinput2% equ 3 goto ms_config
+if %otherinput2% equ 4 goto startsysinfo
+if %otherinput2% equ 5 goto memcheckprogram
+if %otherinput2% equ 6 goto componentmgr
+if %otherinput2% equ 7 goto sharemanage
+if %otherinput2% equ 8 goto startperfmon
+if %otherinput2% equ 9 goto securemgr
+if %otherinput2% equ 10 goto dxcheck
+if %otherinput2% equ 11 goto rdapp
+echo 输入异常，请检查输入选项。
+pause
+goto menuotherP2
 
 rem 功能区
 
@@ -636,7 +770,7 @@ rem 项目6
 call:nslookvalue www.163.com www.sina.com.cn www.qq.com www.taobao.com www.jd.com www.iqiyi.com
 set /a sum3=sum
 rem 项目6
-call:nslookvalue www.baidu.com www.bing.com www.sohu.com
+call:nslookvalue www.baidu.com cn.bing.com www.bilibili.com
 set /a sum4=sum
 
 set /a sumall=sum1+sum2+sum3+sum4
@@ -1743,7 +1877,7 @@ del /f /q %temp%\netdiag.txt >nul 2>nul
 rem 游戏数据信息备份桌面
 	if EXIST %temp%\infocollect.txt (
 		taskkill /F /FI "WINDOWTITLE eq netdiag.txt*" >nul 2>nul
-		echo F| xcopy "%temp%\infocollect.txt" "%userprofile%\desktop\NetDiagLog\netdiag.txt" /s /c /y /i >nul 2>nul
+		echo F| xcopy "%temp%\infocollect.txt" "%userprofile%\desktop\MDT\netdiag.txt" /s /c /y /i >nul 2>nul
 	) else (
 		echo. >nul 2>nul
 	)
@@ -1865,6 +1999,7 @@ echo 重建注册表值
 reg add "HKCR\Folder\shell\open" /v "MultiSelectModel" /d "Document" /f >nul
 reg add "HKCR\Folder\shell\open\command" /ve /t REG_EXPAND_SZ /d "%%SystemRoot%%\Explorer.exe" /f >nul
 reg add "HKCR\Folder\shell\open\command" /v "DelegateExecute" /f >nul
+echo 操作执行完成
 echo 修复完成，请重启电脑
 pause
 goto menu
@@ -1907,10 +2042,13 @@ reg add "HKCR\exefile\shellex\PropertySheetHandlers\Digital Signatures" /ve /d "
 reg add "HKCR\exefile\shellex\PropertySheetHandlers\ShimLayer Property Page" /ve /d "{513D916F-2A8E-4F51-AEAB-0CBC76FB1AF8}" /f
 reg add "HKCR\exefile\shellex\PropertySheetHandlers\{B41DB860-64E4-11D2-9906-E49FADC173CA}" /ve /d "" /f
 reg add "HKCR\exefile\shellex\PropertySheetHandlers\{B41DB860-8EE4-11D2-9906-E49FADC173CA}" /ve /d "" /f
-
+echo 操作执行完成
+echo.
 
 echo 重建exe关联
 assoc .exe=exefile
+echo 操作执行完成
+echo 所有操作已执行完成
 echo 修复完成，请重启电脑
 pause
 goto menu
@@ -1958,10 +2096,10 @@ cls
 echo 警告：使用此功能将会导致Windows变为未激活状态！
 echo 一般情况下，此功能仅在出现激活异常或者密钥异常的情况下使用
 echo 如果您不知道您在做什么，请退出程序或者输入其他并确认回到主页面
-echo 如果您明白并能承担操作后果，请在下方输入 Confirm 来继续操作（区分大小写）
+echo 如果您明白并能承担操作后果，请在下方输入 Yes 来继续操作（区分大小写）
 timeout /t 3 /nobreak > NUL
 set /p input=请确认您的操作（区分大小写）：
-if %input% equ Confirm goto deaconfirm
+if %input% equ Yes goto deaconfirm
 echo 确认操作异常，已取消操作
 pause
 goto menu
@@ -2142,7 +2280,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "ValueName" /d "SecureProtocols" /f >nul
-echo 操作完成
+echo 操作执行完成
 echo.
 
 echo 修复TLS1.0选项
@@ -2158,7 +2296,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "ValueName" /d "SecureProtocols" /f >nul
-echo 操作完成
+echo 操作执行完成
 echo.
 
 echo 修复TLS1.1选项
@@ -2175,7 +2313,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "ValueName" /d "SecureProtocols" /f >nul
-echo 操作完成
+echo 操作执行完成
 echo.
 
 echo 修复TLS1.2选项
@@ -2192,7 +2330,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "ValueName" /d "SecureProtocols" /f >nul
-echo 操作完成
+echo 操作执行完成
 echo.
 
 echo 修复TLS1.3选项
@@ -2209,7 +2347,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "Type" /d "checkbox" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "ValueName" /d "SecureProtocols" /f >nul
-echo 操作完成
+echo 操作执行完成
 echo.
 echo 前置修复：重置IE
 del /f /q "%temp%\mb" >nul 2>nul
@@ -2234,6 +2372,8 @@ netsh winsock reset
 echo 重新部署微软商店
 powershell get-appxpackage *store* | remove-Appxpackage 
 powershell add-appxpackage -register "C:\Program Files\WindowsApps\*Store*\AppxManifest.xml" -disabledevelopmentmode 
+echo 调用原生重置
+wsreset
 echo 在接下来的弹窗（Internet属性）中，请点击高级选项卡，勾选如下选项：
 echo “使用SSL3.0”（可选）、“使用TLS1.0”、“使用TLS1.1”（可选）、“使用TLS1.2”、“使用TLS1.3”
 timeout /t 3 /nobreak > NUL
@@ -2768,7 +2908,7 @@ echo.
 echo 正在打开报告...
 start %userprofile%\Desktop\MDT\battery-report.html
 echo.
-echo 导出报告操作完成，如遇异常请重新检查BIOS设置、服务与组策略设置，尽量避免使用精简版、定制版系统
+echo 导出报告操作执行完成，如遇异常请重新检查BIOS设置、服务与组策略设置，尽量避免使用精简版、定制版系统
 echo 打开弹出的文件夹里的battery-report.html即可查看电池健康报告
 echo 此报告具有时效性，不是动态的，更换电池或是一段时间后需要查看新的报告仍需运行此脚本
 echo.
@@ -2860,7 +3000,7 @@ goto menu
 cls
 echo 更新注册表信息
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /d 1 /t REG_DWORD
-echo 已禁用Windows Defender
+echo 已禁用 Windows Defender
 pause
 goto menu
 
@@ -2868,7 +3008,7 @@ goto menu
 cls
 echo 更新注册表信息
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /d 0 /t REG_DWORD
-echo 已启用Windows Defender
+echo 已启用 Windows Defender
 pause
 goto menu
 
@@ -11958,20 +12098,20 @@ echo 程序识别到的进程名为：%input%
 echo.
 echo 尝试使用 taskkill 命令结束进程
 taskkill /im %imput% /f
-echo 操作完成
+echo 操作执行完成
 echo.
 echo 使用 wmic 命令获取进程信息
 wmic process where name=%input% get processid,executablepath,name
-echo 操作完成
+echo 操作执行完成
 echo.
 echo 尝试使用 wmic 命令结束进程
 wmic process where name=%input% call terminate
 wmic process where name=%input% delete
-echo 操作完成
+echo 操作执行完成
 echo.
 echo 使用 tasklist 查找目标进程是否存在
 tasklist | findstr %input%
-echo 操作完成
+echo 操作执行完成
 echo 所有操作已执行完成
 echo.
 
@@ -11995,6 +12135,7 @@ if %eacinput% equ Y goto deleacdata
 if %eacinput% equ y goto deleacdata
 if %eacinput% equ N goto menu
 if %eacinput% equ n goto menu
+goto menu
 
 :deleacdata
 echo 停止 EAC 相关服务
@@ -12006,7 +12147,7 @@ sc delete EasyAntiCheat
 echo 删除 EAC 相关文件
 rd /s /q "C:\Program Files (x86)\EasyAntiCheat"
 rd /s /q "C:\Program Files (x86)\EasyAntiCheat_EOS"
-echo 操作完成
+echo 操作执行完成
 echo.
 echo 清理注册表信息
 reg delete "HKLM\SOFTWARE\WOW6432Node\EasyAntiCheat" /f >nul
@@ -12019,12 +12160,12 @@ reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat" /f >nul
 reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat\Security" /f >nul
 reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat_EOS" /f >nul
 reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EasyAntiCheat_EOS\Security" /f >nul
-echo 操作完成
+echo 操作执行完成
 echo.
 echo 清理常见游戏的 EAC 注册表信息
 reg delete "HKLM\SOFTWARE\WOW6432Node\Valve\Steam\Apps\1172470" /v "EasyAntiCheat" /f >nul
 reg delete "HKLM\SOFTWARE\WOW6432Node\Valve\Steam\Apps\GGD_EAC" /v "easyanticheat" /f >nul
-echo 操作完成
+echo 操作执行完成
 echo 请手动重新安装 EAC 或者校验游戏完整性重新运行游戏安装部署脚本安装EAC
 pause
 goto menu
@@ -12103,5 +12244,686 @@ echo.
 echo 导出用户列表（详细）完成，请查看桌面 MDT 文件夹中的 Userlist_Detail.log 文件
 start %userprofile%\desktop\MDT\Userlist_Detail.log
 echo 路径：%userprofile%\desktop\MDT\Userlist_Detail.log
+pause
+goto menu
+
+:wureset
+	:: ----- Stopping the Windows Update services -----
+echo 停止 Windows Update 相关服务
+net stop bits
+net stop wuauserv
+net stop appidsvc
+net stop cryptsvc
+net stop WaaSMedicSvc
+net stop UsoSvc
+
+echo 取消正在进行的 Windows Update 操作
+taskkill /im wuauclt.exe /f
+
+	:: ----- Checking the services status -----
+echo 检查 BITS 服务状态
+
+	sc query bits | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 BITS 服务失败
+		echo.
+		echo 再次重试停止 BITS 服务
+    net stop bits
+	)
+
+echo 检查 Windows Update 服务状态
+
+	sc query wuauserv | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Windows Update 服务失败
+		echo.
+		echo 再次重试停止 Windows Update 服务
+    net stop wuauserv
+	)
+
+echo 检查 Application Identity 服务状态
+
+	sc query appidsvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		sc query appidsvc | findstr /I /C:"OpenService FAILED 1060"
+		if %errorlevel% NEQ 0 (
+			echo 停止 Application Identity 服务失败
+			echo.
+			echo 再次重试停止 Application Identity 服务
+      net stop appidsvc
+		)
+	)
+
+echo 检查 Cryptographic 服务状态
+
+	sc query cryptsvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Cryptographic 服务失败
+		echo.
+		echo 再次重试停止 Cryptographic 服务
+    net stop cryptsvc
+	)
+
+echo 检查 Windows Update Medic 服务状态
+
+	sc query WaaSMedicSvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Windows Update Medic 服务失败
+		echo.
+		echo 再次重试停止 Windows Update Medic 服务
+    net stop cryptsvc
+	)
+
+echo 检查 Update Orchestrator 服务状态
+
+	sc query WaaSMedicSvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Update Orchestrator 服务失败
+		echo.
+		echo 再次重试停止 Update Orchestrator 服务
+    net stop UsoSvc
+	)
+
+	:: ----- Delete the qmgr*.dat files -----
+echo 清理 qmgr*.dat 文件
+del /s /q /f "%ALLUSERSPROFILE%\Application Data\Microsoft\Network\Downloader\qmgr*.dat"
+del /s /q /f "%ALLUSERSPROFILE%\Microsoft\Network\Downloader\qmgr*.dat"
+
+	:: ----- Renaming the softare distribution folders backup copies -----
+echo 删除旧的 SoftwareDistribution 备份文件
+
+cd /d %SYSTEMROOT%
+
+	if exist "%SYSTEMROOT%\winsxs\pending.xml.bak" (
+		del /s /q /f "%SYSTEMROOT%\winsxs\pending.xml.bak"
+	)
+	if exist "%SYSTEMROOT%\SoftwareDistribution.bak" (
+		rmdir /s /q "%SYSTEMROOT%\SoftwareDistribution.bak"
+	)
+	if exist "%SYSTEMROOT%\system32\Catroot2.bak" (
+		rmdir /s /q "%SYSTEMROOT%\system32\Catroot2.bak"
+	)
+	if exist "%SYSTEMROOT%\WindowsUpdate.log.bak" (
+		del /s /q /f "%SYSTEMROOT%\WindowsUpdate.log.bak"
+	)
+
+echo 重命名 SoftwareDistribution 文件夹
+	if exist "%SYSTEMROOT%\winsxs\pending.xml" (
+		takeown /f "%SYSTEMROOT%\winsxs\pending.xml"
+		attrib -r -s -h /s /d "%SYSTEMROOT%\winsxs\pending.xml"
+		ren "%SYSTEMROOT%\winsxs\pending.xml" pending.xml.bak
+	)
+	if exist "%SYSTEMROOT%\SoftwareDistribution" (
+		attrib -r -s -h /s /d "%SYSTEMROOT%\SoftwareDistribution"
+		ren "%SYSTEMROOT%\SoftwareDistribution" SoftwareDistribution.bak
+		if exist "%SYSTEMROOT%\SoftwareDistribution" (
+			echo.
+			echo 未能成功重命名 SoftwareDistribution 文件夹
+			echo.
+			echo 操作失败，请检查文件夹权限和安全软件拦截情况
+      echo 检查完毕后请重新运行此功能进行修复
+			pause>nul
+			goto menu
+		)
+	)
+	if exist "%SYSTEMROOT%\system32\Catroot2" (
+		attrib -r -s -h /s /d "%SYSTEMROOT%\system32\Catroot2"
+		ren "%SYSTEMROOT%\system32\Catroot2" Catroot2.bak
+	)
+	if exist "%SYSTEMROOT%\WindowsUpdate.log" (
+		attrib -r -s -h /s /d "%SYSTEMROOT%\WindowsUpdate.log"
+		ren "%SYSTEMROOT%\WindowsUpdate.log" WindowsUpdate.log.bak
+	)
+
+echo 重置注册表信息
+echo.
+rem wuauserv
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "DependOnService" /t REG_MULTI_SZ /d "rpcss" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "Description" /d "@%%systemroot%%\system32\wuauserv.dll,-106" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "DisplayName" /d "@%%systemroot%%\system32\wuauserv.dll,-105" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "ErrorControl" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "FailureActions" /t REG_BINARY /d "80510100000000000000000003000000140000000100000060ea000000000000000000000000000000000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "ImagePath" /t REG_EXPAND_SZ /d "%%systemroot%%\system32\svchost.exe -k netsvcs -p" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "ObjectName" /d "LocalSystem" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "RequiredPrivileges" /t REG_MULTI_SZ /d "SeAuditPrivilege\0SeCreateGlobalPrivilege\0SeCreatePageFilePrivilege\0SeTcbPrivilege\0SeAssignPrimaryTokenPrivilege\0SeImpersonatePrivilege\0SeIncreaseQuotaPrivilege\0SeShutdownPrivilege\0SeDebugPrivilege\0SeBackupPrivilege\0SeRestorePrivilege\0SeSecurityPrivilege\0SeTakeOwnershipPrivilege\0SeLoadDriverPrivilege\0SeManageVolumePrivilege\0SeSystemEnvironmentPrivilege\0SeCreateSymbolicLinkPrivilege\0SeIncreaseBasePriorityPrivilege" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "ServiceSidType" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "Start" /t REG_DWORD /d 3 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "SvcMemHardLimitInMB" /t REG_DWORD /d 246 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "SvcMemMidLimitInMB" /t REG_DWORD /d 167 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "SvcMemSoftLimitInMB" /t REG_DWORD /d 88 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /v "Type" /t REG_DWORD /d 32 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\Parameters" /v "ServiceDll" /t REG_EXPAND_SZ /d "%%systemroot%%\system32\wuauserv.dll" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\Parameters" /v "ServiceDllUnloadOnStop" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\Parameters" /v "ServiceMain" /d "WUServiceMain" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\Security" /v "Security" /t REG_BINARY /d "010014807800000084000000140000003000000002001c000100000002801400ff000f000101000000000001000000000200480003000000000014009d00020001010000000000050b00000000001800ff010f000102000000000005200000002002000000001400ff010f00010100000000000512000000010100000000000512000000010100000000000512000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\TriggerInfo" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\TriggerInfo\0" /v "Type" /t REG_DWORD /d 5 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\TriggerInfo\0" /v "Action" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\TriggerInfo\0" /v "Guid" /t REG_BINARY /d "e6ca9f65db5ba94db1ffca2a178d46e0" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\TriggerInfo\1" /v "Type" /t REG_DWORD /d 5 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\TriggerInfo\1" /v "Action" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv\TriggerInfo\1" /v "Guid" /t REG_BINARY /d "c846fb5489f04c46b1fd59d1b62c3b50" /f >nul
+echo 操作执行完成
+
+rem bits
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "DependOnService" /t REG_MULTI_SZ /d "RpcSs" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "Description" /d "@%%SystemRoot%%\system32\qmgr.dll,-1001" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "DisplayName" /d "@%%SystemRoot%%\system32\qmgr.dll,-1000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "ErrorControl" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "FailureActions" /t REG_BINARY /d "80510100000000000000000003000000140000000100000060ea000001000000c0d401000000000000000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "ImagePath" /t REG_EXPAND_SZ /d "%%SystemRoot%%\System32\svchost.exe -k netsvcs -p" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "ObjectName" /d "LocalSystem" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "RequiredPrivileges" /t REG_MULTI_SZ /d "SeCreateGlobalPrivilege\0SeImpersonatePrivilege\0SeTcbPrivilege\0SeAssignPrimaryTokenPrivilege\0SeIncreaseQuotaPrivilege\0SeDebugPrivilege" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "ServiceSidType" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "Start" /t REG_DWORD /d 3 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "Type" /t REG_DWORD /d 32 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /v "DelayedAutostart" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Parameters" /v "ServiceDll" /t REG_EXPAND_SZ /d "%%SystemRoot%%\System32\qmgr.dll" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Parameters" /v "ServiceDllUnloadOnStop" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Close" /d "PerfMon_Close" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Collect" /d "PerfMon_Collect" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Library" /d "C:\Windows\System32\bitsperf.dll" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Open" /d "PerfMon_Open" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "InstallType" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "PerfIniFile" /d "bitsctrs.ini" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "First Counter" /t REG_DWORD /d 8616 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Last Counter" /t REG_DWORD /d 8632 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "First Help" /t REG_DWORD /d 8617 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Last Help" /t REG_DWORD /d 8633 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Object List" /d "8616" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "1008" /t  /d  /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "1011" /t  /d  /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Performance" /v "Disable Performance Counters" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BITS\Security" /v "Security" /t REG_BINARY /d "0100148090000000a00000001400000034000000020020000100000002c0180000000c000102000000000005200000002002000002005c000400000000021400ff010f0001010000000000051200000000001800ff010f0001020000000000052000000020020000000014008d010200010100000000000504000000000014008d0102000101000000000005060000000102000000000005200000002002000001020000000000052000000020020000" /f >nul
+echo 操作执行完成
+
+rem TrustedInstaller
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "BlockTime" /t REG_DWORD /d 10800 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "BlockTimeIncrement" /t REG_DWORD /d 900 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "Description" /d "@%%SystemRoot%%\servicing\TrustedInstaller.exe,-101" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "DisplayName" /d "@%%SystemRoot%%\servicing\TrustedInstaller.exe,-100" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "ErrorControl" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "FailureActions" /t REG_BINARY /d "840300000000000000000000030000001400000001000000c0d4010001000000e09304000000000000000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "Group" /d "ProfSvc_Group" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "ImagePath" /t REG_EXPAND_SZ /d "%%SystemRoot%%\servicing\TrustedInstaller.exe" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "ObjectName" /d "localSystem" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "PreshutdownTimeout" /t REG_DWORD /d 3600000 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "ServiceSidType" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "Start" /t REG_DWORD /d 3 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller" /v "Type" /t REG_DWORD /d 16 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\TrustedInstaller\Security" /v "Security" /t REG_BINARY /d "0100148090000000a00000001400000034000000020020000100000002c0180000000c000102000000000005200000002002000002005c000400000000021400ff010f0001010000000000051200000000001800ff01020001020000000000052000000020020000000014008d010200010100000000000504000000000014008d0102000101000000000005060000000102000000000005200000002002000001020000000000052000000020020000" /f >nul
+echo 操作执行完成
+
+rem CryptSvc
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "DependOnService" /t REG_MULTI_SZ /d "RpcSs" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "Description" /d "@%%SystemRoot%%\system32\cryptsvc.dll,-1002" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "DisplayName" /d "@%%SystemRoot%%\system32\cryptsvc.dll,-1001" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "ErrorControl" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "FailureActions" /t REG_BINARY /d "80510100000000000000000003000000140000000100000060ea000000000000000000000000000000000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "ImagePath" /t REG_EXPAND_SZ /d "%%SystemRoot%%\system32\svchost.exe -k NetworkService -p" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "ObjectName" /d "NT Authority\NetworkService" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "RequiredPrivileges" /t REG_MULTI_SZ /d "SeChangeNotifyPrivilege\0SeCreateGlobalPrivilege\0SeImpersonatePrivilege" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "ServiceSidType" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "Start" /t REG_DWORD /d 2 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc" /v "Type" /t REG_DWORD /d 16 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\Parameters" /v "ServiceDll" /t REG_EXPAND_SZ /d "%%SystemRoot%%\system32\cryptsvc.dll" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\Parameters" /v "ServiceDllUnloadOnStop" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\Parameters" /v "ServiceMain" /d "CryptServiceMain" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\Security" /v "Security" /t REG_BINARY /d "01000480d8000000e400000000000000140000000200c4000700000000001400fd01020001010000000000051200000000001800ff010f0001020000000000052000000020020000000014008d010200010100000000000504000000000014008d01020001010000000000050600000000001800fd01020001020000000000052000000025020000000018008d000200010200000000000f0200000001000000000038008d000200010a00000000000f03000000000400008543efbe8867637e4d7a39abdefa60729ff69fa85772dbfe9e1ca32d96ba04a4010100000000000512000000010100000000000512000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\TriggerInfo" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\TriggerInfo\0" /v "Action" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\TriggerInfo\0" /v "Data0" /t REG_BINARY /d "460035003000410041004300300030002d0043003700460033002d0034003200380065002d0041003000320032002d004100360042003700310042004600420039004400340033000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\TriggerInfo\0" /v "DataType0" /t REG_DWORD /d 2 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\TriggerInfo\0" /v "GUID" /t REG_BINARY /d "67d190bc70943941a9babe0bbbf5b74d" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\CryptSvc\TriggerInfo\0" /v "Type" /t REG_DWORD /d 6 /f >nul
+echo 操作执行完成
+
+rem UsoSvc
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "DelayedAutoStart" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "DependOnService" /t REG_MULTI_SZ /d "rpcss" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "Description" /d "@%%systemroot%%\system32\usosvc.dll,-102" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "DisplayName" /d "@%%systemroot%%\system32\usosvc.dll,-101" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "ErrorControl" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "FailureActions" /t REG_BINARY /d "805101000000000000000000030000001400000001000000c0d4010001000000e09304000000000000000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "ImagePath" /t REG_EXPAND_SZ /d "%%systemroot%%\system32\svchost.exe -k netsvcs -p" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "ObjectName" /d "LocalSystem" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "PreshutdownTimeout" /t REG_DWORD /d 3600000 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "RequiredPrivileges" /t REG_MULTI_SZ /d "SeAuditPrivilege\0SeCreateGlobalPrivilege\0SeCreatePageFilePrivilege\0SeTcbPrivilege\0SeAssignPrimaryTokenPrivilege\0SeImpersonatePrivilege\0SeIncreaseQuotaPrivilege\0SeShutdownPrivilege\0SeDebugPrivilege\0SeBackupPrivilege\0SeRestorePrivilege\0SeSecurityPrivilege\0SeTakeOwnershipPrivilege\0SeLoadDriverPrivilege\0SeManageVolumePrivilege\0SeSystemEnvironmentPrivilege\0SeCreateSymbolicLinkPrivilege\0SeIncreaseBasePriorityPrivilege" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "ServiceSidType" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "Start" /t REG_DWORD /d 2 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /v "Type" /t REG_DWORD /d 32 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc\Parameters" /v "ServiceDll" /t REG_EXPAND_SZ /d "%%systemroot%%\system32\usosvc.dll" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc\Parameters" /v "ServiceDllUnloadOnStop" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc\Parameters" /v "ServiceMain" /d "ServiceMain" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc\Security" /v "Security" /t REG_BINARY /d "010014807800000084000000140000003000000002001c000100000002801400ff000f000101000000000001000000000200480003000000000014009d00020001010000000000050b00000000001800ff010f000102000000000005200000002002000000001400ff010f00010100000000000512000000010100000000000512000000010100000000000512000000" /f >nul
+echo 操作执行完成
+
+rem WaaSMedicSvc
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "DependOnService" /t REG_MULTI_SZ /d "rpcss" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "Description" /d "@WaaSMedicSvcImpl.dll,-101" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "DisplayName" /d "@WaaSMedicSvcImpl.dll,-100" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "ErrorControl" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "FailureActions" /t REG_BINARY /d "840300000000000000000000030000001400000001000000c0d4010001000000e09304000000000000000000" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "ImagePath" /t REG_EXPAND_SZ /d "%%systemroot%%\system32\svchost.exe -k wusvcs -p" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "LaunchProtected" /t REG_DWORD /d 2 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "ObjectName" /d "LocalSystem" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "RequiredPrivileges" /t REG_MULTI_SZ /d "SeTcbPrivilege\0SeChangeNotifyPrivilege\0SeImpersonatePrivilege\0SeTakeOwnershipPrivilege\0SeSecurityPrivilege\0SeBackupPrivilege\0SeRestorePrivilege\0SeManageVolumePrivilege" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "ServiceSidType" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "Start" /t REG_DWORD /d 3 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /v "Type" /t REG_DWORD /d 32 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc\Parameters" /v "ServiceDll" /t REG_EXPAND_SZ /d "%%SystemRoot%%\System32\WaaSMedicSvc.dll" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc\Parameters" /v "ServiceDllUnloadOnStop" /t REG_DWORD /d 1 /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc\Parameters" /v "ServiceMain" /d "ServiceMain" /f >nul
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc\Security" /v "Security" /t REG_BINARY /d "010014807800000084000000140000003000000002001c000100000002801400ff000f000101000000000001000000000200480003000000000014009d00020001010000000000050b00000000001800ff010f000102000000000005200000002002000000001400ff010f00010100000000000512000000010100000000000512000000010100000000000512000000" /f >nul
+echo 操作执行完成
+
+	:: ----- Reset the BITS service and the Windows Update service to the default security descriptor -----
+echo 正在将 BITS 服务和 Windows Update 服务重置为默认安全描述符
+	sc.exe sdset wuauserv D:(A;CI;CCLCSWRPLORC;;;AU)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)S:(AU;FA;CCDCLCSWRPWPDTLOSDRCWDWO;;;WD)
+	sc.exe sdset bits D:(A;CI;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)S:(AU;SAFA;WDWO;;;BA)
+	sc.exe sdset cryptsvc D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)(A;;CCLCSWRPWPDTLOCRRC;;;SO)(A;;CCLCSWLORC;;;AC)(A;;CCLCSWLORC;;;S-1-15-3-1024-3203351429-2120443784-2872670797-1918958302-2829055647-4275794519-765664414-2751773334)
+	sc.exe sdset trustedinstaller D:(A;CI;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)(A;;CCDCLCSWRPWPDTLOCRRC;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)S:(AU;SAFA;WDWO;;;BA)
+
+	:: ----- Reregister the BITS files and the Windows Update files -----
+echo 重新注册 BITS 文件和 Windows Update 文件.
+	cd /d %SYSTEMROOT%\system32
+	regsvr32.exe /s atl.dll
+	regsvr32.exe /s urlmon.dll
+	regsvr32.exe /s mshtml.dll
+	regsvr32.exe /s shdocvw.dll
+	regsvr32.exe /s browseui.dll
+	regsvr32.exe /s jscript.dll
+	regsvr32.exe /s vbscript.dll
+	regsvr32.exe /s scrrun.dll
+	regsvr32.exe /s msxml.dll
+	regsvr32.exe /s msxml3.dll
+	regsvr32.exe /s msxml6.dll
+	regsvr32.exe /s actxprxy.dll
+	regsvr32.exe /s softpub.dll
+	regsvr32.exe /s wintrust.dll
+	regsvr32.exe /s dssenh.dll
+	regsvr32.exe /s rsaenh.dll
+	regsvr32.exe /s gpkcsp.dll
+	regsvr32.exe /s sccbase.dll
+	regsvr32.exe /s slbcsp.dll
+	regsvr32.exe /s cryptdlg.dll
+	regsvr32.exe /s oleaut32.dll
+	regsvr32.exe /s ole32.dll
+	regsvr32.exe /s shell32.dll
+	regsvr32.exe /s initpki.dll
+	regsvr32.exe /s wuapi.dll
+	regsvr32.exe /s wuaueng.dll
+	regsvr32.exe /s wuaueng1.dll
+	regsvr32.exe /s wucltui.dll
+	regsvr32.exe /s wups.dll
+	regsvr32.exe /s wups2.dll
+	regsvr32.exe /s wuweb.dll
+	regsvr32.exe /s qmgr.dll
+	regsvr32.exe /s qmgrprxy.dll
+	regsvr32.exe /s wucltux.dll
+	regsvr32.exe /s muweb.dll
+	regsvr32.exe /s wuwebv.dll
+echo 文件重新注册操作执行完成
+echo.
+	:: ----- Resetting Winsock -----
+echo 重置 Winsock
+	netsh winsock reset
+
+	:: ----- Resetting WinHTTP Proxy -----
+echo 重置 WinHTTP 代理设置
+
+	if %family% EQU 5 (
+		proxycfg.exe -d
+	) else (
+		netsh winhttp reset proxy
+	)
+
+	:: ----- Set the startup type as automatic -----
+echo 重置服务状态为自动启动
+	sc.exe config wuauserv start= auto
+	sc.exe config bits start= delayed-auto
+	sc.exe config cryptsvc start= auto
+	sc.exe config TrustedInstaller start= demand
+	sc.exe config DcomLaunch start= auto
+  sc.exe config WaaSMedicSvc start= auto
+
+	:: ----- Starting the Windows Update services -----
+echo 启动 Windows Update 相关服务
+	net start bits
+	net start wuauserv
+	net start appidsvc
+	net start cryptsvc
+	net start DcomLaunch
+
+	:: ----- End process -----
+	echo 所有操作已执行完成
+
+	echo 修复 Windows Update 完成
+	pause
+goto menu
+
+:wudisable
+echo 二次确认：此操作将禁用 Windows Update
+echo 若您不明白您在做什么，请输入 0 返回主菜单
+echo 若已明确需求，继续操作请输入 Y
+echo.
+set /p wuinput=请输入选项：
+if %wuinput% equ 0 goto menu
+if %wuinput% equ Y goto wudisablestart
+if %wuinput% equ y goto wudisablestart
+goto menu
+
+:wudisablestart
+
+echo 取消正在进行的 Windows Update 操作
+taskkill /im wuauclt.exe /f
+
+echo 停止 Windows Update 相关服务
+
+net stop bits
+net stop wuauserv
+net stop appidsvc
+net stop cryptsvc
+net stop WaaSMedicSvc
+net stop UsoSvc
+
+echo 检查 BITS 服务状态
+
+	sc query bits | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 BITS 服务失败
+		echo.
+		echo 再次重试停止 BITS 服务
+    net stop bits
+	)
+
+echo 检查 Windows Update 服务状态
+
+	sc query wuauserv | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Windows Update 服务失败
+		echo.
+		echo 再次重试停止 Windows Update 服务
+    net stop wuauserv
+	)
+
+echo 检查 Application Identity 服务状态
+
+	sc query appidsvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		sc query appidsvc | findstr /I /C:"OpenService FAILED 1060"
+		if %errorlevel% NEQ 0 (
+			echo 停止 Application Identity 服务失败
+			echo.
+			echo 再次重试停止 Application Identity 服务
+      net stop appidsvc
+		)
+	)
+
+echo 检查 Cryptographic 服务状态
+
+	sc query cryptsvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Cryptographic 服务失败
+		echo.
+		echo 再次重试停止 Cryptographic 服务
+    net stop cryptsvc
+	)
+
+echo 检查 Windows Update Medic 服务状态
+
+	sc query WaaSMedicSvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Windows Update Medic 服务失败
+		echo.
+		echo 再次重试停止 Windows Update Medic 服务
+    net stop cryptsvc
+	)
+
+echo 检查 Update Orchestrator 服务状态
+
+	sc query WaaSMedicSvc | findstr /I /C:"STOPPED"
+	if %errorlevel% NEQ 0 (
+		echo 停止 Update Orchestrator 服务失败
+		echo.
+		echo 再次重试停止 Update Orchestrator 服务
+    net stop UsoSvc
+	)
+
+
+echo 禁用 Windows Update 相关服务
+
+sc stop WaaSMedicSvc >nul
+sc config WaaSMedicSvc start= disabled >nul
+
+sc stop wuauserv >nul
+sc config wuauserv start= disabled >nul
+
+sc stop BITS >nul
+sc config BITS start= disabled >nul
+
+sc stop cryptsvc >nul
+sc config cryptsvc start= disabled >nul
+echo 操作执行完成
+echo. 
+echo 注册表信息更新
+echo 清理 BITS 服务
+reg delete "HKLM\SYSTEM\CurrentControlSet\Services\BITS" /f >nul
+echo 清理 UsoSvc 服务
+reg delete "HKLM\SYSTEM\CurrentControlSet\Services\UsoSvc" /f >nul
+echo 清理 WaaSMedicSvc 服务
+reg delete "HKLM\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /f >nul
+echo 清理 wuauserv 服务
+reg delete "HKLM\SYSTEM\CurrentControlSet\Services\wuauserv" /f >nul
+echo.
+echo 操作执行完成
+
+
+echo 清理 qmgr*.dat 文件
+del /s /q /f "%ALLUSERSPROFILE%\Application Data\Microsoft\Network\Downloader\qmgr*.dat"
+del /s /q /f "%ALLUSERSPROFILE%\Microsoft\Network\Downloader\qmgr*.dat"
+echo.
+echo 删除旧的 SoftwareDistribution 备份文件
+
+cd /d %SYSTEMROOT%
+
+	if exist "%SYSTEMROOT%\winsxs\pending.xml.bak" (
+		del /s /q /f "%SYSTEMROOT%\winsxs\pending.xml.bak"
+	)
+	if exist "%SYSTEMROOT%\SoftwareDistribution.bak" (
+		rmdir /s /q "%SYSTEMROOT%\SoftwareDistribution.bak"
+	)
+	if exist "%SYSTEMROOT%\system32\Catroot2.bak" (
+		rmdir /s /q "%SYSTEMROOT%\system32\Catroot2.bak"
+	)
+	if exist "%SYSTEMROOT%\WindowsUpdate.log.bak" (
+		del /s /q /f "%SYSTEMROOT%\WindowsUpdate.log.bak"
+	)
+echo.
+echo 清理 SoftwareDistribution 文件夹
+
+	if exist "%SYSTEMROOT%\winsxs\pending.xml" (
+		takeown /f "%SYSTEMROOT%\winsxs\pending.xml"
+		attrib -r -s -h /s /d "%SYSTEMROOT%\winsxs\pending.xml"
+		del /s /q /f "%SYSTEMROOT%\winsxs\pending.xml"
+	)
+	if exist "%SYSTEMROOT%\SoftwareDistribution" (
+		attrib -r -s -h /s /d "%SYSTEMROOT%\SoftwareDistribution"
+		rmdir /s /q "%SYSTEMROOT%\SoftwareDistribution"
+		if exist "%SYSTEMROOT%\SoftwareDistribution" (
+			echo.
+			echo 未能成功删除 SoftwareDistribution 文件夹
+			echo.
+			echo 操作失败，请检查文件夹权限和安全软件拦截情况
+      echo 检查完毕后请重新运行此功能进行修复
+			pause>nul
+			goto menu
+		)
+	)
+	if exist "%SYSTEMROOT%\system32\Catroot2" (
+		attrib -r -s -h /s /d "%SYSTEMROOT%\system32\Catroot2"
+		rmdir /s /q "%SYSTEMROOT%\system32\Catroot2"
+	)
+	if exist "%SYSTEMROOT%\WindowsUpdate.log" (
+		attrib -r -s -h /s /d "%SYSTEMROOT%\WindowsUpdate.log"
+		del /s /q /f "%SYSTEMROOT%\WindowsUpdate.log"
+	)
+echo.
+echo 所有操作已执行完成
+echo 已禁用 Windows Update
+pause
+goto menu
+
+:gpeditmsc
+echo 正在启动本地组策略编辑器
+start gpedit.msc
+echo 操作执行完成
+pause
+goto menu
+
+:servicesmsc
+echo 正在启动服务管理单元
+start services.msc
+echo 操作执行完成
+pause
+goto menu
+
+:regeditexe
+echo 正在启动注册表编辑器
+start regedit.exe
+echo 操作执行完成
+pause
+goto menu
+
+:compmgmtmsc
+echo 正在启动计算机管理
+start compmgmt.msc
+echo 操作执行完成
+pause
+goto menu
+
+:eventvwrmsc
+echo 正在启动事件管理器
+start eventvwr.msc
+echo 操作执行完成
+pause
+goto menu
+
+:ctrlpanel
+echo 正在启动控制面板
+start control
+echo 操作执行完成
+pause
+goto menu
+
+:winversion
+echo 执行 Winver 命令
+winver
+echo 操作执行完成
+pause
+goto menu
+
+:startmssetting
+echo 正在打开设置
+start ms-settings:wheel
+echo 操作执行完成
+pause
+goto menu
+
+:starttaskmgr
+echo 正在启动任务管理器
+start taskmgr.exe
+echo 操作执行完成
+pause
+goto menu
+
+:startdiskmgr
+echo 正在启动磁盘管理
+start diskmgmt.msc
+echo 操作执行完成
+pause
+goto menu
+
+:sharemanage
+echo 正在启动共享文件夹管理
+start fsmgmt.msc
+echo 操作执行完成
+pause
+goto menu
+
+:startperfmon
+echo 正在启动性能监视器
+start perfmon.msc
+echo 操作执行完成
+pause
+goto menu
+
+:securemgr
+echo 正在启动本地安全组策略
+start secpol.msc
+echo 操作执行完成
+pause
+goto menu
+
+:dxcheck
+echo 正在启动 DirectX 检测工具
+start dxdiag
+echo 操作执行完成
+pause
+goto menu
+
+:rdapp
+echo 正在启动远程桌面连接
+start mstsc
+echo 操作执行完成
+pause
+goto menu
+
+:optionalfunc
+echo 正在启动 Windows 功能管理（启用或关闭 Windows 功能）
+start OptionalFeatures
+echo 操作执行完成
+pause
+goto menu
+
+:ms_config
+echo 正在启动系统配置（启动、引导管理）
+start msconfig
+echo 操作执行完成
+pause
+goto menu
+
+:startsysinfo
+echo 正在启动系统信息
+start msinfo32
+echo 操作执行完成
+pause
+goto menu
+
+:memcheckprogram
+echo 正在启动 Windows 内存诊断
+start mdsched
+echo 操作执行完成
+pause
+goto menu
+
+:componentmgr
+echo 正在启动组件服务管理
+start dcomcnfg
+echo 操作执行完成
+pause
+goto menu
+
+:ipconfigsys
+echo 查看本机网络连接信息
+echo 执行命令
+ipconfig /all >%userprofile%\desktop\MDT\sys_ipconfig_detail.log
+ipconfig >%userprofile%\desktop\MDT\sys_ipconfig_basic.log
+type %userprofile%\desktop\MDT\sys_ipconfig_basic.log
+echo 操作执行完成
+echo 本机网络连接信息导出完成，请查看桌面 MDT 文件夹中的 sys_ipconfig_basic.log 和 sys_ipconfig_detail.log 文件
+rem start %userprofile%\desktop\MDT\sys_ipconfig.log
+echo 路径：%userprofile%\desktop\MDT\sys_ipconfig_basic.log
+echo 路径：%userprofile%\desktop\MDT\sys_ipconfig_detail.log
 pause
 goto menu
