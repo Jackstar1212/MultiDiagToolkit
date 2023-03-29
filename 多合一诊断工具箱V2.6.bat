@@ -1,28 +1,48 @@
 @echo off
-
 rem 取得管理员权限
 >NUL 2>&1 REG.exe query "HKU\S-1-5-19" || (
+    echo.
+    echo     声明：脚本修复功能不一定适用于您的问题，作者对使用脚本后果概不负责，请自行斟酌使用
+    echo     声明：继续使用代表您同意免除脚本作者对您电脑进行修改缩造成后果的责任，自行承担后果
+    echo.
+    echo     若要使用请允许此脚本以管理员权限运行
+    echo     当出现“你要允许此应用对您的设备进行更改吗？”对话框时，请选“是”
+    echo     请检查是否已退出杀毒软件、管家软件等安全软件
+    echo.
+    echo     若不同意请关闭程序，或在出现“你要允许此应用对您的设备进行更改吗？”对话框时，选择“否”
+    echo.
+
+    timeout /t 5 /nobreak > NUL
     ECHO SET UAC = CreateObject^("Shell.Application"^) > "%TEMP%\Getadmin.vbs"
     ECHO UAC.ShellExecute "%~f0", "%1", "", "runas", 1 >> "%TEMP%\Getadmin.vbs"
     "%TEMP%\Getadmin.vbs"
     DEL /f /q "%TEMP%\Getadmin.vbs" 2>NUL
     cls
-    echo 请允许此脚本以管理员权限运行
-    echo 当出现“你要允许此应用对您的设备进行更改吗？”对话框时，请选“是”
-    timeout /t 3 /nobreak > NUL
     Exit /b
 )
 
 rem 系统诊断修复工具
 
+rem 设置窗口大小及颜色
+rem color 2f
+color 70
+mode con cols=92 lines=54
+rem cols 设置宽度；lines 设置长度
+rem 颜色属性由两个十六进制数字指定 -- 第一个对应于背景，第二个对应于前景。每个数字可以为以下任何值:
+rem 0 = 黑色 1 = 蓝色 2 = 绿色 3= 浅绿色 4 = 红色 5 = 紫色 6 = 黄色 7 = 白色 8 = 灰色 9 = 淡蓝色 A = 淡绿色 B = 淡浅绿色 C = 淡红色 D = 淡紫色 E = 淡黄色 F = 亮白色
 rem 检查系统环境变量
 
+echo.
+echo     正在初始化程序...
+echo.
+echo     检查环境变量...
+echo.
 wmic /? >nul 2>nul
 if %ERRORLEVEL% equ 0 (
 	echo. >nul 2>nul
 ) else (
 	rem call:systempath %%SystemRoot%%\system32\Wbem
-	echo 诊断工具功能可能受限，请手动修复C:\Windows\system32\Wbem环境变量
+	echo     诊断工具功能可能受限，请手动修复 C:\Windows\system32\Wbem 环境变量
 )
 
 netsh winsock show >nul 2>nul
@@ -39,12 +59,14 @@ if %ERRORLEVEL% equ 0 (
 ) else (
 	%systemroot%\system32\reg add "HKEY_CURRENT_USER\Environment" /v Temp /t REG_EXPAND_SZ /d "%USERPROFILE%\AppData\Local\Temp" /f >nul 2>nul
 	set temp=%USERPROFILE%\AppData\Local\Temp
-	echo 已修复用户环境变量, 请重新打开检查工具
+	echo     已修复用户环境变量, 请重新打开检查工具
 )
-
+echo     操作执行完成
+echo.
+echo     检查软件兼容性问题
 %systemroot%\system32\tasklist /fi "IMAGENAME eq 360tray.exe" |findstr /i 360tray.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出360安全卫士, 以免操作过程中出现错误！
+	echo     请退出360安全卫士, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出360安全卫士, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -53,7 +75,7 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq kxetray.exe" |findstr /i kxetray.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出金山毒霸, 以免操作过程中出现错误！
+	echo     请退出金山毒霸, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出金山毒霸, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -62,7 +84,7 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq BaiduSdSvc.exe" |findstr /i BaiduSdSvc.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出百度杀毒软件, 以免操作过程中出现错误！
+	echo     请退出百度杀毒软件, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出百度杀毒软件, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -71,7 +93,7 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq ksafe.exe" |findstr /i ksafe.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出金山卫士, 以免操作过程中出现错误！
+	echo     请退出金山卫士, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出金山卫士, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -80,7 +102,7 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq ccSvcHst.exe" |findstr /i ccSvcHst.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出Norton杀毒, 以免操作过程中出现错误！
+	echo     请退出Norton杀毒, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出Norton杀毒, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -89,7 +111,7 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq avp.exe" |findstr /i avp.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出卡巴斯基, 以免操作过程中出现错误！
+	echo     请退出卡巴斯基, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出卡巴斯基, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -98,7 +120,7 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq 360sd.exe" |findstr /i 360sd.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出360杀毒, 以免操作过程中出现错误！
+	echo     请退出360杀毒, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出360杀毒, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -107,7 +129,7 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq QQPCSoftMgr.exe" |findstr /i QQPCSoftMgr.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出腾讯电脑管家, 以免操作过程中出现错误！
+	echo     请退出腾讯电脑管家, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出腾讯电脑管家, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
@@ -116,15 +138,17 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq HipsTray.exe" |findstr /i HipsTray.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo 请退出火绒安全软件, 以免操作过程中出现错误！
+	echo     请退出火绒安全软件, 以免操作过程中出现错误！
 	mshta vbscript:msgbox("请退出火绒安全软件, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
 )
+echo.
+echo     操作执行完成
 
 rem 设置程序版本、作者信息
-set "progver=2.3"
+set "progver=2.6"
 set "Author=LonelyFish"
 
 setlocal enabledelayedexpansion
@@ -208,44 +232,98 @@ for /f %%i in ('netsh int ipv4 show interfaces ^|findstr /c:%networkname2%') do 
 echo. >nul 2>nul
 )
 
+:preGetOSinfo
+rem 提前读取，避免重复读取加快目录加载速度
+if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+
+rem 生成文件夹说明文件
+echo.>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo 此文件夹为 MutiDiagToolkit（MDT）程序的日志输出文件夹>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo MDT 生成的所有日志均会保存在此文件夹内>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo 如不再需要日志信息，可以在 MDT 程序退出后删除此文件夹>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo.>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo 以下为日志名称说明：>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo.>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo 此文件夹是干什么的？_ReadMe.txt  说明文件                      由 MDT 主程序初始化生成，用于告知用户此文件夹的作用与用途>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo AllProcess.log                  系统所有进程列表日志          由查看系统当前所有进程功能生成>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo AllProcess_Running.log          系统所有正在运行的进程列表日志 由查看系统当前所有正在运行的进程功能生成>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo Battery_Report.html             电池健康度报告                由查看电池健康度功能生成，可以查看电池健康度相关信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo GET_HASH.log                    HASH 值日志                  由查看文件 HASH 值功能生成，可查看生成的文件 HASH 值记录>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo NetDiag.txt                     内网信息日志                  由系统环境诊断功能生成，可以查看内网情况信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo OS_Info.txt                     系统信息转储文件              由 MDT 主程序初始化生成，可以查看系统相关信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo ProgramList.log                 此设备安装的程序列表日志       由导出程序列表功能生成，可以查看此设备安装的程序>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo Sys_ipconfig_Basic.log          系统网络 IP 配置信息基础日志   由查看本机网络连接信息功能生成，可以查看系统网络连接基础情况>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo Sys_ipconfig_Detail.log         系统网络 IP 配置信息详细日志   由查看本机网络连接信息功能生成，可以查看系统网络连接详细情况>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo Userlist_Basic.log              用户列表基础信息日志           由列出此计算机的所有用户功能生成，可以查看此设备用户的基础信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo Userlist_Detail.log             用户列表详细信息日志           由列出此计算机的所有用户功能生成，可以查看此设备用户的详细信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo.>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo 如果没有以上部分文件，是因为用户没有调用相关功能，因此不会生成相关日志文件>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo.>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo 生成此文件的 MDT 程序版本：%progver%>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt 
+echo 作者：%Author%>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+
+echo.
+echo     正在生成系统信息转储文件
+rem 调用生成系统信息方法
+call :generatesysinfo
+echo.
+rem 存储首次生成系统信息文件MD5值，作为校验标准
+for /f %%i in ('certutil -hashfile %userprofile%\desktop\MDT\OS_Info.txt MD5 ^|findstr /v "[^0-9a-z]"') do set osinfoMD5=%%i
+echo osinfoMD5 = %osinfoMD5% >nul
+echo     已保存系统信息校验值
+echo     已保存系统信息，路径：%userprofile%\desktop\MDT\OS_Info.txt
+echo.
+echo     程序初始化完成
+timeout /t 1 /nobreak > NUL
+
 :menu
 for /f "tokens=4" %%i in ('powercfg /LIST ^|findstr /v "Active" ^|findstr "*"') do set powerstate=%%i
 set powerstate=!powerstate:(=! 2>nul
 set powerstate=!powerstate:)=! 2>nul
 
+rem 再次设置颜色，避免MAS覆盖
+color 70
 rem Win10游戏模式
 if "%systemver%"=="10" (
 for /f "tokens=3" %%i in ('reg query "HKEY_CURRENT_USER\Software\Microsoft\GameBar" /v AutoGameModeEnabled 2^>nul') do set gamebar=%%i
 if defined gamebar (
-if !gamebar!==0x0 set gamebar=游戏模式:         关
-if !gamebar!==0x1 set gamebar=游戏模式:         开
+if !gamebar!==0x0 set gamebar=    游戏模式:                     关
+if !gamebar!==0x1 set gamebar=    游戏模式:                     开
 ) else (
-set "gamebar=游戏模式:         开"
+set "gamebar=    游戏模式:                     开"
 )
 ) else (
 echo. >nul
 )
 
-rem 设置窗口大小及颜色
-rem color 2f
-color 70
-mode con cols=100 lines=50
-
-rem cols 设置宽度；lines 设置长度
-rem 颜色属性由两个十六进制数字指定 -- 第一个对应于背景，第二个对应于前景。每个数字可以为以下任何值:
-rem 0 = 黑色 1 = 蓝色 2 = 绿色 3= 浅绿色 4 = 红色 5 = 紫色 6 = 黄色 7 = 白色 8 = 灰色 9 = 淡蓝色 A = 淡绿色 B = 淡浅绿色 C = 淡红色 D = 淡紫色 E = 淡黄色 F = 亮白色
-
 cls
 echo.
-echo 基本系统信息: 
+echo     基本系统信息: 
 echo.
-systeminfo | findstr /C:"OS"
-echo 登录用户：        %USERNAME%
-echo 计算机名：        %COMPUTERNAME%
-echo 系统时间:         %time:~0,8%
-echo 系统时区:         %timezone%
-echo 安装语言:         %Languages% %SystemLanguages%
-echo 电源模式:         %powerstate%
+rem 此处不再执行systeminfo命令，直接读取预加载的文件，但是做MD55校验，与最开始生成的文件不同则重新生成文件
+rem 文件不存在则重新生成
+if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+if not exist "%userprofile%\desktop\MDT\OS_Info.txt" (
+  echo     系统信息转储文件丢失，重新读取系统信息
+  call :generatesysinfo
+  echo     已重新保存系统信息
+)
+rem 开始MD5校验，不通过则重新生成
+for /f %%i in ('certutil -hashfile %userprofile%\desktop\MDT\OS_Info.txt MD5 ^|findstr /v "[^0-9a-z]"') do set osinfoMD5New=%%i
+if %osinfoMD5% neq %osinfoMD5New% (
+  echo     系统信息校验值不匹配，重新读取系统信息
+  call :generatesysinfo
+  echo     已重新保存系统信息
+)
+rem 进入菜单，输出记录
+type %userprofile%\desktop\MDT\OS_Info.txt
+rem 以下每次返回目录输出
+echo     登录用户：                    %USERNAME%
+echo     计算机名：                    %COMPUTERNAME%
+echo     系统时间:                     %time:~0,8%
+echo     系统时区:                     %timezone%
+echo     安装语言:                     %Languages% %SystemLanguages%
+echo     电源模式:                     %powerstate%
 if "%systemver%"=="10" (
 echo %gamebar%
 )
@@ -254,91 +332,93 @@ echo     欢迎使用多合一系统诊断修复工具！
 echo.
 rem 主菜单：多合一系统诊断修复工具
 
-echo ----------------------------------------------------------------------------------------
-echo                                   多合一系统诊断修复工具
-echo ----------------------------------------------------------------------------------------
-echo 0. 关于脚本的疑难解答（不知道这玩意干嘛的，选我）
+echo ------------------------------------------------------------------------------------------
+echo                                    多合一系统诊断修复工具
+echo ------------------------------------------------------------------------------------------
+echo     0. 关于脚本的疑难解答（不知道这玩意干嘛的，选我）
 echo.
-echo 1. 系统诊断修复（电脑常见问题选我）
+echo     1. 系统诊断修复（电脑常见问题选我）
 echo.
-echo 2. 网络诊断修复（网炸了选我）
+echo     2. 网络诊断修复（网炸了选我）
 echo.
-echo 3. 系统优化调整（Windows 功能调整选我）
+echo     3. 系统优化调整（Windows 功能调整选我）
 echo.
-echo 4. 常用软件修复（Steam 异常等选我）
+echo     4. 常用软件修复（Steam 异常等选我）
 echo.
-echo 5. 其他功能杂项（其他的选我）
-echo ----------------------------------------------------------------------------------------
+echo     5. 其他功能杂项（其他的选我）
+echo ------------------------------------------------------------------------------------------
 echo.
-echo 脚本作者：%Author%
-echo 脚本版本：v%progver%
+echo     脚本作者：%Author%
+echo     脚本版本：v%progver%
 echo.
-echo 声明：脚本修复功能不一定适用于您的问题，作者对使用脚本后果概不负责，请自行斟酌使用
-echo 声明：继续使用代表您同意免除脚本作者对您电脑进行修改缩造成后果的责任，自行承担后果
-echo 声明：如果不同意，请点击右上角关闭按钮关闭脚本并删除脚本文件
-echo 首次使用建议阅读关于脚本的疑难解答
+echo     声明：脚本修复功能不一定适用于您的问题，作者对使用脚本后果概不负责，请自行斟酌使用
+echo     声明：继续使用代表您同意免除脚本作者对您电脑进行修改缩造成后果的责任，自行承担后果
+echo     声明：如果不同意，请点击右上角关闭按钮关闭脚本并删除脚本文件
+echo     首次使用建议阅读关于脚本的疑难解答
 echo.
-echo ----------------------------------------------------------------------------------------
-set /p maininput=请选择项目：
+echo ------------------------------------------------------------------------------------------
+set /p maininput=→  请选择项目：
 if %maininput% equ 0 goto QA
 if %maininput% equ 1 goto menusysrepairP1
 if %maininput% equ 2 goto menunetfix
 if %maininput% equ 3 goto menusysoptimizeP1
 if %maininput% equ 4 goto menusoft
 if %maininput% equ 5 goto menuotherP1
-echo 输入异常，请检查输入选项。
+echo →  输入异常，请检查输入选项
 pause
 goto menu
 
 rem 系统诊断修复菜单
 
 :menusysrepairP1
-echo ----------------------------------------------------------------------------------------
-echo                                      系统诊断修复菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       系统诊断修复菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 系统环境诊断（我想了解系统啊网络环境啊大概啥样）
+echo     1. 系统环境诊断（我想了解系统啊网络环境啊大概啥样）
 echo.
-echo 2. 系统修复（电脑这个不行那个不行，又不想重装，试试我）
+echo     2. 系统修复（电脑这个不行那个不行，又不想重装，试试我）
 echo.
-echo 3. 显示程序列表（看看老子/老娘电脑里装了些啥）
+echo     3. 显示程序列表（看看老子/老娘电脑里装了些啥）
 echo.
-echo 4. 重置IE（上古神器ie浏览器，没人用，但是有时候网寄了也可以选我试试）
+echo     4. 重置 IE（上古神器 IE 浏览器，没人用，但是有时候网寄了也可以选我试试）
 echo.
-echo 5. Xbox平台修复（打游戏用到xbox了，这玩意出问题选我）
+echo     5. Xbox 平台修复（打游戏用到 xbox 了，这玩意出问题选我）
 echo.
-echo 6. 图标变白修复（桌面图标咋都变成白色的了？选我）
+echo     6. 图标变白修复（桌面图标咋都变成白色的了？选我）
 echo.
-echo 7. Windows聚焦壁纸修复（我的锁屏壁纸之前总是会自动换的，咋不换了或者变默认了？选我）
+echo     7. Windows 聚焦壁纸修复（我的锁屏壁纸之前总是会自动换的，咋不换了或者变默认了？选我）
 echo.
-echo 8. Windows电源选项恢复（想要高性能、节能、平衡等那些电源选项，找不到了，选我）
+echo     8. Windows 电源选项恢复（想要高性能、节能、平衡等那些电源选项，找不到了，选我）
 echo.
-echo 9. Windows Update更新安装问题（0x80070002/0x80070005）其他故障请使用系统修复（更新打不上选我）
+echo     9. Windows Update 更新安装问题（0x80070002/0x80070005）其他故障请使用系统修复
 echo.
-echo 10. taskmgr.exe没有与之关联的程序运行（任务管理器定位程序进程路径出问题，选我）
+echo     10. taskmgr.exe 没有与之关联的程序运行（任务管理器定位程序进程路径出问题，选我）
 echo.
-echo 11. 多种exe没有与之关联的程序运行（打开软件报这个错选我）
+echo     11. 多种 exe 没有与之关联的程序运行（打开软件报这个错选我）
 echo.
-echo 12. 取消Windows激活状态并重置评估期（慎用！会使Windows变为未激活状态！）（小白别点）
+echo     12. 取消 Windows 激活状态并重置评估期（慎用！会使 Windows 变为未激活状态！）（小白别点）
 echo.
-echo 13. 组策略添加、修复（适用于家庭版添加组策略或者升级专业版后组策略丢失异常等问题）
+echo     13. 组策略添加、修复（适用于家庭版添加组策略或者升级专业版后组策略丢失异常等问题）
 echo.
-echo 14. 修复桌面图标间距异常、窗口右上角关闭最大化最小化按钮异常（桌面图标间距好大，怪怪的，右上角关闭图标也怪怪的，选我）
+echo     14. 修复桌面图标间距异常、窗口右上角关闭最大化最小化按钮异常
+echo     （桌面图标间距好大，怪怪的，右上角关闭图标也怪怪的，选我）
 echo.
-echo 15. 修复微软商店打不开、转圈、白屏等问题（微软商店打不开选我）
+echo     15. 修复微软商店打不开、转圈、白屏等问题（微软商店打不开选我）
 echo.
-echo 16. IE主页劫持修复（主页被乱改了）
+echo     16. IE 主页劫持修复（主页被乱改了）
 echo.
-echo 17. 修复由于远程连接导致的剪贴板复制粘贴失效问题
+echo     17. 修复由于远程连接导致的剪贴板复制粘贴失效问题
 echo.
-echo 18. 停用vmmem，解决vmmem占用过高问题
+echo     18. 停用 vmmem ，解决 vmmem 占用过高问题
 echo.
-echo 19. 查看电池健康度（看看电脑电池损耗如何）
+echo     19. 查看电池健康度（看看电脑电池损耗如何）
 echo.
-echo 20. 查看下一页（当前页面为：P1）
-echo ----------------------------------------------------------------------------------------
-set /p sysdiaginput1=请选择项目：
+echo     20. 查看下一页（当前页面为：P1）
+echo ------------------------------------------------------------------------------------------
+set /p sysdiaginput1=→  请选择项目：
 if %sysdiaginput1% equ 0 goto menu
 if %sysdiaginput1% equ 1 goto envdiag
 if %sysdiaginput1% equ 2 goto systemrepair
@@ -360,31 +440,32 @@ if %sysdiaginput1% equ 17 goto RDclipboard
 if %sysdiaginput1% equ 18 goto vmmemstop
 if %sysdiaginput1% equ 19 goto batteryreport
 if %sysdiaginput1% equ 20 goto menusysrepairP2
-echo 输入异常，请检查输入选项。
+echo →  输入异常，请检查输入选项
 pause
 goto menusysrepairP1
 
 :menusysrepairP2
-echo ----------------------------------------------------------------------------------------
-echo                                      系统诊断修复菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       系统诊断修复菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 返回上一页（当前页面为：P2）
+echo     1. 返回上一页（当前页面为：P2）
 echo.
-echo 2. 加入Windows预览体验计划（Windows Insider Channel）
+echo     2. 加入Windows预览体验计划（Windows Insider Channel）
 echo.
-echo 3. 运行系统自带磁盘清理工具（Cleanmgr）
+echo     3. 运行系统自带磁盘清理工具（Cleanmgr）
 echo.
-echo 4. MAS 微软激活脚本（系统激活用我）
+echo     4. MAS 微软激活脚本（系统激活用我）
 echo.
-echo 5. 列出当前计算机正在运行的所有进程
+echo     5. 列出当前计算机正在运行的所有进程
 echo.
-echo 6. 列出所有进程（不论活跃与否）
+echo     6. 列出所有进程（不论活跃与否）
 echo.
-echo 7. 列出此计算机的所有用户
-echo ----------------------------------------------------------------------------------------
-set /p sysdiaginput2=请选择项目：
+echo     7. 列出此计算机的所有用户
+echo ------------------------------------------------------------------------------------------
+set /p sysdiaginput2=→  请选择项目：
 if %sysdiaginput2% equ 0 goto menu
 if %sysdiaginput2% equ 1 goto menusysrepairP1
 if %sysdiaginput2% equ 2 goto insiderchannel
@@ -393,39 +474,44 @@ if %sysdiaginput2% equ 4 goto MAS_ACTIVATOR
 if %sysdiaginput2% equ 5 goto allprocessrunning
 if %sysdiaginput2% equ 6 goto allprocess
 if %sysdiaginput2% equ 7 goto userlist
-echo 输入异常，请检查输入选项。
+echo →  输入异常，请检查输入选项
 pause
 goto menusysrepairP2
 
 rem 网络诊断修复菜单
 
 :menunetfix
-echo ----------------------------------------------------------------------------------------
-echo                                      网络诊断修复菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       网络诊断修复菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 代理程序诊断（有没有奇怪的代理程序影响我上网选我）
+echo     1. 代理程序诊断（有没有奇怪的代理程序影响我上网选我）
 echo.
-echo 2. hosts修复工具（高级操作，改改影响网络解析的玩意）
+echo     2. HOSTS 修复工具（高级操作，改改影响网络解析的玩意）
 echo.
-echo 3. DNS设置工具（上网打开网页慢，换个dns也许可以解决？）
+echo     3. DNS 设置工具（上网打开网页慢，换个dns也许可以解决？）
 echo.
-echo 4. 网络协议栈重置（网炸了选我）
+echo     4. 网络协议栈重置（网炸了选我）
 echo.
-echo 5. LSP修复（网炸了选我先，不行选上面的那个）
+echo     5. LSP 修复（网炸了选我先，不行选上面的那个）
 echo.
-echo 6. 关闭Windows防火墙（碍手碍脚总弹窗问联网权限？选我关掉，当然不是那么推荐）
+echo     6. 关闭 Windows 防火墙（碍手碍脚总弹窗问联网权限？选我关掉，当然不是那么推荐）
 echo.
-echo 7. 开启Windows防火墙（我后悔了，或者遇到问题了，重新打开选我）
+echo     7. 开启 Windows 防火墙（我后悔了，或者遇到问题了，重新打开选我）
 echo.
-echo 8. 重置IE（上古神器ie浏览器，没人用，但是有时候网寄了也可以选我试试）
+echo     8. 重置 IE（上古神器 IE 浏览器，没人用，但是有时候网寄了也可以选我试试）
 echo.
-echo 9. DNS缓存域名记录（看看网页解析）
+echo     9. DNS 缓存域名记录（看看网页解析）
 echo.
-echo 10. 查看本机网络连接信息详情
-echo ----------------------------------------------------------------------------------------
-set /p netdiaginput=请选择项目：
+echo     10. 查看本机网络连接信息详情
+echo.
+echo     11. 网络完全重置（我不知道哪里出问题了，帮我全部重置一遍，含 Steam、Xbox 修复）
+echo.
+echo     12. 打开网络连接设置（传统设置）
+echo ------------------------------------------------------------------------------------------
+set /p netdiaginput=→  请选择项目：
 if %netdiaginput% equ 0 goto menu
 if %netdiaginput% equ 1 goto proxydiag
 if %netdiaginput% equ 2 goto hsfile
@@ -437,144 +523,152 @@ if %netdiaginput% equ 7 goto systemfirewallon
 if %netdiaginput% equ 8 goto iereset
 if %netdiaginput% equ 9 goto dnscachelist
 if %netdiaginput% equ 10 goto ipconfigsys
-echo 输入异常，请检查输入选项。
+if %netdiaginput% equ 11 goto NetworkAllReset
+if %netdiaginput% equ 12 goto netconnectcenter
+echo →  输入异常，请检查输入选项
 pause
 goto menunetfix
 
 rem 系统优化调整菜单
 
 :menusysoptimizeP1
-echo ----------------------------------------------------------------------------------------
-echo                                      系统优化调整菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       系统优化调整菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 关闭Windows防火墙（碍手碍脚总弹窗问联网权限？选我关掉，当然不是那么推荐）
+echo     1. 关闭Windows防火墙（碍手碍脚总弹窗问联网权限？选我关掉，当然不是那么推荐）
 echo.
-echo 2. 开启Windows防火墙（我后悔了，或者遇到问题了，重新打开选我）
+echo     2. 开启Windows防火墙（我后悔了，或者遇到问题了，重新打开选我）
 echo.
-echo 3. 卓越性能模式（解锁电脑系统层面的一些功耗限制，让电脑尽可能满功耗运行）
+echo     3. 设置计算机使用的电源选项（切换电源选项）
 echo.
-echo 4. 恢复UAC（我后悔禁用了，还是想要权限在自己手里控制舒服）
+echo     4. 卓越性能模式（解锁电脑系统层面的一些功耗限制，让电脑尽可能满功耗运行）
 echo.
-echo 5. 禁用UAC（关了uac，打开软件不会再申请管理员权限，省的选是选否不知道）
+echo     5. 恢复UAC（我后悔禁用了，还是想要权限在自己手里控制舒服）
 echo.
-echo 6. 自定义开机选择系统启动项等待时间（高级操作：不想开机等30秒选择系统，选我输入自定义秒数）
+echo     6. 禁用UAC（关了uac，打开软件不会再申请管理员权限，省的选是选否不知道）
 echo.
-echo 7. 打开可移动磁盘自动运行（想一插u盘自动播放选我，可能会让病毒也自动启动嗷）
+echo     7. 自定义开机选择系统启动项等待时间（高级操作：不想开机等30秒选择系统，选我输入自定义秒数）
 echo.
-echo 8. 关闭可移动磁盘自动运行（不要自动播放选我）
+echo     8. 打开可移动磁盘自动运行（想一插u盘自动播放选我，可能会让病毒也自动启动嗷）
 echo.
-echo 9. 开启系统休眠（想要一盖电脑就冻结，打开电脑就恢复之前样子，选我，默认开）
+echo     9. 关闭可移动磁盘自动运行（不要自动播放选我）
 echo.
-echo 10. 关闭系统休眠（极致性能，我就一个臭打游戏的，台式机巴拉巴拉，选我）
+echo     10. 开启系统休眠（想要一盖电脑就冻结，打开电脑就恢复之前样子，选我，默认开）
 echo.
-echo 11. 系统盘缓存垃圾清理（使用有风险，会清理日志文件等，请做好备份）（删个垃圾选我）
+echo     11. 关闭系统休眠（极致性能，我就一个臭打游戏的，台式机巴拉巴拉，选我）
 echo.
-echo 12. （WIN7限定）在较老的电脑上开启Aero透明毛玻璃效果
+echo     12. 系统盘缓存垃圾清理（使用有风险，会清理日志文件等，请做好备份）（删个垃圾选我）
 echo.
-echo 13. 清除快捷方式小箭头（美化类：不要桌面上快捷方式左下角的小箭头）
+echo     13. （WIN7限定）在较老的电脑上开启Aero透明毛玻璃效果
 echo.
-echo 14. 恢复快捷方式小箭头（美化类：恢复桌面上快捷方式左下角的小箭头）
+echo     14. 清除快捷方式小箭头（美化类：不要桌面上快捷方式左下角的小箭头）
 echo.
-echo 15. 停用vmmem，解决vmmem占用过高问题
+echo     15. 恢复快捷方式小箭头（美化类：恢复桌面上快捷方式左下角的小箭头）
 echo.
-echo 16. 停用TabletPC功能
+echo     16. 停用vmmem，解决vmmem占用过高问题
 echo.
-echo 17. 记事本默认保存编码修改（高版本Windows不一定适用）
+echo     17. 停用TabletPC功能
 echo.
-echo 18. 加入Windows预览体验计划（Windows Insider Channel）
+echo     18. 记事本默认保存编码修改（高版本Windows不一定适用）
 echo.
-echo 19. 运行系统自带磁盘清理工具（Cleanmgr）
+echo     19. 加入Windows预览体验计划（Windows Insider Channel）
 echo.
-echo 20. 查看下一页（当前页面为：P1）
-echo ----------------------------------------------------------------------------------------
-set /p sysopt1=请选择项目：
+echo     20. 查看下一页（当前页面为：P1）
+echo ------------------------------------------------------------------------------------------
+set /p sysopt1=→  请选择项目：
 if %sysopt1% equ 0 goto menu
 if %sysopt1% equ 1 goto systemfirewalloff
 if %sysopt1% equ 2 goto systemfirewallon
-if %sysopt1% equ 3 goto powercfgperf
-if %sysopt1% equ 4 goto enableuac
-if %sysopt1% equ 5 goto disableuac
-if %sysopt1% equ 6 goto BootTime
-if %sysopt1% equ 7 goto uautorunon
-if %sysopt1% equ 8 goto uautorunoff
-if %sysopt1% equ 9 goto hibernateon
-if %sysopt1% equ 10 goto hibernateoff
-if %sysopt1% equ 11 goto junkclean
-if %sysopt1% equ 12 goto win7aero
-if %sysopt1% equ 13 goto noshortcut
-if %sysopt1% equ 14 goto restoreshortcut
-if %sysopt1% equ 15 goto vmmemstop
-if %sysopt1% equ 16 goto deltabletpc
-if %sysopt1% equ 17 goto notepadsaveencoder
-if %sysopt1% equ 18 goto insiderchannel
-if %sysopt1% equ 19 goto diskcleanmgr
+if %sysopt1% equ 3 goto setbatteryoption
+if %sysopt1% equ 4 goto powercfgperf
+if %sysopt1% equ 5 goto enableuac
+if %sysopt1% equ 6 goto disableuac
+if %sysopt1% equ 7 goto BootTime
+if %sysopt1% equ 8 goto uautorunon
+if %sysopt1% equ 9 goto uautorunoff
+if %sysopt1% equ 10 goto hibernateon
+if %sysopt1% equ 11 goto hibernateoff
+if %sysopt1% equ 12 goto junkclean
+if %sysopt1% equ 13 goto win7aero
+if %sysopt1% equ 14 goto noshortcut
+if %sysopt1% equ 15 goto restoreshortcut
+if %sysopt1% equ 16 goto vmmemstop
+if %sysopt1% equ 17 goto deltabletpc
+if %sysopt1% equ 18 goto notepadsaveencoder
+if %sysopt1% equ 19 goto insiderchannel
 if %sysopt1% equ 20 goto menusysoptimizeP2
-echo 输入异常，请检查输入选项。
+echo →  输入异常，请检查输入选项
 pause
 goto menusysoptimizeP1
 
 :menusysoptimizeP2
-echo ----------------------------------------------------------------------------------------
-echo                                      系统优化调整菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       系统优化调整菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 返回上一页（当前页面为：P2）
+echo     1. 返回上一页（当前页面为：P2）
 echo.
-echo 2. 禁用遥测系统跟踪等服务（系统隐私优化）
+echo     2. 运行系统自带磁盘清理工具（Cleanmgr）
 echo.
-echo 3. 恢复遥测系统跟踪等服务（遇到异常了选我恢复）
+echo     3. 禁用遥测系统跟踪等服务（系统隐私优化）
 echo.
-echo 4. 禁用 Windows Defender（文件一直被系统拦截选我）
+echo     4. 恢复遥测系统跟踪等服务（遇到异常了选我恢复）
 echo.
-echo 5. 启用 Windows Defender（恢复Defender功能选我）
+echo     5. 禁用 Windows Defender（文件一直被系统拦截选我）
 echo.
-echo 6. 禁用 Windows Update
+echo     6. 启用 Windows Defender（恢复Defender功能选我）
 echo.
-echo 7. 启用、重置、修复 Windows Update
-echo ----------------------------------------------------------------------------------------
-set /p sysopt2=请选择项目：
+echo     7. 禁用 Windows Update
+echo.
+echo     8. 启用、重置、修复 Windows Update
+echo ------------------------------------------------------------------------------------------
+set /p sysopt2=→  请选择项目：
 if %sysopt2% equ 0 goto menu
 if %sysopt2% equ 1 goto menusysoptimizeP1
-if %sysopt2% equ 2 goto PrivCtrloff
-if %sysopt2% equ 3 goto PrivCtrlon
-if %sysopt2% equ 4 goto defenderoff
-if %sysopt2% equ 5 goto defenderon
-if %sysopt2% equ 6 goto wudisable
-if %sysopt2% equ 7 goto wureset
-echo 输入异常，请检查输入选项。
+if %sysopt2% equ 2 goto diskcleanmgr
+if %sysopt2% equ 3 goto PrivCtrloff
+if %sysopt2% equ 4 goto PrivCtrlon
+if %sysopt2% equ 5 goto defenderoff
+if %sysopt2% equ 6 goto defenderon
+if %sysopt2% equ 7 goto wudisable
+if %sysopt2% equ 8 goto wureset
+echo →  输入异常，请检查输入选项
 pause
 goto menusysoptimizeP2
 
 rem 常用软件修复菜单
 
 :menusoft
-echo ----------------------------------------------------------------------------------------
-echo                                      常用软件修复菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       常用软件修复菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 显示程序列表（看看老子/老娘电脑里装了些啥）
+echo     1. 导出程序列表（看看老子/老娘电脑里装了些啥）
 echo.
-echo 2. Xbox平台修复（打游戏用到xbox了，这玩意出问题选我）
+echo     2. Xbox平台修复（打游戏用到xbox了，这玩意出问题选我）
 echo.
-echo 3. Steam VAC屏蔽修复与闪退问题修复工具（打csgo报vac验证错误断开连接之类的选我）
+echo     3. Steam VAC屏蔽修复与闪退问题修复工具（打csgo报vac验证错误断开连接之类的选我）
 echo.
-echo 4. 清理本地FlashPlayer播放器记录（单文件FlashPlayer播放器的记录清理）
+echo     4. 清理本地FlashPlayer播放器记录（单文件FlashPlayer播放器的记录清理）
 echo.
-echo 5. 记事本默认保存编码修改
+echo     5. 记事本默认保存编码修改
 echo.
-echo 6. 获取文件HASH值
+echo     6. 获取文件HASH值
 echo.
-echo 7. 杀死特定进程
+echo     7. 杀死特定进程
 echo.
-echo 8. EasyAntiCheat 异常、启动失败、卸载（EAC小蓝熊删除重装）
+echo     8. EasyAntiCheat 异常、启动失败、卸载（EAC小蓝熊删除重装）
 echo.
-echo 9. Apex Legends 商店图片不显示出现禁用标志（ASSET FAILED TO LOAD）
-echo ----------------------------------------------------------------------------------------
-set /p softinput=请选择项目：
+echo     9. Apex Legends 商店图片不显示出现禁用标志（ASSET FAILED TO LOAD）
+echo ------------------------------------------------------------------------------------------
+set /p softinput=→  请选择项目：
 if %softinput% equ 0 goto menu
 if %softinput% equ 1 goto programlist
 if %softinput% equ 2 goto xboxfix
@@ -585,59 +679,61 @@ if %softinput% equ 6 goto GETHASH
 if %softinput% equ 7 goto killprocess
 if %softinput% equ 8 goto eacuninstall
 if %softinput% equ 9 goto apexshopimgerr
-echo 输入异常，请检查输入选项。
+echo →  输入异常，请检查输入选项
 pause
 goto menusoft
 
 rem 其他功能杂项菜单
 
 :menuotherP1
-echo ----------------------------------------------------------------------------------------
-echo                                      其他功能杂项菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       其他功能杂项菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 将管理员取得所有权添加到右键菜单（文件夹打不开？删文件权限不够？试试这个，添加后右键文件取得所有权再试试）
+echo     1. 将管理员取得所有权添加到右键菜单
+echo     （文件夹打不开？删文件权限不够？试试这个，添加后右键文件取得所有权再试试）
 echo.
-echo 2. 将管理员取得所有权从右键菜单删除（不想要了）
+echo     2. 将管理员取得所有权从右键菜单删除（不想要了）
 echo.
-echo 3. 获取文件 HASH 值
+echo     3. 获取文件 HASH 值
 echo.
-echo 4. 列出当前计算机正在运行的所有进程
+echo     4. 列出当前计算机正在运行的所有进程
 echo.
-echo 5. 列出所有进程（不论活跃与否）
+echo     5. 列出所有进程（不论活跃与否）
 echo.
-echo 6. 杀死特定进程
+echo     6. 杀死特定进程
 echo.
-echo 7. 启动 CMD 命令行（CMD.exe 管理员身份运行）
+echo     7. 启动 CMD 命令行（CMD.exe 管理员身份运行）
 echo.
-echo 8. 启动 Windows PowerShell 命令行（Powershell.exe 管理员身份运行）
+echo     8. 启动 Windows PowerShell 命令行（Powershell.exe 管理员身份运行）
 echo.
-echo 9. 列出此计算机的所有用户
+echo     9. 列出此计算机的所有用户
 echo.
-echo 10. 启动本地组策略编辑器（gpedit.msc）
+echo     10. 启动本地组策略编辑器（gpedit.msc）
 echo.
-echo 11. 启动服务管理单元（services.msc）
+echo     11. 启动服务管理单元（services.msc）
 echo.
-echo 12. 启动注册表编辑器（regedit.exe）
+echo     12. 启动注册表编辑器（regedit.exe）
 echo.
-echo 13. 启动计算机管理（compmgmt.msc）
+echo     13. 启动计算机管理（compmgmt.msc）
 echo.
-echo 14. 启动事件查看器（eventvwr.msc）
+echo     14. 启动事件查看器（eventvwr.msc）
 echo.
-echo 15. 启动控制面板
+echo     15. 启动控制面板
 echo.
-echo 16. 查看系统版本信息（关于“Windows”）
+echo     16. 查看系统版本信息（关于“Windows”）
 echo.
-echo 17. 打开系统设置页面（老版本 Windows 不适用）
+echo     17. 打开系统设置页面（老版本 Windows 不适用）
 echo.
-echo 18. 启动磁盘管理（diskmgmt.msc）
+echo     18. 启动磁盘管理（diskmgmt.msc）
 echo.
-echo 19. 启动任务管理器（taskmgr.exe）
+echo     19. 启动任务管理器（taskmgr.exe）
 echo.
-echo 20. 查看下一页（当前页面为：P1）
-echo ----------------------------------------------------------------------------------------
-set /p otherinput1=请选择项目：
+echo     20. 查看下一页（当前页面为：P1）
+echo ------------------------------------------------------------------------------------------
+set /p otherinput1=→  请选择项目：
 if %otherinput1% equ 0 goto menu
 if %otherinput1% equ 1 goto rightadmadd
 if %otherinput1% equ 2 goto rightadmdel
@@ -660,41 +756,60 @@ if %otherinput1% equ 18 goto startdiskmgr
 if %otherinput1% equ 19 goto starttaskmgr
 if %otherinput1% equ 20 goto menuotherP2
 
-echo 输入异常，请检查输入选项。
+echo →  输入异常，请检查输入选项
 pause
 goto menuotherP1
 
 
 
 :menuotherP2
-echo ----------------------------------------------------------------------------------------
-echo                                      其他功能杂项菜单
-echo ----------------------------------------------------------------------------------------
-echo 0. 返回主菜单
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       其他功能杂项菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
 echo.
-echo 1. 返回上一页（当前页面为：P2）
+echo     1. 返回上一页（当前页面为：P2）
 echo.
-echo 2. 启动 Windows 功能管理（启用或关闭 Windows 功能）
+echo     2. 启动 Windows 功能管理（启用或关闭 Windows 功能）
 echo.
-echo 3. 启动系统配置（启动、引导管理）
+echo     3. 启动系统配置（启动、引导管理）
 echo.
-echo 4. 启动系统信息
+echo     4. 启动系统信息
 echo.
-echo 5. 启动 Windows 内存诊断
+echo     5. 启动 Windows 内存诊断
 echo.
-echo 6. 启动组件服务管理
+echo     6. 启动组件服务管理
 echo.
-echo 7. 启动共享文件夹管理（fsmgmt.msc）
+echo     7. 启动共享文件夹管理（fsmgmt.msc）
 echo.
-echo 8. 启动性能监视器（perfmon.msc）
+echo     8. 启动性能监视器（perfmon.msc）
 echo.
-echo 9. 启动本地安全组策略（secpol.msc）
+echo     9. 启动本地安全组策略（secpol.msc）
 echo.
-echo 10. 启动 DirectX 检测工具（dxdiag）
+echo     10. 启动 DirectX 检测工具（dxdiag）
 echo.
-echo 11. 启动远程桌面连接
-echo ----------------------------------------------------------------------------------------
-set /p otherinput2=请选择项目：
+echo     11. 启动远程桌面连接
+echo.
+echo     12. 用户资料数据备份（便捷备份用户数据，重装电脑前选我备份数据）
+echo.
+echo     13. 打开桌面图标设置（计算机、此电脑我的文档不见了，只有回收站，选我）
+echo.
+echo     14. 打开用户账户设置
+echo.
+echo     15. 打开 Windows Defender 防火墙设置
+echo.
+echo     16. 打开程序和功能（卸载或更改程序）
+echo.
+echo     17. 打开系统属性设置（虚拟内存、分页文件等高级系统设置）
+echo.
+echo     18. 打开时间和区域设置（时间格式调整、时区调整）
+echo.
+echo     19. 打开网络连接设置（传统设置）
+echo.
+echo     20. 查看下一页（当前页面为：P2）
+echo ------------------------------------------------------------------------------------------
+set /p otherinput2=→  请选择项目：
 if %otherinput2% equ 0 goto menu
 if %otherinput2% equ 1 goto menuotherP1
 if %otherinput2% equ 2 goto optionalfunc
@@ -707,42 +822,125 @@ if %otherinput2% equ 8 goto startperfmon
 if %otherinput2% equ 9 goto securemgr
 if %otherinput2% equ 10 goto dxcheck
 if %otherinput2% equ 11 goto rdapp
-echo 输入异常，请检查输入选项。
+if %otherinput2% equ 12 goto sysuserbackup
+if %otherinput2% equ 13 goto desktopiconset
+if %otherinput2% equ 14 goto useraccset
+if %otherinput2% equ 15 goto firewallset
+if %otherinput2% equ 16 goto applistset
+if %otherinput2% equ 17 goto computerpropset
+if %otherinput2% equ 18 goto timezoneset
+if %otherinput2% equ 19 goto netconnectcenter
+if %otherinput2% equ 20 goto menuotherP3
+echo →  输入异常，请检查输入选项
 pause
 goto menuotherP2
+
+:menuotherP3
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       其他功能杂项菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
+echo.
+echo     1. 返回上一页（当前页面为：P3）
+echo.
+echo     2. 打开轻松使用设置中心（放大镜等辅助工具设置页面）
+echo.
+echo     3. 打开显示属性（屏幕设置）
+echo.
+echo     4. 打开安全和维护（Windows 安全中心）
+rem echo.
+rem echo 20. 查看下一页（当前页面为：P3）
+echo ------------------------------------------------------------------------------------------
+set /p otherinput3=→  请选择项目：
+if %otherinput3% equ 0 goto menu
+if %otherinput3% equ 1 goto menuotherP2
+if %otherinput3% equ 2 goto easyuseset
+if %otherinput3% equ 3 goto scrpropset
+if %otherinput3% equ 4 goto securitycenter
+rem if %otherinput3% equ 20 goto menuotherP4
+echo →  输入异常，请检查输入选项
+pause
+goto menuotherP3
 
 rem 功能区
 
 :QA
 cls
-echo ----------------------------------------------------------------------------------
+echo ------------------------------------------------------------------------------------------
 echo.
-echo 常见问题：为什么会报毒？
-echo 脚本内容涉及到系统敏感文件及设置还原，因此需要管理员权限提权，本质与杀毒软件的系统
-echo 修复功能一致，并不涉及其他操作。杀毒软件检测到提权代码以及修改系统设置操作，会认定
-echo 脚本具有恶意行为，而实际上脚本仅仅是还原被恶意软件修改过的系统设置。
+echo     常见问题：为什么会报毒？
 echo.
-echo 常见问题：为什么用这个不用杀毒软件？
-echo 杀毒软件修复功能有限，并不能修复所有问题。而一些常见问题在本人使用系统过程中遇见，
-echo 自行修复之后为了方便以后遇到相同问题能快速修复，于是利用命令行制作了一键修复脚本。
-echo 脚本会不断更新加入新的功能，但也并非全能。同样也相信部分用户深受某些厂家的安全软件
-echo 打着免费杀毒的旗号疯狂占用用户系统资源还弹出大量广告，以此来谋取利益。此脚本便是为
-echo 方便一些裸奔用户而制成的，文件体积小、功能强大、修复方便快捷，也是对本人的使用修复
-echo 的一些心得做的总结，希望能帮到各位。
+echo     脚本内容涉及到系统敏感文件及设置还原，因此需要管理员权限提权，本质与杀毒软件的系统
+echo     修复功能一致，并不涉及其他操作。杀毒软件检测到提权代码以及修改系统设置操作，会认定
+echo     脚本具有恶意行为，而实际上脚本仅仅是还原被恶意软件修改过的系统设置。
 echo.
-echo 常见问题：有这个脚本是不是可以不用装杀毒软件了？
-echo 脚本和杀毒软件并不冲突，之所以脚本会检测杀毒软件进程，是因为部分新手用户很容易会让
-echo 杀毒软件做默认的拒绝操作，而不是放行。一旦杀毒软件对脚本的修复操作进行拦截操作，那
-echo 脚本的修复功能便不能正常工作，更不要说对问题进行修复了。如果是稍微专业一点的用户，
-echo 完全可以用杀毒软件来监视脚本操作，只是需要频繁放行罢了。脚本仅仅只是修复一些系统的
-echo 异常问题，并不具备杀毒能力，不可替代杀毒软件，杀毒还请使用专业的杀毒软件。如果是对
-echo 自己的技术有信心，那当然另谈。
+echo     常见问题：为什么用这个不用杀毒软件？
 echo.
-echo ----------------------------------------------------------------------------------
+echo     杀毒软件修复功能有限，并不能修复所有问题。而一些常见问题在本人使用系统过程中遇见，
+echo     自行修复之后为了方便以后遇到相同问题能快速修复，于是利用命令行制作了一键修复脚本。
+echo     脚本会不断更新加入新的功能，但也并非全能。同样也相信部分用户深受某些厂家的安全软件
+echo     打着免费杀毒的旗号疯狂占用用户系统资源还弹出大量广告，以此来谋取利益。此脚本便是为
+echo     方便一些裸奔用户而制成的，文件体积小、功能强大、修复方便快捷，也是对本人的使用修复
+echo     的一些心得做的总结，希望能帮到各位。
+echo.
+echo     常见问题：有这个脚本是不是可以不用装杀毒软件了？
+echo.
+echo     脚本和杀毒软件并不冲突，之所以脚本会检测杀毒软件进程，是因为部分新手用户很容易会让
+echo     杀毒软件做默认的拒绝操作，而不是放行。一旦杀毒软件对脚本的修复操作进行拦截操作，那
+echo     脚本的修复功能便不能正常工作，更不要说对问题进行修复了。如果是稍微专业一点的用户，
+echo     完全可以用杀毒软件来监视脚本操作，只是需要频繁放行罢了。脚本仅仅只是修复一些系统的
+echo     异常问题，并不具备杀毒能力，不可替代杀毒软件，杀毒还请使用专业的杀毒软件。如果是对
+echo     自己的技术有信心，那当然另谈。
+echo.
+echo     常见问题：导出的日志报告在哪里？
+echo.
+echo     导出的日志报告路径： %userprofile%\Desktop\MDT 
+echo     即用户桌面上的 MDT 文件夹。
+echo     软件所有的日志都保存在此文件夹内，如不需要可以在程序运行完毕后删除。如果不知道哪个
+echo     日志对应哪个功能，可以查看文件夹内的 此文件夹是干什么的？_ReadMe.txt 文件。
+echo.
+echo     当前程序版本：%progver%
+echo     作者：%Author%
+echo.
+echo ------------------------------------------------------------------------------------------
 timeout /t 3 /nobreak > NUL
-echo 按任意键即可返回菜单
+echo →  按任意键即可返回菜单
 pause
 goto menu
+
+:generatesysinfo
+rem 生成系统信息，读取信息
+rem 操作系统名称
+for /f "tokens=*" %%i in ('systeminfo ^| findstr /C:"OS 名称"') do set osnametmp=%%i
+for /f "tokens=2 delims=:" %%i in ('echo %osnametmp%') do set osname=%%i
+rem 系统版本
+for /f "tokens=*" %%i in ('ver') do set sysv=%%i
+rem CPU信息
+for /f "tokens=*" %%i in ('wmic cpu get name ^|findstr /v "Name" ^|findstr "[^\S]"') do set cpuinfo=%%i
+rem 内存信息
+for /f %%i in ('wmic os get TotalVisibleMemorySize ^|findstr [0-9]') do set /a ram=%%i/1024
+rem 虚拟内存信息
+for /f %%i in ('wmic os get SizeStoredInPagingFiles ^|findstr [0-9]') do set /a virtualram=%%i/1024
+rem 显卡信息
+for /f "tokens=2 delims==" %%i in ('wmic path Win32_VideoController get AdapterRAM^,Name /value ^|findstr Name') do set vganame=%%i
+rem 屏幕分辨率信息
+for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do set scrresolution=%%j*%%i
+rem 应用程序错误信息
+if "%systemver%"=="10" (
+for /f "tokens=1,2,4* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName Application -EntryType Error -Newest 2 -After %year%-%month%-%day% -Source 'Application Error' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j 错误: %%k %%l
+) else (
+echo. >nul 2>nul
+)
+rem 统一输出信息
+echo     操作系统名称:                %osname%>%userprofile%\desktop\MDT\OS_Info.txt
+echo     系统版本:                     %sysv%>>%userprofile%\desktop\MDT\OS_Info.txt
+echo     中央处理器 CPU:               %cpuinfo%>>%userprofile%\desktop\MDT\OS_Info.txt
+echo     图形处理器 GPU（独立显卡）:   %vganame%>>%userprofile%\desktop\MDT\OS_Info.txt
+echo     屏幕分辨率:                   %scrresolution%>>%userprofile%\desktop\MDT\OS_Info.txt
+echo     内存:                         %ram% MB>>%userprofile%\desktop\MDT\OS_Info.txt
+echo     当前分配虚拟内存:             %VirtualRAM% MB>>%userprofile%\desktop\MDT\OS_Info.txt
+goto :eof
 
 :envdiag
 cls
@@ -758,7 +956,7 @@ call:ieproxy
 rem call:systemfirewalloff 9
 call:hostsdiag
 call:ipv6state
-echo 本地DNS解析测试 (预计耗时5-10秒): 
+echo 本地 DNS 解析测试 (预计耗时5-10秒): 
 ipconfig /flushdns >nul 2>nul
 rem 项目6
 call:nslookvalue www.people.com.cn www.xinhuanet.com www.cctv.com www.cac.gov.cn www.china.com.cn www.gmw.cn
@@ -770,7 +968,7 @@ rem 项目6
 call:nslookvalue www.163.com www.sina.com.cn www.qq.com www.taobao.com www.jd.com www.iqiyi.com
 set /a sum3=sum
 rem 项目6
-call:nslookvalue www.baidu.com cn.bing.com www.bilibili.com
+call:nslookvalue www.baidu.com cn.bing.com www.bilibili.com www.douyin.com www.sohu.com www.microsoft.com
 set /a sum4=sum
 
 set /a sumall=sum1+sum2+sum3+sum4
@@ -799,26 +997,47 @@ goto menu
 
 :networkreset
 cls
+rem 结束VeryKuai加速器
 taskkill /F /IM VeryKuai.exe >nul 2>nul
+rem 结束雷神加速器
 taskkill /F /IM Leigod.exe >nul 2>nul
+rem 结束uu加速器
 taskkill /F /IM uu.exe >nul 2>nul
+rem 结束zz加速器（AK旗下，征云网络科技）
+taskkill /F /im ZZ.exe >nul 2>nul
+rem 结束迅游加速器
+taskkill /F /im xunyou.exe >nul 2>nul
+rem 结束鲜牛加速器
+taskkill /F /im XianNiu.exe >nul 2>nul
+rem 结束奇游加速器
+taskkill /F /im QiYou.exe >nul 2>nul
+rem 结束小黑盒加速器
+taskkill /F /im heyboxacc.exe >nul 2>nul
+taskkill /f /im heyboxbrowser.exe >nul 2>nul
+rem 结束nn加速器(雷神旗下)
+taskkill /F /im nn.exe >nul 2>nul
+rem 结束AK加速器（征云网络科技）
+taskkill /F /im AK.exe>nul 2>nul
+
 echo 请关闭加速器以获得最佳修复效果
 echo.
-echo 前置修复：重置LSP
+echo 前置修复：重置 LSP
 netsh winsock reset >nul 2>nul
 echo.
 
 goto modeselect
 
 :modeselect
-cls
-set /p a=请选择重置模式（模式1普通重置，模式2暴力重置）: 
+echo 即将开始网络协议栈重置
+echo.
+set /p a=→  请选择重置模式（模式1普通重置，模式2暴力重置）: 
 if %a% equ 1 goto regularreset
 if %a% equ 2 goto brutereset
+goto menu
 
 :brutereset
 echo.
-echo 重置TCP/IP协议
+echo 重置 TCP/IP 协议
 rem 获取网络名称和网络IP信息
 netsh interface IP Show Address %networkname1% > %temp%\ip.txt 2>nul
 for /f "tokens=3" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr "IP"') do set ipsetaddress=%%i
@@ -847,7 +1066,7 @@ netsh interface ip set dns name=%networkname1% source=dhcp >nul 2>nul
 del /f /q %temp%\ip.txt >nul 2>nul
 echo.
 
-echo 禁用Killer服务
+echo 禁用 Killer 服务
 sc config "Killer Network Service x64" start= disabled >nul 2>nul
 sc config "Killer Network Service" start= disabled >nul 2>nul
 sc config "Killer Bandwidth Service" start= disabled >nul 2>nul
@@ -855,14 +1074,15 @@ sc config "Rivet Bandwidth Service" start= disabled >nul 2>nul
 
 :regularreset
 echo.
-echo 再次重置LSP
+echo 重置 LSP
 netsh winsock reset >nul 2>nul
 netsh winsock reset >nul 2>nul
 echo.
 
-echo 重置hosts文件权限并清空
+echo 重置 Hosts 文件权限并清空
 echo y| cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:F >nul
 cd. > %WINDIR%\system32\drivers\etc\hosts
+call:host1fix
 
 rem 停止并删除驱动服务
 set drivername=vkdpi xunyoufilter xunyounpf QeeYouPacket npf uuwfp uupacket networktunnel10_x64 ylwfp TP2CNNetFilter lgdcatcher lgdcatchertdi xfilter savitar netrtp
@@ -880,7 +1100,7 @@ rem echo.
 
 call:ieproxy
 
-echo 刷新DNS/ARP缓存
+echo 刷新 DNS/ARP 缓存
 ipconfig /flushdns >nul 2>nul
 arp -d >nul 2>nul
 echo.
@@ -895,7 +1115,7 @@ reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ylwfp" /f >nul 
 reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\networktunnel10_x64" /f >nul 2>nul
 reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XunYouFilter" /f >nul 2>nul
 
-echo IE组件修复
+echo IE 组件修复
 regsvr32 /s jscript.dll
 regsvr32 /s vbscript.dll
 echo.
@@ -929,7 +1149,7 @@ goto menu
 :lspfix
 cls
 echo.
-echo LSP修复
+echo LSP 修复
 netsh winsock reset
 netsh winsock reset
 netsh winsock reset
@@ -942,18 +1162,20 @@ goto menu
 :systemrepair
 cls
 echo.
-echo 0. 前置服务修复
-echo 1. SFC修复（基础修复）
-echo 2. DISM检查修复（高级修复）
-echo 3. 返回主菜单
+echo     系统修复菜单
+echo.
+echo     0. 前置服务修复
+echo     1. SFC 修复（基础修复）
+echo     2. DISM 检查修复（高级修复）
+echo     3. 返回主菜单
 
-set /p user_input=请选择一个项目：
+set /p user_input=→  请选择一个项目：
 if %user_input% equ 0 goto PreSFix
 if %user_input% equ 1 goto SFCFIX
 if %user_input% equ 2 goto DISMFIX
 if %user_input% equ 3 goto menu
 echo.
-echo 无效的代码，请重新输入。
+echo     无效的代码，请重新输入。
 timeout /t 3 /nobreak > NUL
 goto systemrepair
 
@@ -969,30 +1191,31 @@ echo 前置服务修复完成
 goto systemrepair
 
 :SFCFIX
-echo 即将使用SFC工具进行修复，如遇服务异常请先运行前置服务修复
-echo 如遇进度条卡死超过10分钟，请退出程序重新运行并选择DISM工具修复
+echo 即将使用 SFC 工具进行修复，如遇服务异常请先运行前置服务修复
+echo 如遇进度条卡死超过 10 分钟，请退出程序重新运行并选择 DISM 工具修复
 timeout /t 3 /nobreak > NUL
-echo 运行SCANNOW命令修复系统
+echo 运行 SCANNOW 命令修复系统
 sfc /scannow
-echo SFC基础修复完成
+echo SFC 基础修复完成
 goto menu
 
 :DISMFIX
 echo.
-echo 即将使用DISM工具进行修复，如遇服务异常请先运行前置服务修复
-echo 如遇进度条卡死超过10分钟，请退出程序重新运行DISM工具修复
-echo 若出现DISM工具异常或者仍然卡死，请考虑使用原版系统镜像覆盖安装系统修复文件（系统文件遭到DISM工具不可修复的破坏）
+echo 即将使用 DISM 工具进行修复，如遇服务异常请先运行前置服务修复
+echo 如遇进度条卡死超过 10 分钟，请退出程序重新运行 DISM 工具修复
+echo 若出现 DISM 工具异常或者仍然卡死，请考虑使用原版系统镜像覆盖安装系统修复文件（系统文件遭到 DISM 工具不可修复的破坏）
 timeout /t 3 /nobreak > NUL
-echo 使用DISM工具校验系统文件
+echo 使用 DISM 工具校验系统文件
 Dism /Online /Cleanup-Image /ScanHealth
 echo DISM扫描完成
 
 :dismbreak
-echo DISM工具扫描完成，请检查结果并选择：
-echo 1. 可以修复组件存储
-echo 2. 未检测到组件存储损坏
-echo 3. 其他问题
-set /p host=请根据情况选择项目：
+echo     DISM 工具扫描完成，请检查结果并选择：
+echo.
+echo     1. 可以修复组件存储
+echo     2. 未检测到组件存储损坏
+echo     3. 其他问题
+set /p host=→  请根据情况选择项目：
 if %host% equ 1 goto DISMRestore
 if %host% equ 2 goto DISMFin
 if %host% equ 3 goto DISMother
@@ -1002,43 +1225,46 @@ timeout /t 3 /nobreak > NUL
 goto dismbreak
 
 :DISMRestore
-echo 使用DISM工具修复系统文件
+echo 使用 DISM 工具修复系统文件
 Dism /Online /Cleanup-Image /RestoreHealth
-echo DISM修复组件存储完成
+echo DISM 修复组件存储完成
 goto DISMFin
 
 :DISMother
-echo 以下列出几种常见问题：
-echo 1. 存储组件已损坏，建议下载原版镜像覆盖安装系统修复
-echo 2. 找不到映像源，找不到源文件，先检查网络是否通畅，重新运行
-echo 若仍存在问题，请找原版镜像里的install.wim文件挂载，再利用StartComponent参数修复
-echo 最推荐的方法是下载原版镜像覆盖安装系统修复
-echo 3. 诊断策略服务未运行，请先运行前置修复，如果仍存在问题，建议下载原版镜像文件覆盖安装系统修复
-echo 普通用户推荐使用微软官方的MediaCreationTool无损覆盖、安装、升级系统
-echo 专业用户可自行寻找iso文件通过多种方式修复系统，不多赘述
-timeout /t 5 /nobreak > NUL
-echo 按任意键返回菜单
+echo     以下列出几种常见问题：
+echo     1. 存储组件已损坏，建议下载原版镜像覆盖安装系统修复
+echo     2. 找不到映像源，找不到源文件，先检查网络是否通畅，重新运行
+echo     若仍存在问题，请找原版镜像里的 install.wim 文件挂载，再利用 StartComponent 参数修复
+echo     最推荐的方法是下载原版镜像覆盖安装系统修复
+echo     3. 诊断策略服务未运行，请先运行前置修复，如果仍存在问题，建议下载原版镜像文件覆盖安装系统修复
+echo     普通用户推荐使用微软官方的 MediaCreationTool 无损覆盖、安装、升级系统
+echo     专业用户可自行寻找 iso 文件通过多种方式修复系统，不多赘述
+timeout /t 3 /nobreak > NUL
+echo     按任意键返回菜单
 echo pause
 goto menu
 
 :DISMFin
-echo DISM修复完成，推荐重启系统
+echo DISM 修复完成，推荐重启系统
 timeout /t 3 /nobreak > NUL
 goto menu
 
 :hsfile
 cls
 echo.
-echo 0. 返回主菜单
-echo 1. 修改hosts
-echo 2. 修复权限并清空hosts
-echo 3. 使hosts只读
-echo 4. 使hosts可写
-echo 5. 设置指定路径文件拒绝访问
-echo 6. 设置指定路径文件完全访问
+echo     Hosts 修复菜单
+echo.
+echo     0. 返回主菜单
+echo     1. Hosts 文件丢失修复
+echo     2. 修改 Hosts
+echo     3. 修复权限并清空 Hosts
+echo     4. 使 Hosts 只读
+echo     5. 使 Hosts 可写
+echo     6. 设置指定路径文件拒绝访问
+echo     7. 设置指定路径文件完全访问
 
 echo.
-set /p host=请选择: 
+set /p host=→  请选择: 
 if %host% equ 0 goto host0
 if %host% equ 1 goto host1
 if %host% equ 2 goto host2
@@ -1046,14 +1272,72 @@ if %host% equ 3 goto host3
 if %host% equ 4 goto host4
 if %host% equ 5 goto host5
 if %host% equ 6 goto host6
+if %host% equ 7 goto host7
 echo.
-pause
-goto menu
+echo     无效的代码，请重新输入。
+goto hsfile
 
 :host0
 echo.
 goto menu
+
+:host1err
+echo.
+set /p choice="→  存在 Hosts 文件，是否继续修复？ (y/N) "
+if %choice% equ Y goto host1fix
+if %choice% equ y goto host1fix
+if %choice% equ N goto hsfile
+if %choice% equ n goto hsfile
+goto hsfile
+
 :host1
+cls
+echo 开始修复 Hosts 文件丢失问题
+echo.
+echo 检测 Hosts 文件是否存在
+echo.
+if exist "%WINDIR%\system32\drivers\etc\hosts" goto host1err
+
+echo 检测到 Hosts 文件丢失，创建 Hosts 文件
+echo.
+rem 此处为多余的判断，前面已经判断了是否存在 hosts 文件，因此这里可以不用判断
+rem 但是为了学习写法，此处保留。精简写法可以直接 type 甚至不用写这行直接写入即可
+rem 此写法是多一步多一个echo，一步一步来，学习过程还是条理清晰一点
+if not exist "%WINDIR%\system32\drivers\etc\hosts" type nul>"%WINDIR%\system32\drivers\etc\hosts"
+call:host1fix
+pause
+goto menu
+
+:host1fix
+echo 开始写入默认 Hosts 数据
+echo # Copyright (c) 1993-2009 Microsoft Corp.>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # This is a sample HOSTS file used by Microsoft TCP/IP for Windows.>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # This file contains the mappings of IP addresses to host names. Each>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # entry should be kept on an individual line. The IP address should>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # be placed in the first column followed by the corresponding host name.>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # The IP address and the host name should be separated by at least one>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # space.>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # Additionally, comments (such as these) may be inserted on individual>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # lines or following the machine name denoted by a '#' symbol.>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # For example:>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #      102.54.94.97     rhino.acme.com          # source server>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #       38.25.63.10     x.acme.com              # x client host>>"%WINDIR%\system32\drivers\etc\hosts"
+echo # localhost name resolution is handled within DNS itself.>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #	127.0.0.1       localhost>>"%WINDIR%\system32\drivers\etc\hosts"
+echo #	::1             localhost>>"%WINDIR%\system32\drivers\etc\hosts"
+echo.
+echo 写入完成
+echo.
+echo 恢复默认 Hosts 完成
+echo.
+goto :EOF
+
+:host2
 echo.
 rem 清除空行
 type %WINDIR%\system32\drivers\etc\hosts 2>nul |findstr "." >> %WINDIR%\system32\drivers\etc\hosts_bak
@@ -1063,64 +1347,77 @@ cacls.exe %WINDIR%\system32\drivers\etc\hosts /e /t /g Administrators:F
 rem 删除备份文件
 del /s /q %WINDIR%\system32\drivers\etc\hosts_bak >nul 2>nul
 start notepad.exe %WINDIR%\system32\drivers\etc\hosts
-echo 已启动记事本，hosts修改完成后请按任意键继续
+echo 已启动记事本，Hosts 修改完成后请按任意键继续
 echo.
 pause
 ipconfig /flushdns >nul 2>nul
 goto menu
-:host2
-echo 修复权限并清空hosts
+
+:host3
+echo.
+echo 修复权限并清空 Hosts
 echo y| cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:F >nul
 cd. > %WINDIR%\system32\drivers\etc\hosts
 echo.
+echo 已清空 Hosts
+echo.
+call:host1fix
+echo.
 pause
 goto menu
-:host3
+
+:host4
 echo.
 rem 使hosts只读
-echo 按Y使hosts只读: 
+echo →  按Y使 Hosts 只读: 
 cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:R
 echo.
 pause
 goto menu
-:host4
+
+:host5
 echo.
 rem 使hosts可写
-echo 按Y使hosts可写: 
+echo →  按Y使 Hosts 可写: 
 cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:F
 cd. > %WINDIR%\system32\drivers\etc\hosts 2>nul
 echo.
 pause
 goto menu
-:host5
+
+:host6
 echo.
-set /p files=请输入文件完整路径: 
+set /p files=→  请输入文件完整路径: 
 cacls.exe "%files%" /e /t /p Administrators:N
 echo 设置指定路径文件拒绝访问
 echo.
 pause
 goto menu
-:host6
+
+:host7
 echo.
-set /p files=请输入文件完整路径: 
+set /p files=→  请输入文件完整路径: 
 cacls.exe "%files%" /e /t /g Administrators:F
 echo 设置指定路径文件完全访问
 echo.
 pause
 goto menu
 
+
+
+
 :iereset
 cls
 echo.
 del /f /q "%temp%\mb" >nul 2>nul
-echo Miniblink缓存清理成功
+echo Miniblink 缓存清理成功
 Rundll32 InetCpl.cpl,ClearMyTracksByProcess 255
-echo IE缓存清理成功
+echo IE 缓存清理成功
 RunDll32.exe InetCpl.cpl,ResetIEtoDefaults
-echo IE已重置
+echo IE 已重置
 regsvr32 /s jscript.dll
 regsvr32 /s vbscript.dll
-echo IE组件已修复
+echo IE 组件已修复
 echo.
 pause
 goto menu
@@ -1128,18 +1425,20 @@ goto menu
 :dnsfix
 cls
 echo.
-echo 0. 返回主菜单
-echo 1. 首选: 119.29.29.29    备用: 8.8.8.8
-echo 2. 首选: 223.5.5.5       备用: 8.8.8.8
-echo 3. 首选: 114.114.114.114 备用: 8.8.8.8
-echo 4. 首选: 180.76.76.76    备用: 8.8.8.8
-echo 5. 首选: 8.8.8.8         备用: 223.5.5.5
-echo 6. 首选: 9.9.9.9         备用: 223.5.5.5(防运营商劫持^)
-echo 7. 首选: 4.2.2.2         备用: 223.5.5.5
-echo 8. 移动: 101.226.4.6     备用: 223.5.5.5
-echo 9. 首选: 80.80.80.80     备用: 223.5.5.5(防运营商劫持^)
+echo     DNS 设置菜单
 echo.
-set /p dns=请选择: 
+echo     0. 返回主菜单
+echo     1. 首选: 119.29.29.29    备用: 8.8.8.8
+echo     2. 首选: 223.5.5.5       备用: 8.8.8.8
+echo     3. 首选: 114.114.114.114 备用: 8.8.8.8
+echo     4. 首选: 180.76.76.76    备用: 8.8.8.8
+echo     5. 首选: 8.8.8.8         备用: 223.5.5.5
+echo     6. 首选: 9.9.9.9         备用: 223.5.5.5(防运营商劫持^)
+echo     7. 首选: 4.2.2.2         备用: 223.5.5.5
+echo     8. 移动: 101.226.4.6     备用: 223.5.5.5
+echo     9. 首选: 80.80.80.80     备用: 223.5.5.5(防运营商劫持^)
+echo.
+set /p dns=→  请选择: 
 if %dns% equ 0 goto dnsip0
 if %dns% equ 1 goto dnsip1
 if %dns% equ 2 goto dnsip2
@@ -1150,6 +1449,8 @@ if %dns% equ 6 goto dnsip6
 if %dns% equ 7 goto dnsip7
 if %dns% equ 8 goto dnsip8
 if %dns% equ 9 goto dnsip9
+goto menu
+
 :dnsip0
 goto menu
 :dnsip1
@@ -1207,6 +1508,7 @@ echo.
 goto:eof
 
 :programlist
+echo.
 echo 开始导出用户程序列表
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 echo.
@@ -1222,6 +1524,9 @@ goto menu
 
 :powercfgperf
 cls
+echo.
+echo 正在设置电源选项...
+echo.
 if "%systemver%"=="10" (
 goto powercfgwin10
 ) else (
@@ -1246,14 +1551,17 @@ echo.
 echo 电源管理: 高性能(设置成功)
 echo.
 :powerlabelexit
-echo 提醒：如果帧率仍然比预想的要低或者不正常，请检查系统问题
-echo 包括但不限于软件层面：OEM定制驱动软件限制功耗影响帧率（节能模式、办公模式等）
-echo NVIDIA Experience、AMD等控制面板限制功耗影响帧率
-echo 系统虚拟内存设置异常、各种系统小问题堆积导致大异常
-echo 某些软件环境后台（不一定显示）占用大量系统资源进行运算（模型训练、挖矿软件、木马病毒等）
-echo 硬件层面：电池电压不稳，计算机供电异常，运行内存过小、内存条接触异常识别异常
-echo 固态硬盘损坏，机械硬盘老化（推荐除了文件存储需求外，软件均安装至固态硬盘内）
-echo 请自行排查重试，若均难以解决，请联系专业用户。
+echo 设置电源选项完成
+echo 如遇设置异常，可在系统诊断修复菜单中，选择电源选项恢复进行修复
+echo.
+echo     提醒：如果帧率仍然比预想的要低或者不正常，请检查系统问题
+echo     包括但不限于软件层面：OEM 定制驱动软件限制功耗影响帧率（节能模式、办公模式等）
+echo     NVIDIA Experience、AMD 等控制面板限制功耗影响帧率
+echo     系统虚拟内存设置异常、各种系统小问题堆积导致大异常
+echo     某些软件环境后台（不一定显示）占用大量系统资源进行运算（模型训练、挖矿软件、木马病毒等）
+echo     硬件层面：电池电压不稳，计算机供电异常，运行内存过小、内存条接触异常识别异常
+echo     固态硬盘损坏，机械硬盘老化（推荐除了文件存储需求外，软件均安装至固态硬盘内）
+echo     请自行排查重试，若均难以解决，请联系专业用户。
 pause
 goto menu
 
@@ -1271,7 +1579,7 @@ pause
 goto menu
 
 :securitysoft
-echo 安全/拨号/代理/模拟器/限速软件: && for /f "tokens=1,10 delims=," %%i in ('tasklist /v /fo csv ^|findstr /I "%securitysoftwareprocess%"') do echo    %%i 名称:%%j
+echo 安全/拨号/代理/模拟器/限速软件: && for /f "tokens=1,10 delims=," %%i in ('tasklist /v /fo csv ^|findstr /I "%securitysoftwareprocess%"') do echo     %%i 名称:%%j
 
 rem 数据诊断
 tasklist /v /fo csv |findstr /I "2345" >nul 2>nul
@@ -1285,7 +1593,7 @@ echo.
 goto:eof
 
 :minidump
-echo Minidump目录: && dir %WINDIR%\Minidump |findstr 文件
+echo Minidump 目录: && dir %WINDIR%\Minidump |findstr 文件
 echo.
 goto:eof
 
@@ -1335,9 +1643,9 @@ echo. >nul 2>nul
 for /f "tokens=3" %%i in ('reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer 2^>nul') do set proxyserver=%%i
 rem 截取变量最后10个字符串
 echo 代理配置: AutoConfigURL: %autoconfigurl:~0,20% %autoconfigurlresult%
-echo    代理状态: %proxyenable%
+echo     代理状态: %proxyenable%
 if not "!proxyserver!" == "" (
-echo    地址/端口: %proxyserver%
+echo     地址/端口: %proxyserver%
 )
 set autoconfigurl=<nul
 echo.
@@ -1359,12 +1667,16 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v Pr
 goto:eof
 
 :systemfirewalloff
+cls
+echo.
 netsh advfirewall set allprofiles state off >nul 2>nul
 echo Windows系统防火墙: 已关闭
 echo.
 goto:eof
 
 :systemfirewallon
+cls
+echo.
 netsh advfirewall set allprofiles state on >nul 2>nul
 echo Windows系统防火墙: 已开启
 echo.
@@ -1454,7 +1766,7 @@ goto:eof
 :systemver
 ping -n 1 /f -l 1372 www.baidu.com |findstr DF >nul
 if "%errorlevel%"=="0" (
-set mturesult=警告: 上层设备MTU小于1400
+set mturesult=警告: 上层设备 MTU 小于 1400
 ) else (
 set mturesult=
 )
@@ -1465,8 +1777,8 @@ for /f "delims=." %%i in ('wmic datafile where name^="C:\\Program Files\\Interne
 echo.
 for /f "tokens=1,*" %%i in ('ver') do echo %%i %%j %systemversion%
 echo 计算机名: %COMPUTERNAME%
-echo IE浏览器: %ieversion%
-echo 网卡MTU: %mtuvalue%
+echo IE 浏览器: %ieversion%
+echo 网卡 MTU: %mtuvalue%
 if not "!mturesult!" == "" (
 	echo %mturesult%
 )
@@ -1477,7 +1789,7 @@ if DEFINED systemversion (
 	if "%systemversion%" GTR "1809" (
 		echo. >nul 2>nul
 	) else (
-		set systemversionresult=Win10系统版本%systemversion%过低, 建议升级
+		set systemversionresult=Win10 系统版本 %systemversion% 过低, 建议升级
 		echo !systemversionresult!
 	)
 ) else (
@@ -1501,10 +1813,10 @@ if DEFINED vpngateway (
 	echo. >nul 2>nul
 )
 
-echo 路由跟踪结果
-echo    IPv4路由表统计: %routeall%(行)
+echo %1路由跟踪结果
+echo     IPv4路由表统计: %routeall%(行)
 if not "!vpngateway!" == "" (
-	echo    模式B网关: %vpngateway%
+	echo     模式B网关: %vpngateway%
 )
 set vpngateway=<nul
 if "%powershellver%" GEQ "3" (
@@ -1544,13 +1856,13 @@ echo 网卡:
 rem 网卡列表
 	for /f "tokens=1,2,4 delims=," %%i in ('Getmac /v /nh /fo csv') do (
 		set networkstatus=%%k
-		echo    %%i %%j  !networkstatus:~1,7! |%temp%\mtee /a /+ %temp%\networkadapter.txt
+		echo     %%i %%j  !networkstatus:~1,7! |%temp%\mtee /a /+ %temp%\networkadapter.txt
 	)
 
 netsh wlan show Interfaces |findstr /R "\<SSID" >nul
 if "%errorlevel%"=="0" (
 
-	rem 获取无线WIFI字段信息
+	rem 获取无线 WIFI 字段信息
 	set WF=0
 	for /f "tokens=2 delims=:" %%i in ('netsh wlan show Interfaces') do (
 		for /f "tokens=1" %%a in ('echo %%i') do (
@@ -1559,11 +1871,11 @@ if "%errorlevel%"=="0" (
 		)
 	)
 
-	echo    WiFi:!wifi7!   状态:!wifi6!   信道:!wifi14!   信号:!wifi17!   速度:!wifi16!Mbps
+	echo     WiFi:!wifi7!   状态:!wifi6!   信道:!wifi14!   信号:!wifi17!   速度:!wifi16!Mbps
 
-	rem WIFI网络质量判断
+	rem WIFI 网络质量判断
 	if "!wifi17:~0,-1!" LEQ "95" ( set wifiresult1=WIFI信号不稳定 ) else ( echo. >nul 2>nul )
-	if "!wifi14!" GEQ "36" ( set wifiresult2=当前5G的WIFI,网络游戏建议使用2.4G,有线最佳 ) else ( echo. >nul 2>nul )
+	if "!wifi14!" GEQ "36" ( set wifiresult2=当前正在使用 5GHz WIFI，网络游戏建议使用 2.4GHz，有线网络最佳 ) else ( echo. >nul 2>nul )
 
 	rem wifi驱动信息
 	for /f "tokens=2,4 delims=," %%i in ('DRIVERQUERY /fo csv ^|findstr "Wireless" ^|findstr "[0-9]/[0-9]/[0-9]"') do echo    %%i 驱动日期%%j
@@ -1577,7 +1889,7 @@ rem 统计网卡个数
 	if "!textlinesnum!" GEQ "2" (
 			type %temp%\networkadapter.txt 2>nul |findstr /i "tap SangforVNIC yltap" >nul 2>nul
 			if !ERRORLEVEL! equ 0 (
-				set networkcardresult1=网卡数量:!textlinesnum!,存在其它加速器VPN设备虚拟网卡
+				set networkcardresult1=网卡数量:!textlinesnum!，存在其它加速器VPN设备虚拟网卡
 			) else (
 				echo. >nul 2>nul
 			)
@@ -1600,13 +1912,13 @@ goto:eof
 
 :hardware
 echo 硬件配置信息: 
-for /f "tokens=*" %%i in ('wmic cpu get name ^|findstr /v "Name" ^|findstr "[^\S]"') do echo    CPU:  %%i
+for /f "tokens=*" %%i in ('wmic cpu get name ^|findstr /v "Name" ^|findstr "[^\S]"') do echo     CPU:  %%i
 for /f %%i in ('wmic os get TotalVisibleMemorySize ^|findstr [0-9]') do set /a ram=%%i/1024
 for /f %%i in ('wmic os get SizeStoredInPagingFiles ^|findstr [0-9]') do set /a virtualram=%%i/1024
-echo    内存: %ram% MB; 当前分配虚拟内存: %VirtualRAM% MB
+echo     内存:  %ram% MB; 当前分配虚拟内存:  %VirtualRAM% MB
 for /f "tokens=2 delims==" %%i in ('wmic path Win32_VideoController get AdapterRAM^,Name /value ^|findstr Name') do set vganame=%%i
-echo    显卡: %vganame%
-for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do echo    分辨率: %%j*%%i
+echo     独立显卡 GPU:  %vganame%
+for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do echo     分辨率:  %%j*%%i
 rem 应用程序错误信息
 if "%systemver%"=="10" (
 for /f "tokens=1,2,4* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName Application -EntryType Error -Newest 2 -After %year%-%month%-%day% -Source 'Application Error' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j 错误: %%k %%l
@@ -1618,7 +1930,7 @@ rem 数据诊断
 if DEFINED ram (
 	if %ram% LSS 8000 (
 		set /a ram=%ram%/1000
-		set ramresult=系统内存!ram!G, 建议升级
+		set ramresult=系统运行内存!ram!G, 建议升级
 		echo    !ramresult!
 	) else (
 		echo. >nul 2>nul
@@ -1638,7 +1950,7 @@ set dnsserverip=%dnsserverip:}=%
 
 nslookup whether.114dns.com 114.114.114.114 2>nul |findstr 127.0.0 >nul
 If %ERRORLEVEL% equ 0 (
-set dnsresult=运营商可能DNS劫持
+set dnsresult=运营商可能 DNS 劫持
 echo.
 ) else (
 echo. >nul 2>nul
@@ -1649,7 +1961,7 @@ goto:eof
 
 :dnseventlog
 if "%systemver%"=="10" (
-for /f "tokens=1,2,4,6* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName System -EntryType Warning -Newest 3 -After %year%-%month%-%day% -Source 'Microsoft-Windows-DNS-Client' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j %%k响应域名: %%l %%m
+for /f "tokens=1,2,4,6* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName System -EntryType Warning -Newest 3 -After %year%-%month%-%day% -Source 'Microsoft-Windows-DNS-Client' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo     %%i %%j %%k响应域名: %%l %%m
 ) else (
 echo. >nul 2>nul
 )
@@ -1669,13 +1981,13 @@ rem 统计127.0.0行
 for /f %%i in ('type %WINDIR%\system32\drivers\etc\hosts 2^>nul ^|findstr /v /b "\<#" ^|find /c "127.0.0"') do set hostsnumber127=%%i
 rem 统计155.89行
 for /f %%i in ('type %WINDIR%\system32\drivers\etc\hosts 2^>nul ^|findstr /v /b "\<#" ^|find /c "155.89"') do set hostsnumber155=%%i
-echo hosts修改时间:    !filetime!
+echo Hosts 修改时间:    !filetime!
 echo     有效解析条目总数: !hostsnumber!(行^)
-echo     带UHE注释条目数:  !hostsnumberUHE!(行^)
-echo     127开头条目数:    !hostsnumber127!(行^)
-echo     155开头条目数:    !hostsnumber155!(行^)
+echo     带 UHE 注释条目数:  !hostsnumberUHE!(行^)
+echo     127 开头条目数:    !hostsnumber127!(行^)
+echo     155 开头条目数:    !hostsnumber155!(行^)
 ) else (
-echo hosts文件: 不存在
+echo Hosts 文件: 不存在
 )
 echo.
 
@@ -1684,7 +1996,7 @@ for /f %%i in ("%WINDIR%\system32\drivers\etc\hosts") do set hostsize1=%%~zi
 echo. >> %WINDIR%\system32\drivers\etc\hosts 2>nul
 for /f %%i in ("%WINDIR%\system32\drivers\etc\hosts") do set hostsize2=%%~zi
 if %hostsize1% equ %hostsize2% (
-set hostsresult=hosts文件权限异常
+set hostsresult=Hosts 文件权限异常
 ) else (
 echo. >nul 2>nul
 )
@@ -1692,26 +2004,26 @@ goto:eof
 
 :disableuac
 echo.
-echo 彻底禁用UAC
+echo 禁用 UAC
 echo.
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d "0" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorAdmin /t REG_DWORD /d "0" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorUser /t REG_DWORD /d "3" /f >nul
 echo.
-echo 请重新启动计算机
+echo 操作执行完成，请重新启动计算机
 echo.
 pause
 goto menu
 
 :enableuac
 echo.
-echo 恢复UAC
+echo 恢复 UAC
 echo.
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d "1" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorAdmin /t REG_DWORD /d "5" /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v ConsentPromptBehaviorUser /t REG_DWORD /d "3" /f >nul
 echo.
-echo 请重新启动计算机
+echo 操作执行完成，请重新启动计算机
 echo.
 pause
 goto menu
@@ -1719,12 +2031,12 @@ goto menu
 
 :xboxfix
 echo.
-echo 修复Xbox多人游戏
+echo 修复 Xbox 多人游戏
 echo.
-echo 临时禁用Teredo隧道
+echo 临时禁用 Teredo 隧道
 netsh int teredo set state disable > NUL
 
-echo 禁用华硕GameFirst(建议卸载！)
+echo 禁用华硕 GameFirst (建议卸载！)
 sc config AsusGameFirstService start= DISABLED > NUL
 sc stop AsusGameFirstService > NUL
 
@@ -1742,10 +2054,10 @@ w32tm /unregister > NUL
 w32tm /register > NUL
 sc start w32time > NUL
 
-echo 重置Windows防火墙策略
+echo 重置 Windows 防火墙策略
 netsh advfirewall reset > NUL
 netsh advfirewall set allprofiles state on > NUL
-echo 排除冲突的Windows防火墙策略
+echo 排除冲突的 Windows 防火墙策略
 netsh advfirewall set currentprofile firewallpolicy blockinbound,allowoutbound > NUL
 netsh advfirewall firewall set rule name="4jxr4b3r3du76ina39a98x8k2" new enable=no > NUL
 
@@ -1760,7 +2072,7 @@ sc config upnphost start= AUTO > NUL
 sc config XblAuthManager start= AUTO > NUL
 sc config XboxNetApiSvc start= AUTO > NUL
 
-echo 重置系统IPv6设置
+echo 重置系统 IPv6 设置
 netsh int ipv6 reset
 reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_DefaultQualified /f > NUL
 reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Force_Tunneling /f > NUL
@@ -1782,31 +2094,31 @@ sc start FDResPub > NUL
 sc start SSDPSRV > NUL
 sc start upnphost > NUL
 
-echo 设置IPv6前缀优先级
+echo 设置 IPv6 前缀优先级
 netsh int ipv6 set prefix ::1/128 50 0 > NUL
 netsh int ipv6 set prefix ::/0 40 1 > NUL
 netsh int ipv6 set prefix 2002::/16 30 2 > NUL
 netsh int ipv6 set prefix ::/96 20 3 > NUL
 netsh int ipv6 set prefix ::ffff:0:0/96 100 4 > NUL
 
-echo 启动IP Helper服务
+echo 启动 IP Helper 服务
 sc start iphlpsvc > NUL
 
-echo 配置Teredo隧道参数
+echo 配置 Teredo 隧道参数
 route delete ::/0 > NUL
 netsh int teredo set state type=default > NUL
 netsh int teredo set state enterpriseclient teredo.remlab.net 20 0 > NUL
 netsh int ipv6 add route ::/0 "Teredo Tunneling Pseudo-Interface" > NUL
 
-echo 启动Xbox网络服务
+echo 启动 Xbox 网络服务
 sc start XboxNetApiSvc > NUL
 sc start XblAuthManager > NUL
 
 echo 修复工具运行结束！
-echo Teredo配置状态：
+echo Teredo 配置状态：
 netsh int teredo show state
 echo.
-echo 已修复Xbox多人游戏 请重启系统后尝试联机
+echo 已修复 Xbox 多人游戏 请重启系统后尝试联机
 pause
 exit
 
@@ -1870,14 +2182,14 @@ if DEFINED wifiresult2 ( echo *%wifiresult2% >> %temp%\infocollect.txt 2>nul & s
 if DEFINED networkcardresult1 ( echo *%networkcardresult1% >> %temp%\infocollect.txt 2>nul & set networkcardresult1=<nul ) else ( echo. >nul 2>nul )
 if DEFINED networkcardresult2 ( echo *%networkcardresult2% >> %temp%\infocollect.txt 2>nul & set networkcardresult2=<nul ) else ( echo. >nul 2>nul )
 
-type %temp%\netdiag.txt 2>nul >> %temp%\infocollect.txt 2>nul
+type %temp%\NetDiag.txt 2>nul >> %temp%\infocollect.txt 2>nul
 type %temp%\gameprocessip.txt 2>nul >> %temp%\infocollect.txt 2>nul
-del /f /q %temp%\netdiag.txt >nul 2>nul
+del /f /q %temp%\NetDiag.txt >nul 2>nul
 
 rem 游戏数据信息备份桌面
 	if EXIST %temp%\infocollect.txt (
-		taskkill /F /FI "WINDOWTITLE eq netdiag.txt*" >nul 2>nul
-		echo F| xcopy "%temp%\infocollect.txt" "%userprofile%\desktop\MDT\netdiag.txt" /s /c /y /i >nul 2>nul
+		taskkill /F /FI "WINDOWTITLE eq NetDiag.txt*" >nul 2>nul
+		echo F| xcopy "%temp%\infocollect.txt" "%userprofile%\desktop\MDT\NetDiag.txt" /s /c /y /i >nul 2>nul
 	) else (
 		echo. >nul 2>nul
 	)
@@ -1911,6 +2223,7 @@ goto:eof
 
 :IconRepair
 cls
+echo.
 echo 开始修复图标变白问题
 timeout /t 3 /nobreak > NUL
 echo 暂时结束资源管理器进程
@@ -1926,8 +2239,10 @@ goto menu
 
 :BootTime
 cls
+echo.
 echo 正在设置开机启动项选择等待时间
 echo 输入秒数后回车确认，请勿输入字母！！！
+echo 若不想修改设置请关闭程序
 set /p usertime=设定开机启动项选择的等待时间（秒）：
 bcdedit /timeout %usertime%
 echo 已设置开机启动项选择等待时间为%usertime%秒
@@ -1937,7 +2252,8 @@ goto menu
 
 :WinFocus
 cls
-echo 开始修复Windows聚焦异常问题
+echo.
+echo 开始修复 Windows 聚焦异常问题
 echo 清理缓存
 DEL /F /S /Q /A "%USERPROFILE%/AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets"
 DEL /F /S /Q /A "%USERPROFILE%/AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\Settings"
@@ -1949,25 +2265,74 @@ goto menu
 
 :borecover
 cls
+:borecmenu
+echo.
+echo     请选择你要恢复的电源选项：
+echo.
+echo     0. 返回主菜单
+echo     1. 恢复节能模式
+echo     2. 恢复平衡模式
+echo     3. 恢复高性能模式
+echo     4. 恢复卓越性能模式（仅限于Win10/11专业版以上）
+set /p binput=→  请输入：
+if %binput% equ 0 goto menu
+if %binput% equ 1 goto lowbatteryrec
+if %binput% equ 2 goto medbatteryrec
+if %binput% equ 3 goto highperfbatteryrec
+if %binput% equ 4 goto extremeperfbatteryrec
+echo →  输入异常，请检查输入选项
+goto borecover
+:lowbatteryrec
 echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
 echo 恢复节能模式
 powercfg -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a
+echo.
+goto batteryrecfin
+
+:medbatteryrec
+echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
 echo 恢复平衡模式
 powercfg -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e
+echo.
+goto batteryrecfin
+
+:highperfbatteryrec
+echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
 echo 恢复高性能模式
 powercfg -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+echo.
+goto batteryrecfin
+
+:extremeperfbatteryrec
+echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
 echo 恢复卓越性能模式（仅限于Win10/11专业版以上）
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+echo.
+goto batteryrecfin
 
-echo 设置电源选项为高性能
-powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-echo 电源选项恢复完成
-pause
-goto menu
+:batteryrecfin
+echo.
+echo     电源选项恢复完成
+echo.
+echo     请选择你要继续的操作：
+echo     0. 返回主菜单
+echo     1. 恢复其他电源选项
+echo     2. 设置计算机使用的电源选项
+set /p bfinput=→  请输入：
+if %bfinput% equ 0 goto menu
+if %bfinput% equ 1 goto borecmenu
+if %bfinput% equ 2 goto setbatteryoption
+echo →  输入异常，请检查输入选项
+goto batteryrecfin
 
 :wu0205
 cls
-echo 开始修复Windows Update异常问题
+echo.
+echo 开始修复 Windows Update 异常问题
 echo 配置系统服务
 SC config wuauserv start= auto
 SC config bits start= auto
@@ -1988,12 +2353,14 @@ net start cryptSvc
 net start bits
 net start msiserver
 echo 修复完成，请重启电脑重试更新
+echo 若仍存在问题，请使用系统修复功能进行修复
 pause
 goto menu
 
 :taskmgrexeErr
 cls
-echo 开始修复taskmgr.exe关联问题
+echo.
+echo 开始修复 taskmgr.exe 关联问题
 echo 重建注册表值
 
 reg add "HKCR\Folder\shell\open" /v "MultiSelectModel" /d "Document" /f >nul
@@ -2006,7 +2373,8 @@ goto menu
 
 :exeError
 cls
-echo 开始修复exe关联问题
+echo.
+echo 开始修复 exe 关联问题
 echo 重建注册表值
 timeout /t 1 /nobreak > NUL
 reg add "HKCR\.exe" /ve /d "exefile" /f
@@ -2045,7 +2413,7 @@ reg add "HKCR\exefile\shellex\PropertySheetHandlers\{B41DB860-8EE4-11D2-9906-E49
 echo 操作执行完成
 echo.
 
-echo 重建exe关联
+echo 重建 exe 关联
 assoc .exe=exefile
 echo 操作执行完成
 echo 所有操作已执行完成
@@ -2055,6 +2423,7 @@ goto menu
 
 :uautorunon
 cls
+echo.
 echo 更新注册表信息
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 149 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 149 /f
@@ -2068,6 +2437,7 @@ goto menu
 
 :uautorunoff
 cls
+echo.
 echo 更新注册表信息
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 255 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 255 /f
@@ -2079,6 +2449,7 @@ goto menu
 
 :hibernateon
 cls
+echo.
 powercfg -h on
 echo 系统休眠已开启
 pause
@@ -2086,6 +2457,7 @@ goto menu
 
 :hibernateoff
 cls
+echo.
 powercfg -h off
 echo 系统休眠已关闭
 pause
@@ -2093,27 +2465,29 @@ goto menu
 
 :deactivate
 cls
-echo 警告：使用此功能将会导致Windows变为未激活状态！
-echo 一般情况下，此功能仅在出现激活异常或者密钥异常的情况下使用
-echo 如果您不知道您在做什么，请退出程序或者输入其他并确认回到主页面
-echo 如果您明白并能承担操作后果，请在下方输入 Yes 来继续操作（区分大小写）
+echo.
+echo     警告：使用此功能将会导致 Windows 变为未激活状态！
+echo     一般情况下，此功能仅在出现激活异常或者密钥异常的情况下使用
+echo     如果您不知道您在做什么，请退出程序或者输入其他并确认回到主页面
+echo     如果您明白并能承担操作后果，请在下方输入 Yes 来继续操作（区分大小写）
 timeout /t 3 /nobreak > NUL
-set /p input=请确认您的操作（区分大小写）：
+set /p input=→  请确认您的操作（区分大小写）：
 if %input% equ Yes goto deaconfirm
-echo 确认操作异常，已取消操作
+echo     确认操作异常，已取消操作
 pause
 goto menu
 :deaconfirm
-echo 卸载Windows密钥
+echo 卸载 Windows 密钥
 slmgr /upk
-echo 重置Windows评估期
+echo 重置 Windows 评估期
 slmgr /rearm
-echo 重置完成，Windows已变为未激活状态，请重启计算机
+echo 重置完成，Windows 已变为未激活状态，请重启计算机
 pause
 goto menu
 
 :gpeditfix
 cls
+echo.
 echo 开始修复组策略问题
 pushd "%~dp0"
 dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum >List.txt
@@ -2125,123 +2499,149 @@ goto menu
 
 :junkclean
 cls
+echo.
 echo 开始垃圾清理进程
+echo.
 echo 系统盘扫描
 echo.
 
 echo 清理自动更新补丁日志
-del /f /s /q "%windir%\SoftwareDistribution\DataStore\Logs\*.log"
-del /f /s /q "%windir%\SoftwareDistribution\DataStore\Logs\*.jrs"
+del /f /s /q "%windir%\SoftwareDistribution\DataStore\Logs\*.log" >nul 2>nul
+del /f /s /q "%windir%\SoftwareDistribution\DataStore\Logs\*.jrs" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 清理错误报告
-del /f /s /q "%ProgramData%\Microsoft\Windows\WER\ReportArchive\*.wer"
-del /f /q "%ProgramData%\Microsoft\Windows\WER\ReportArchive\*.*"
+del /f /s /q "%ProgramData%\Microsoft\Windows\WER\ReportArchive\*.wer" >nul 2>nul
+del /f /q "%ProgramData%\Microsoft\Windows\WER\ReportArchive\*.*" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理Windows Search日志文件
-del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jcp"
-del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jtx"
-del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jr"
+echo 清理 Windows Search 日志文件
+del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jcp" >nul 2>nul
+del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jtx" >nul 2>nul
+del /f /s /q "%systemdrive%\ProgramData\Microsoft\Search\Data\Applications\Windows\*.jr" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理IIS日志文件
-del /f /s /q "%windir%\System32\LogFiles\Fax\Incoming\*.*"
-del /f /s /q "%windir%\System32\LogFiles\Fax\outcoming\*.*"
-del /f /s /q "%windir%\System32\LogFiles\setupcln\setupact.log"
-del /f /s /q "%windir%\System32\LogFiles\setupcln\setuperr.log"
+echo 清理 IIS 日志文件
+del /f /s /q "%windir%\System32\LogFiles\Fax\Incoming\*.*" >nul 2>nul
+del /f /s /q "%windir%\System32\LogFiles\Fax\outcoming\*.*" >nul 2>nul
+del /f /s /q "%windir%\System32\LogFiles\setupcln\setupact.log" >nul 2>nul
+del /f /s /q "%windir%\System32\LogFiles\setupcln\setuperr.log" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理Windows设置日志文件
-del /f /s /q "%windir%\setupact.log"
-del /f /s /q "%windir%\setuperr.log"
+echo 清理 Windows 设置日志文件
+del /f /s /q "%windir%\setupact.log" >nul 2>nul
+del /f /s /q "%windir%\setuperr.log" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理.Net Framework日志
-del /f /s /q "%windir%\Microsoft.NET\Framework\*.log"
+echo 清理 .Net Framework 日志
+del /f /s /q "%windir%\Microsoft.NET\Framework\*.log" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理Windows日志
-del /f /s /q "%windir%\*.log"
+echo 清理 Windows 日志
+del /f /s /q "%windir%\*.log" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 清理系统临时文件
-rd /s /q %windir%\temp & md %windir%\temp
-del /f /s /q "%userprofile%\AppData\Local\Temp\*.*"
-del /f /s /q "%userprofile%\Local Settings\Temp\*.*"
+rd /s /q %windir%\temp & md %windir%\temp >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Temp\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\Local Settings\Temp\*.*" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 清理崩溃转储文件
-del /f /q %userprofile%\AppData\Local\CrashDumps\*.*
+del /f /q %userprofile%\AppData\Local\CrashDumps\*.* >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理Cookies
-del /f /q %userprofile%\cookies\*.*
-echo Recent & Jump list
-del /f /q %userprofile%\recent\*.*
-del /f /s /q "%userprofile%\recent\*.*"
-del /f /s /q "%AppData%\Microsoft\Windows\Recent\CustomDestinations\*.*"
+echo 清理 Cookies
+del /f /q %userprofile%\cookies\*.* >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理临时Internet文件
-del /f /s /q "%userprofile%\Local Settings\Temporary Internet Files\*.*"
-del /f /s /q "%userprofile%\AppData\Local\Temporary Internet Files\*.*"
+echo 最近使用文件和跳转列表
+del /f /q %userprofile%\recent\*.* >nul 2>nul
+del /f /s /q "%userprofile%\recent\*.*" >nul 2>nul
+del /f /s /q "%AppData%\Microsoft\Windows\Recent\CustomDestinations\*.*" >nul 2>nul
+echo 操作执行完成
+echo.
+
+echo 清理临时 Internet 文件
+del /f /s /q "%userprofile%\Local Settings\Temporary Internet Files\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Temporary Internet Files\*.*" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 清理字体缓存
-del /f /s /q "%windir%\ServiceProfiles\LocalService\AppData\Local\FontCache\*.dat"
+del /f /s /q "%windir%\ServiceProfiles\LocalService\AppData\Local\FontCache\*.dat" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理CryptoAPI证书缓存
-del /f /s /q "%userprofile%\AppData\LocalLow\Microsoft\CryptnetUrlCache\Content\*.*"
+echo 清理 CryptoAPI 证书缓存
+del /f /s /q "%userprofile%\AppData\LocalLow\Microsoft\CryptnetUrlCache\Content\*.*" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 清理预加载文件
-del /f /s /q "%windir%\Prefetch\*.pf"
+del /f /s /q "%windir%\Prefetch\*.pf" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 清理自动更新补丁文件
-del /f /s /q "%windir%\SoftwareDistribution\Download\*.*"
+del /f /s /q "%windir%\SoftwareDistribution\Download\*.*" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 清理缩略图缓存
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\Explorer\*.db"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete\*.tmp"
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\Explorer\*.db" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete\*.tmp" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理Microsoft Edge缓存
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Extension State\*.*"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Session Storage\*.*"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\JumpListIconsRecentClosed\*.tmp"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Cache\*.*"
+echo 清理 Microsoft Edge 缓存
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Extension State\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Session Storage\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\JumpListIconsRecentClosed\*.tmp" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Cache\*.*" >nul 2>nul
+echo 操作执行完成
 echo.
 
-echo 清理Internet Explorer缓存
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Internet Explorer\DOMStore\*.*"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\container.dat"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\deprecated.cookie"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCache\IE\*.*"
-del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\WebCache\*.*"
+echo 清理 Internet Explorer 缓存
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Internet Explorer\DOMStore\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\container.dat" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\deprecated.cookie" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCache\IE\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\WebCache\*.*" >nul 2>nul
+echo 操作执行完成
 echo.
 
 echo 系统盘整体清理
-del /f /s /q %systemdrive%\*.tmp
-del /f /s /q %systemdrive%\*._mp
-del /f /s /q %systemdrive%\*.log
-del /f /s /q %systemdrive%\*.gid
-del /f /s /q %systemdrive%\*.chk
-del /f /s /q %systemdrive%\*.old
-del /f /s /q %systemdrive%\recycled\*.*
-del /f /s /q %windir%\*.bak
-del /f /s /q %windir%\prefetch\*.*
+del /f /s /q %systemdrive%\*.tmp >nul 2>nul
+del /f /s /q %systemdrive%\*._mp >nul 2>nul
+del /f /s /q %systemdrive%\*.log >nul 2>nul
+del /f /s /q %systemdrive%\*.gid >nul 2>nul
+del /f /s /q %systemdrive%\*.chk >nul 2>nul
+del /f /s /q %systemdrive%\*.old >nul 2>nul
+del /f /s /q %systemdrive%\recycled\*.* >nul 2>nul
+del /f /s /q %windir%\*.bak >nul 2>nul
+del /f /s /q %windir%\prefetch\*.* >nul 2>nul
+echo 操作执行完成
 echo.
 
+echo 所有操作已执行完成
 echo 清理完成
 pause
 goto menu
 
 :winbutton
 cls
+echo.
 echo 开始修复桌面图标间距异常、窗口右上角关闭最大化最小化按钮异常问题
 echo 修复注册表异常信息(还原默认值)
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "BorderWidth" /d "-15" /f >nul
@@ -2267,7 +2667,7 @@ goto menu
 cls
 echo 开始修复微软商店异常问题
 echo 前置修复：注册表修复
-echo 修复SSL3.0选项
+echo 修复 SSL 3.0 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "CheckedValue" /t REG_DWORD /d 32 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "HelpID" /d "iexplore.hlp#50129" /f >nul
@@ -2283,7 +2683,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.0选项
+echo 修复 TLS 1.0 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "CheckedValue" /t REG_DWORD /d 128 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "DefaultValue" /t REG_DWORD /d 128 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2299,7 +2699,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.1选项
+echo 修复 TLS 1.1 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "CheckedValue" /t REG_DWORD /d 512 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "DefaultValue" /t REG_DWORD /d 512 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2316,7 +2716,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.2选项
+echo 修复 TLS 1.2 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "CheckedValue" /t REG_DWORD /d 2048 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "DefaultValue" /t REG_DWORD /d 2048 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2333,7 +2733,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.3选项
+echo 修复 TLS 1.3 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "CheckedValue" /t REG_DWORD /d 8192 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -2349,25 +2749,25 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "ValueName" /d "SecureProtocols" /f >nul
 echo 操作执行完成
 echo.
-echo 前置修复：重置IE
+echo 前置修复：重置 IE
 del /f /q "%temp%\mb" >nul 2>nul
-echo Miniblink缓存清理成功
+echo Miniblink 缓存清理成功
 Rundll32 InetCpl.cpl,ClearMyTracksByProcess 255
-echo IE缓存清理成功
+echo IE 缓存清理成功
 RunDll32.exe InetCpl.cpl,ResetIEtoDefaults
-echo IE已重置
+echo IE 已重置
 regsvr32 /s jscript.dll
 regsvr32 /s vbscript.dll
-echo IE组件已修复
-echo 清空IE代理设置
+echo IE 组件已修复
+echo 清空 IE 代理设置
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /d "" /f
 echo.
-echo 前置修复：重置LSP设置
+echo 前置修复：重置 LSP 设置
 netsh winsock reset 
-echo 修改DNS为微软DNS
+echo 修改 DNS 为微软 DNS
 call:dnssetting 4.2.2.2 223.5.5.5
-echo 再次重置LSP设置
+echo 再次重置 LSP 设置
 netsh winsock reset 
 echo 重新部署微软商店
 powershell get-appxpackage *store* | remove-Appxpackage 
@@ -2375,10 +2775,10 @@ powershell add-appxpackage -register "C:\Program Files\WindowsApps\*Store*\AppxM
 echo 调用原生重置
 wsreset
 echo 在接下来的弹窗（Internet属性）中，请点击高级选项卡，勾选如下选项：
-echo “使用SSL3.0”（可选）、“使用TLS1.0”、“使用TLS1.1”（可选）、“使用TLS1.2”、“使用TLS1.3”
+echo “使用 SSL 3.0”（可选）、“使用 TLS 1.0”、“使用 TLS 1.1”（可选）、“使用 TLS 1.2”、“使用 TLS 1.3”
 timeout /t 3 /nobreak > NUL
-start inetcpl.cpl
-timeout /t 5 /nobreak > NUL
+rundll32.exe shell32.dll,Control_RunDLL inetcpl.cpl
+rem start inetcpl.cpl
 echo 勾选完成后，点击确定
 timeout /t 3 /nobreak > NUL
 echo 修复完成，请重启电脑后再次打开微软商城
@@ -2387,6 +2787,7 @@ goto menu
 
 :rightadmadd
 cls
+echo.
 echo 添加右键菜单（管理员取得所有权）
 echo 更新注册表信息
 reg add "HKCR\*\shell\runas" /ve /d "Grant Administrator Access" /f
@@ -2407,6 +2808,7 @@ goto menu
 
 :rightadmdel
 cls
+echo.
 echo 取消右键菜单（管理员取得所有权）
 echo 更新注册表信息
 reg delete "HKEY_CLASSES_ROOT\*\shell\runas" /f
@@ -2418,7 +2820,8 @@ goto menu
 
 :iemainpagefix
 cls
-echo 开始修复IE主页
+echo.
+echo 开始修复 IE 主页
 reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Start Page" /d "about:start" /f
 reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Default_Page_URL" /d "https://www.msn.cn/zh-cn" /f
 reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Search Page" /d "http://go.microsoft.com/fwlink/?LinkId=54896" /f
@@ -2429,27 +2832,29 @@ goto menu
 
 :win7aero
 cls
-echo 设置注册表信息，强制开启Aero
+echo.
+echo 设置注册表信息，强制开启 Aero
 reg add "HKCU\Software\Microsoft\Windows\DWM" /v Composition /t reg_dword /d 00000001 /f
 reg add "HKCU\Software\Microsoft\Windows\DWM" /v CompositionPolicy /t reg_dword /d 00000002 /f
 echo 服务重启
 net stop uxsms
 net start uxsms
-echo 修复完成，请重启电脑开启Aero效果
+echo 修复完成，请重启电脑开启 Aero 效果
 pause
 goto menu
 
 :vacfix
 cls
+echo.
 echo 前置修复：重置网络服务
 netsh winsock reset
-echo 前置修复：清理DNS缓存
+echo 前置修复：清理 DNS 缓存
 ipconfig /flushdns
 
 goto steam
 
 :steam
-echo 正在检测Steam是否开启......
+echo 正在检测 Steam 是否开启......
 tasklist | find /I "Steam.exe"
 if errorlevel 1 goto steamchina
 if not errorlevel 1 goto startvacfix
@@ -2461,7 +2866,7 @@ if errorlevel 1 goto stopsteam
 if not errorlevel 1 goto startvacfix
 
 :stopsteam
-echo Steam和国服启动器均未开启
+echo Steam 和国服启动器均未开启
 goto startvacfix
 
 :killsteam
@@ -2472,14 +2877,14 @@ echo 已强制关闭
 goto startvacfix
 
 :killsteamchina
-echo Steam已开启
+echo Steam 已开启
 echo 正在强制关闭
 taskkill /F /IM steamchina.exe
 echo 已强制关闭
 goto startvacfix
 
 :startvacfix
-echo 开始解决VAC屏蔽
+echo 开始解决 VAC 屏蔽
 
 echo 开启 Network Connections
 sc config Netman start= AUTO
@@ -2504,49 +2909,51 @@ bcdedit /deletevalue loadoptions
 bcdedit /debug off
 bcdedit /deletevalue nx
 
-echo 正在获取你的Steam或国服启动器目录
+echo 正在获取你的 Steam 或国服启动器目录
 for /f "tokens=1,2,* " %%i in ('REG QUERY "HKEY_CURRENT_USER\SOFTWARE\Valve\Steam" ^| find /i "SteamPath"') do set "SteamPath=%%k" 
 if "%SteamPath%" NEQ "0x1" (goto Autosteampath) else (goto Manualerr)
 
 :Autosteampath
-echo Steam或国服启动器目录为%SteamPath% 
+echo Steam 或国服启动器目录为%SteamPath% 
 
-echo 开始安装Steam Services
+echo 开始安装 Steam Services
 cd /d "%SteamPath%\bin"
 steamservice  /install
 ping -n 3 127.0.0.1>nul
-echo 开始修复Steam Services
+echo 开始修复 Steam Services
 steamservice  /repair
 ping -n 3 127.0.0.1>nul
 echo .
-echo 修复Steam Services完毕
+echo 修复 Steam Services 完毕
 echo 出现"Steam client service installation complete"且无任何"Fail"字样
 echo (如"Add firewall exception failed for steamservice.exe"出现)才可以结束，
 echo 否则请检查您的防火墙设置(关闭“不允许例外”选项)
 
-echo 启动Steam Services服务
+echo 启动 Steam Services 服务
 sc config "Steam Client Service" start= AUTO
 sc start "Steam Client Service"
 
-echo 修复完成，请重启Steam
+echo 修复完成，请重启 Steam
 pause
 goto menu
 
 :Manualerr
-echo 获取路径异常，修复终止，请重新安装Steam
+echo 获取路径异常，修复终止，请重新安装 Steam
 pause
 goto menu
 
 :fpclean
 cls
-echo 开始清理Flash Player播放器缓存
-reg delete "HKCU\Software\Macromedia\FlashPlayer" /f
+echo.
+echo 开始清理 Flash Player 播放器缓存
+reg delete "HKCU\Software\Macromedia\FlashPlayer" /f >nul
 echo 清理完成
 pause
 goto menu
 
 :noshortcut
 cls
+echo.
 echo 修改注册表设置
 reg delete "HKCR\lnkfile" /v "IsShortcut" /f
 reg delete "HKCR\piffile" /v "IsShortcut" /f
@@ -2558,6 +2965,7 @@ goto menu
 
 :restoreshortcut
 cls
+echo.
 echo 还原注册表设置
 reg add "HKCR\lnkfile" /v "IsShortcut" /d "" /f
 reg add "HKCR\piffile" /v "IsShortcut" /d "" /f
@@ -2569,6 +2977,7 @@ goto menu
 
 :RDclipboard
 cls
+echo.
 echo 重启远程剪贴板服务程序
 taskkill -im rdpclip.exe -f
 start rdpclip.exe
@@ -2578,7 +2987,12 @@ goto menu
 
 :vmmemstop
 cls
-echo 停止vmmem服务
+echo.
+echo 即将开始停止 vmmem 服务
+echo 请按任意键开始操作，若不想继续操作请关闭程序
+pause
+echo.
+echo 停止 vmmem 服务
 sc stop HvHost
 echo 完成
 pause
@@ -2586,7 +3000,12 @@ goto menu
 
 :deltabletpc
 cls
-echo 开始删除TabletPC组件
+echo.
+echo 即将开始删除 TabletPC 组件
+echo 请按任意键开始操作，若不想继续操作请关闭程序
+pause
+echo.
+echo 开始删除 TabletPC 组件
 dism /NoRestart /Quiet /Online /Disable-Feature /FeatureName:"TabletPCOC"
 echo 完成，如需重新启用，请转到“启用或关闭Windows功能”面板中再次勾选启用
 pause
@@ -2594,14 +3013,16 @@ goto menu
 
 :notepadsaveencoder
 cls
-echo 记事本常见编码格式：
-echo 0. 返回主菜单
-echo 1. ANSI （Win7 默认）
-echo 2. UTF-16 LE
-echo 3. UTF-16 BE
-echo 4. UTF-8 BOM
-echo 5. UTF-8 （Win7 以上默认）
-set /p encode=输入你要设置的编码代号：
+echo.
+echo     记事本常见编码格式：
+echo.
+echo     0. 返回主菜单
+echo     1. ANSI （Win7 默认）
+echo     2. UTF-16 LE
+echo     3. UTF-16 BE
+echo     4. UTF-8 BOM
+echo     5. UTF-8 （Win7 以上默认）
+set /p encode=→  输入你要设置的编码代号：
 if %encode% equ 0 goto menu
 if %encode% equ 1 goto npansi
 if %encode% equ 2 goto nputf16le
@@ -2609,36 +3030,46 @@ if %encode% equ 3 goto nputf16be
 if %encode% equ 4 goto nputf8bom
 if %encode% equ 5 goto nputf8
 echo.
-echo 输入异常，请按任意键返回选择菜单. . .
+echo →  输入异常，请检查输入选项
 echo.
 pause >nul
 goto notepadsaveencoder
 
 :npansi
+cls
+echo.
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 1 /f >nul
 echo 已设置记事本默认保存编码格式为 ANSI
 pause
 goto menu
 
 :nputf16le
+cls
+echo.
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 2 /f >nul
 echo 已设置记事本默认保存编码格式为 UTF-16 LE
 pause
 goto menu
 
 :nputf16be
+cls
+echo.
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 3 /f >nul
 echo 已设置记事本默认保存编码格式为 UTF-16 BE
 pause
 goto menu
 
 :nputf8bom
+cls
+echo.
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 4 /f >nul
 echo 已设置记事本默认保存编码格式为 UTF-8 BOM
 pause
 goto menu
 
 :nputf8
+cls
+echo.
 reg add "HKCU\Software\Microsoft\Notepad" /v "iDefaultEncoding" /t REG_DWORD /d 5 /f >nul
 echo 已设置记事本默认保存编码格式为 UTF-8
 pause
@@ -2887,6 +3318,7 @@ set "choice="
 echo 需要重启计算机以完成应用更改
 set /p choice="你想要现在重启计算机吗？ (y/N) "
 if /I "%choice%"=="y" shutdown -r -t 0
+if /I "%choice%"=="Y" shutdown -r -t 0
 goto :EOF
 
 :batteryreport
@@ -2900,80 +3332,96 @@ echo 启动诊断服务...
 sc start DPS
 echo 导出电池健康报告...
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
-powercfg /batteryreport /output "%userprofile%\Desktop\MDT\battery-report.html"
+powercfg /batteryreport /output "%userprofile%\Desktop\MDT\Battery_Report.html"
 echo.
 echo 定位报告路径...
 start %userprofile%\Desktop\MDT
 echo.
 echo 正在打开报告...
-start %userprofile%\Desktop\MDT\battery-report.html
+start %userprofile%\Desktop\MDT\Battery_Report.html
 echo.
-echo 导出报告操作执行完成，如遇异常请重新检查BIOS设置、服务与组策略设置，尽量避免使用精简版、定制版系统
-echo 打开弹出的文件夹里的battery-report.html即可查看电池健康报告
-echo 此报告具有时效性，不是动态的，更换电池或是一段时间后需要查看新的报告仍需运行此脚本
+echo 导出报告操作执行完成，如遇异常请重新检查 BIOS 设置、服务与组策略设置
+echo 请尽量避免使用精简版、定制版系统
+echo 打开弹出的文件夹里的 Battery_Report.html 即可查看电池健康报告
+echo 此报告具有时效性，更换电池或是一段时间后需要查看新的报告仍需运行此脚本
 echo.
-echo 电池健康度计算方法：(FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%
-echo 电池损耗度计算方法：1 - (FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%
+echo 电池健康度计算方法：(FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%%
+echo 电池损耗度计算方法：1 - (FULL CHARGE CAPACITY) / (DESIGN CAPACITY) * 100%%
 echo.
-echo 电池健康度在95%%至100%%之间可以认为是全新电池，大于100%%可以多尝试几次充放电校准，如果还是一样则无需担心，是全新电池
-echo 电池健康度低于80%%时，请检查电池情况并更换新电池
+echo 电池健康度在 95%% 至 100%% 之间可以认为是全新电池
+echo 大于 100%% 可以多尝试几次充放电校准，如果还是一样则无需担心，是全新电池
+echo 电池健康度低于 80%% 时，请检查电池情况并更换新电池
 pause
 goto menu
 
 :diskcleanmgr
 start cleanmgr.exe
-echo 已启动Windows磁盘清理程序（以管理员身份运行）
+echo 已启动 Windows 磁盘清理程序（以管理员身份运行）
 pause
 goto menu
 
 :GETHASH
 cls
-echo HASH获取
+if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
 echo.
-echo 请在下方输入要获取HASH值的文件路径
-echo 若路径含空格，请用英文半角双引号将路径引用
-echo 不引用会导致程序崩溃退出
-echo 例如："C:\Test Path\example.exe"
-echo 不兼容环境变量输入，可能会导致空输出
+echo     HASH 获取
 echo.
-echo 若要返回主菜单请在文件路径处输入 0 并回车确认
+echo     请在下方输入要获取 HASH 值的文件路径
+echo     若路径含空格，请用英文半角双引号将路径引用
+echo     不引用会导致程序崩溃退出
+echo     例如："C:\Test Path\example.exe"
+echo     可以右键文件或文件夹，选择“复制文件地址”，再在此处粘贴
+echo     或者选中文件或文件夹，按下“Ctrl + Shift + C”快捷键获取地址，再在此处粘贴
+echo     不兼容环境变量输入，可能会导致空输出
+echo.
+echo     若要返回主菜单请在文件路径处输入 0 并回车确认
 
-set /p input=请输入文件路径：
+set /p input=→  请输入文件路径：
 
 if %input% equ 0 goto menu
 
 echo 程序识别到的文件路径为：%input%
+echo 文件路径：%input%  >>%userprofile%\desktop\MDT\GET_HASH.log
 echo.
-echo 文件 MD2 值：
-certutil -hashfile %input% MD2 | findstr /v "[^0-9a-z]"
+echo. >>%userprofile%\desktop\MDT\GET_HASH.log
+echo 开始计算 HASH 值
+echo 提示：文件越大计算时间越久，请耐心等待...
+echo 文件 MD2 值： >>%userprofile%\desktop\MDT\GET_HASH.log
+certutil -hashfile %input% MD2 | findstr /v "[^0-9a-z]" >>%userprofile%\desktop\MDT\GET_HASH.log
+
+echo 文件 MD4 值： >>%userprofile%\desktop\MDT\GET_HASH.log
+certutil -hashfile %input% MD4 | findstr /v "[^0-9a-z]" >>%userprofile%\desktop\MDT\GET_HASH.log
+
+echo 文件 MD5 值： >>%userprofile%\desktop\MDT\GET_HASH.log
+certutil -hashfile %input% MD5 | findstr /v "[^0-9a-z]" >>%userprofile%\desktop\MDT\GET_HASH.log
+
+echo 文件 SHA1 值： >>%userprofile%\desktop\MDT\GET_HASH.log
+certutil -hashfile %input% SHA1 | findstr /v "[^0-9a-z]" >>%userprofile%\desktop\MDT\GET_HASH.log
+
+echo 文件 SHA256 值： >>%userprofile%\desktop\MDT\GET_HASH.log
+certutil -hashfile %input% SHA256 | findstr /v "[^0-9a-z]" >>%userprofile%\desktop\MDT\GET_HASH.log
+
+echo 文件 SHA384 值： >>%userprofile%\desktop\MDT\GET_HASH.log
+certutil -hashfile %input% SHA384 | findstr /v "[^0-9a-z]" >>%userprofile%\desktop\MDT\GET_HASH.log
+
+echo 文件 SHA512 值： >>%userprofile%\desktop\MDT\GET_HASH.log
+certutil -hashfile %input% SHA512 | findstr /v "[^0-9a-z]" >>%userprofile%\desktop\MDT\GET_HASH.log
 echo.
-echo 文件 MD4 值：
-certutil -hashfile %input% MD4 | findstr /v "[^0-9a-z]"
-echo.
-echo 文件 MD5 值：
-certutil -hashfile %input% MD5 | findstr /v "[^0-9a-z]"
-echo.
-echo 文件 SHA1 值：
-certutil -hashfile %input% SHA1 | findstr /v "[^0-9a-z]"
-echo.
-echo 文件 SHA256 值：
-certutil -hashfile %input% SHA256 | findstr /v "[^0-9a-z]"
-echo.
-echo 文件 SHA384 值：
-certutil -hashfile %input% SHA384 | findstr /v "[^0-9a-z]"
-echo.
-echo 文件 SHA512 值：
-certutil -hashfile %input% SHA384 | findstr /v "[^0-9a-z]"
-echo.
+echo ------------------------------------------------------------------------------------------ >>%userprofile%\desktop\MDT\GET_HASH.log
 
 :finhash
-echo HASH值获取完成
-echo 1. 继续获取其他文件的HASH值
-echo 2. 返回主菜单
-set /p cinput=请输入选项：
+echo HASH 值获取完成
+echo 结果导出路径为： %userprofile%\desktop\MDT\GET_HASH.log
+start %userprofile%\desktop\MDT\GET_HASH.log
+echo.
+echo     请选择你要继续的操作：
+echo.
+echo     1. 继续获取其他文件的HASH值
+echo     2. 返回主菜单
+set /p cinput=→  请输入选项：
 if %cinput% equ 1 goto GETHASH
 if %cinput% equ 2 goto menu
-echo 输入异常，请重新检查
+echo →  输入异常，请检查输入选项
 goto finhash
 
 :PrivCtrloff
@@ -12081,16 +12529,16 @@ goto menu
 
 :killprocess
 cls
-echo 杀死特定进程
+echo     杀死特定进程
 echo.
-echo 请在下方输入要杀死的进程名，并用英文半角双引号将路径引用
-echo 不引用会导致结束进程失败或程序崩溃退出
-echo 例如："This is sample.exe"、"example.exe"
-echo 不兼容环境变量输入，可能会导致空输出
+echo     请在下方输入要杀死的进程名，并用英文半角双引号将路径引用
+echo     不引用会导致结束进程失败或程序崩溃退出
+echo     例如："This is sample.exe"、"example.exe"
+echo     不兼容环境变量输入，可能会导致空输出
 echo.
-echo 若要返回主菜单请在进程名处输入 0 并回车确认
+echo     若要返回主菜单请在进程名处输入 0 并回车确认
 
-set /p input=请输入进程名：
+set /p input=→  请输入进程名：
 
 if %input% equ 0 goto menu
 echo.
@@ -12113,24 +12561,28 @@ echo 使用 tasklist 查找目标进程是否存在
 tasklist | findstr %input%
 echo 操作执行完成
 echo 所有操作已执行完成
-echo.
+goto finkill
 
 :finkill
-echo 已尝试结束目标进程
-echo 1. 继续杀死其他特定进程
-echo 2. 返回主菜单
-set /p cinput=请输入选项：
+echo.
+echo     已尝试结束目标进程
+echo.
+echo     1. 继续杀死其他特定进程
+echo     2. 返回主菜单
+set /p cinput=→  请输入选项：
 if %cinput% equ 1 goto killprocess
 if %cinput% equ 2 goto menu
-echo 输入异常，请重新检查
+echo →  输入异常，请检查输入选项
 goto finkill
 
 :eacuninstall
-echo EAC小蓝熊卸载脚本
+cls
 echo.
-echo 此操作将卸载EasyAntiCheat（小蓝熊）并清除所有数据
-echo 包括但不限于EpicGames、Steam平台的小蓝熊数据
-set /p eacinput=是否继续操作？（Y/n）
+echo     EAC小蓝熊卸载脚本
+echo.
+echo     此操作将卸载 EasyAntiCheat（小蓝熊）并清除所有数据
+echo     包括但不限于 EpicGames、Steam 平台的小蓝熊数据
+set /p eacinput=→  是否继续操作？（Y/n）
 if %eacinput% equ Y goto deleacdata
 if %eacinput% equ y goto deleacdata
 if %eacinput% equ N goto menu
@@ -12172,9 +12624,10 @@ goto menu
 
 :apexshopimgerr
 cls
-echo Apex Legends 商店图片不显示出现禁用标志（ASSET FAILED TO LOAD）修复
-echo 请先关闭游戏，修复过程会关闭游戏进程
-echo 请保存好文件，按任意键继续修复
+echo.
+echo     Apex Legends 商店图片不显示出现禁用标志（ASSET FAILED TO LOAD）修复
+echo     请先关闭游戏，修复过程会关闭游戏进程
+echo     请保存好文件，按任意键继续修复
 pause
 echo.
 echo 结束 Apex Legends 进程
@@ -12189,12 +12642,14 @@ icacls "%userprofile%\Saved Games\Respawn\Apex" /grant Everyone:F
 takeown /f "%userprofile%\Saved Games\Respawn\Apex\assets"
 icacls "%userprofile%\Saved Games\Respawn\Apex\assets" /grant Everyone:F
 echo.
-echo 权限修改完成，请重新验证游戏完整性
+echo 权限修改完成，请重新验证游戏完整性（推荐全新安装）
 echo 此问题多半是由加速器修复卡屏造成的，请慎用卡屏修复工具！
 pause
 goto menu
 
 :cmdstart
+cls
+echo.
 echo 正在启动 CMD.exe （以管理员身份运行）
 start cmd.exe
 echo 操作执行完成
@@ -12202,6 +12657,8 @@ pause
 goto menu
 
 :psstart
+cls
+echo.
 echo 正在启动 Powershell.exe （以管理员身份运行）
 start powershell.exe
 echo 操作执行完成
@@ -12209,17 +12666,19 @@ pause
 goto menu
 
 :userlist
-echo 列出用户列表
+cls
 echo.
-echo 0. 返回主菜单
-echo 1. 导出用户列表（基础）
-echo 2. 导出用户列表（详细）
+echo     导出用户列表菜单
 echo.
-set /p ulinput=请选择一个项目：
+echo     0. 返回主菜单
+echo     1. 导出用户列表（基础）
+echo     2. 导出用户列表（详细）
+echo.
+set /p ulinput=→  请选择一个项目：
 if %ulinput% equ 0 goto menu
 if %ulinput% equ 1 goto ulbasic
 if %ulinput% equ 2 goto uldetail
-echo 输入异常，请重新检查
+echo →  输入异常，请检查输入选项
 pause
 goto userlist
 
@@ -12248,6 +12707,20 @@ pause
 goto menu
 
 :wureset
+cls
+echo.
+echo     此操作将重置 Windows Update，是否继续操作？（y/N）
+echo.
+set /p wuinput=→  请确认您的操作：
+if %wuinput% equ y goto wuresetstart
+if %wuinput% equ Y goto wuresetstart
+if %wuinput% equ n goto menu
+if %wuinput% equ N goto menu
+goto menu
+
+:wuresetstart
+echo 开始重置 Windows Update
+echo.
 	:: ----- Stopping the Windows Update services -----
 echo 停止 Windows Update 相关服务
 net stop bits
@@ -12603,11 +13076,13 @@ echo 启动 Windows Update 相关服务
 goto menu
 
 :wudisable
-echo 二次确认：此操作将禁用 Windows Update
-echo 若您不明白您在做什么，请输入 0 返回主菜单
-echo 若已明确需求，继续操作请输入 Y
+cls
 echo.
-set /p wuinput=请输入选项：
+echo     二次确认：此操作将禁用 Windows Update
+echo     若您不明白您在做什么，请输入 0 返回主菜单
+echo     若已明确需求，继续操作请输入 Y
+echo.
+set /p wuinput=→  请输入选项：
 if %wuinput% equ 0 goto menu
 if %wuinput% equ Y goto wudisablestart
 if %wuinput% equ y goto wudisablestart
@@ -12775,6 +13250,8 @@ pause
 goto menu
 
 :gpeditmsc
+cls
+echo.
 echo 正在启动本地组策略编辑器
 start gpedit.msc
 echo 操作执行完成
@@ -12782,6 +13259,8 @@ pause
 goto menu
 
 :servicesmsc
+cls
+echo.
 echo 正在启动服务管理单元
 start services.msc
 echo 操作执行完成
@@ -12789,6 +13268,8 @@ pause
 goto menu
 
 :regeditexe
+cls
+echo.
 echo 正在启动注册表编辑器
 start regedit.exe
 echo 操作执行完成
@@ -12796,6 +13277,8 @@ pause
 goto menu
 
 :compmgmtmsc
+cls
+echo.
 echo 正在启动计算机管理
 start compmgmt.msc
 echo 操作执行完成
@@ -12803,6 +13286,8 @@ pause
 goto menu
 
 :eventvwrmsc
+cls
+echo.
 echo 正在启动事件管理器
 start eventvwr.msc
 echo 操作执行完成
@@ -12810,13 +13295,18 @@ pause
 goto menu
 
 :ctrlpanel
+cls
+echo.
 echo 正在启动控制面板
-start control
+rem start control
+rundll32.exe shell32.dll,Control_RunDLL
 echo 操作执行完成
 pause
 goto menu
 
 :winversion
+cls
+echo.
 echo 执行 Winver 命令
 winver
 echo 操作执行完成
@@ -12824,6 +13314,8 @@ pause
 goto menu
 
 :startmssetting
+cls
+echo.
 echo 正在打开设置
 start ms-settings:wheel
 echo 操作执行完成
@@ -12831,6 +13323,8 @@ pause
 goto menu
 
 :starttaskmgr
+cls
+echo.
 echo 正在启动任务管理器
 start taskmgr.exe
 echo 操作执行完成
@@ -12838,6 +13332,8 @@ pause
 goto menu
 
 :startdiskmgr
+cls
+echo.
 echo 正在启动磁盘管理
 start diskmgmt.msc
 echo 操作执行完成
@@ -12845,6 +13341,8 @@ pause
 goto menu
 
 :sharemanage
+cls
+echo.
 echo 正在启动共享文件夹管理
 start fsmgmt.msc
 echo 操作执行完成
@@ -12852,6 +13350,8 @@ pause
 goto menu
 
 :startperfmon
+cls
+echo.
 echo 正在启动性能监视器
 start perfmon.msc
 echo 操作执行完成
@@ -12859,6 +13359,8 @@ pause
 goto menu
 
 :securemgr
+cls
+echo.
 echo 正在启动本地安全组策略
 start secpol.msc
 echo 操作执行完成
@@ -12866,6 +13368,8 @@ pause
 goto menu
 
 :dxcheck
+cls
+echo.
 echo 正在启动 DirectX 检测工具
 start dxdiag
 echo 操作执行完成
@@ -12873,6 +13377,8 @@ pause
 goto menu
 
 :rdapp
+cls
+echo.
 echo 正在启动远程桌面连接
 start mstsc
 echo 操作执行完成
@@ -12880,13 +13386,18 @@ pause
 goto menu
 
 :optionalfunc
+cls
+echo.
 echo 正在启动 Windows 功能管理（启用或关闭 Windows 功能）
-start OptionalFeatures
+rundll32.exe shell32.dll,Control_RunDLL appwiz.cpl,,2
+rem start OptionalFeatures
 echo 操作执行完成
 pause
 goto menu
 
 :ms_config
+cls
+echo.
 echo 正在启动系统配置（启动、引导管理）
 start msconfig
 echo 操作执行完成
@@ -12894,6 +13405,8 @@ pause
 goto menu
 
 :startsysinfo
+cls
+echo.
 echo 正在启动系统信息
 start msinfo32
 echo 操作执行完成
@@ -12901,6 +13414,8 @@ pause
 goto menu
 
 :memcheckprogram
+cls
+echo.
 echo 正在启动 Windows 内存诊断
 start mdsched
 echo 操作执行完成
@@ -12908,6 +13423,8 @@ pause
 goto menu
 
 :componentmgr
+cls
+echo.
 echo 正在启动组件服务管理
 start dcomcnfg
 echo 操作执行完成
@@ -12915,15 +13432,850 @@ pause
 goto menu
 
 :ipconfigsys
+cls
+echo.
 echo 查看本机网络连接信息
 echo 执行命令
-ipconfig /all >%userprofile%\desktop\MDT\sys_ipconfig_detail.log
-ipconfig >%userprofile%\desktop\MDT\sys_ipconfig_basic.log
-type %userprofile%\desktop\MDT\sys_ipconfig_basic.log
+rem 如果路径不存在则创建路径
+if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+ipconfig /all >%userprofile%\desktop\MDT\Sys_ipconfig_Detail.log
+ipconfig >%userprofile%\desktop\MDT\Sys_ipconfig_Basic.log
+type %userprofile%\desktop\MDT\Sys_ipconfig_Basic.log
 echo 操作执行完成
-echo 本机网络连接信息导出完成，请查看桌面 MDT 文件夹中的 sys_ipconfig_basic.log 和 sys_ipconfig_detail.log 文件
+echo 本机网络连接信息导出完成
+echo 请查看桌面 MDT 文件夹中的 Sys_ipconfig_Basic.log 和 Sys_ipconfig_Detail.log 文件
 rem start %userprofile%\desktop\MDT\sys_ipconfig.log
-echo 路径：%userprofile%\desktop\MDT\sys_ipconfig_basic.log
-echo 路径：%userprofile%\desktop\MDT\sys_ipconfig_detail.log
+echo 路径：%userprofile%\desktop\MDT\Sys_ipconfig_Basic.log
+echo 路径：%userprofile%\desktop\MDT\Sys_ipconfig_Detail.log
+pause
+goto menu
+
+:setbatteryoption
+cls
+echo.
+echo     请选择你要设置的电源选项：
+echo.
+echo     0. 返回主菜单
+echo     1. 节能模式
+echo     2. 平衡模式
+echo     3. 高性能模式
+echo     4. 卓越性能模式（仅限于Win10/11专业版以上）
+set /p binput=→  请输入：
+if %binput% equ 0 goto menu
+if %binput% equ 1 goto setlowbattery
+if %binput% equ 2 goto setmedbattery
+if %binput% equ 3 goto sethighperfbattery
+if %binput% equ 4 goto setextremeperfbattery
+echo →  输入异常，请检查输入选项
+goto setbatteryoption
+:setlowbattery
+echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 设置节能模式
+powercfg /s a1841308-3541-4fab-bc81-f71556f20b4a
+echo.
+goto setbatteryfin
+
+:setmedbattery
+echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 设置平衡模式
+powercfg /s 381b4222-f694-41f0-9685-ff5bb260df2e
+echo.
+goto setbatteryfin
+
+:sethighperfbattery
+echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 设置高性能模式
+powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+echo.
+goto setbatteryfin
+
+:setextremeperfbattery
+echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 设置卓越性能模式（仅限于Win10/11专业版以上）
+powercfg /s e9a42b02-d5df-448d-aa00-03f14749eb61
+echo.
+goto setbatteryfin
+
+:setbatteryfin
+echo.
+echo     电源选项设置完成
+echo.
+echo     请选择你要继续的操作：
+echo     0. 返回主菜单
+echo     1. 重新设置计算机使用的电源选项
+echo     2. 恢复其他电源选项
+set /p bfinput=→  请输入：
+if %bfinput% equ 0 goto menu
+if %bfinput% equ 1 goto setbatteryoption
+if %bfinput% equ 2 goto borecmenu
+echo →  输入异常，请检查输入选项
+goto setbatteryfin
+
+rem 网络彻底重置，网络完全重置，整合代码开始
+:NetworkAllReset
+cls
+rem proxydiag
+echo 代理环境诊断开始
+echo.
+call:securitysoft
+call:minidump
+call:ieproxy
+call:ipv6state
+rem call:systemfirewalloff
+call:dnsserver 本地DNS服务器: 
+call:dnseventlog
+call:systemtime
+echo.
+echo 代理环境诊断完成
+echo.
+rem networkreset
+echo 网络重置开始
+echo.
+echo 正在结束加速器进程...
+echo.
+rem 结束VeryKuai加速器
+taskkill /F /IM VeryKuai.exe >nul 2>nul
+rem 结束雷神加速器
+taskkill /F /IM Leigod.exe >nul 2>nul
+rem 结束uu加速器
+taskkill /F /IM uu.exe >nul 2>nul
+rem 结束zz加速器（AK旗下，征云网络科技）
+taskkill /F /im ZZ.exe >nul 2>nul
+rem 结束迅游加速器
+taskkill /F /im xunyou.exe >nul 2>nul
+rem 结束鲜牛加速器
+taskkill /F /im XianNiu.exe >nul 2>nul
+rem 结束奇游加速器
+taskkill /F /im QiYou.exe >nul 2>nul
+rem 结束小黑盒加速器
+taskkill /F /im heyboxacc.exe >nul 2>nul
+taskkill /f /im heyboxbrowser.exe >nul 2>nul
+rem 结束nn加速器(雷神旗下)
+taskkill /F /im nn.exe >nul 2>nul
+rem 结束AK加速器（征云网络科技）
+taskkill /F /im AK.exe>nul 2>nul
+echo 结束代理程序
+taskkill /im v2rayN.exe /F >nul 2>nul
+taskkill /im "Clash for Windows.exe" /F >nul 2>nul
+taskkill /im proxy.exe /F >nul 2>nul
+taskkill /im v2ray.exe /F >nul 2>nul
+taskkill /im wv2ray.exe /F >nul 2>nul
+taskkill /im v2ray_privoxy.exe /F >nul 2>nul
+taskkill /im sysproxy.exe /F >nul 2>nul
+echo.
+echo 操作执行完成
+echo.
+echo 请关闭加速器以获得最佳修复效果
+echo.
+echo 前置修复：重置 LSP
+netsh winsock reset >nul 2>nul
+echo.
+echo.
+echo 重置 TCP/IP 协议
+rem 获取网络名称和网络IP信息
+netsh interface IP Show Address %networkname1% > %temp%\ip.txt 2>nul
+for /f "tokens=3" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr "IP"') do set ipsetaddress=%%i
+for /f "tokens=2" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr /r "默认网关 Gateway"') do set ipgateway=%%i
+for /f "tokens=4" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr /r "子网 Mask"') do set ipmask=%%i
+
+rem 判断正在连接网络dhcp还是手动
+netsh interface IP Show Address %networkname1% |findstr /r "否 No" 2>nul >nul && set ipsetmode=yes || set ipsetmode=no
+netsh int ipv4 reset >nul 2>nul
+netsh int ipv6 reset >nul 2>nul
+
+echo %ipsetaddress% |findstr /b "^[1-9]" |findstr /v [a-z] >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+if %ipsetmode% equ yes (
+netsh interface ip set address %networkname1% static %ipsetaddress% %ipmask:~0,-1% %ipgateway% >nul 2>nul
+netsh interface ip set dns %networkname1% static 223.5.5.5 primary >nul 2>nul
+netsh interface ip add dns %networkname1% 119.29.29.29 >nul 2>nul
+) else (
+netsh interface ip set address name=%networkname1% source=dhcp >nul 2>nul
+netsh interface ip set dns name=%networkname1% source=dhcp >nul 2>nul
+)
+) else (
+netsh interface ip set address name=%networkname1% source=dhcp >nul 2>nul
+netsh interface ip set dns name=%networkname1% source=dhcp >nul 2>nul
+)
+del /f /q %temp%\ip.txt >nul 2>nul
+echo.
+
+echo 禁用 Killer 服务
+sc config "Killer Network Service x64" start= disabled >nul 2>nul
+sc config "Killer Network Service" start= disabled >nul 2>nul
+sc config "Killer Bandwidth Service" start= disabled >nul 2>nul
+sc config "Rivet Bandwidth Service" start= disabled >nul 2>nul
+
+echo.
+echo 重置 LSP
+netsh winsock reset >nul 2>nul
+netsh winsock reset >nul 2>nul
+echo.
+
+echo 重置 hosts 文件权限并清空
+echo y| cacls.exe %WINDIR%\system32\drivers\etc\hosts /t /p Everyone:F >nul
+cd. > %WINDIR%\system32\drivers\etc\hosts
+call:host1fix
+
+echo 停止并删除驱动服务
+set drivername=vkdpi xunyoufilter xunyounpf QeeYouPacket npf uuwfp uupacket networktunnel10_x64 ylwfp TP2CNNetFilter lgdcatcher lgdcatchertdi xfilter savitar netrtp
+for %%i in (%drivername%) do (
+sc stop %%i >nul 2>nul
+sc config %%i start= DISABLED >nul 2>nul
+sc delete %%i >nul 2>nul
+)
+echo.
+
+call:ieproxy
+
+echo 刷新 DNS/ARP 缓存
+ipconfig /flushdns >nul 2>nul
+arp -d >nul 2>nul
+echo.
+
+echo 正在同步网络时间...
+call:systemtimereset
+echo.
+
+rem 清理注册表信息
+reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\vkdpi" /f >nul 2>nul
+reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ylwfp" /f >nul 2>nul
+reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\networktunnel10_x64" /f >nul 2>nul
+reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XunYouFilter" /f >nul 2>nul
+
+echo 清理系统临时文件
+rd /s /q %windir%\temp & md %windir%\temp
+del /f /s /q "%userprofile%\AppData\Local\Temp\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\Local Settings\Temp\*.*" >nul 2>nul
+echo.
+
+echo 清理 Cookies
+del /f /q %userprofile%\cookies\*.* >nul 2>nul
+echo Recent & Jump list
+del /f /q %userprofile%\recent\*.* >nul 2>nul
+del /f /s /q "%userprofile%\recent\*.*" >nul 2>nul
+del /f /s /q "%AppData%\Microsoft\Windows\Recent\CustomDestinations\*.*" >nul 2>nul
+echo.
+
+echo 清理临时 Internet 文件
+del /f /s /q "%userprofile%\Local Settings\Temporary Internet Files\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Temporary Internet Files\*.*" >nul 2>nul
+echo.
+
+echo 清理字体缓存
+del /f /s /q "%windir%\ServiceProfiles\LocalService\AppData\Local\FontCache\*.dat" >nul 2>nul
+echo.
+
+echo 清理 CryptoAPI 证书缓存
+del /f /s /q "%userprofile%\AppData\LocalLow\Microsoft\CryptnetUrlCache\Content\*.*" >nul 2>nul
+echo.
+
+echo 清理预加载文件
+del /f /s /q "%windir%\Prefetch\*.pf" >nul 2>nul
+echo.
+echo 清理Microsoft Edge缓存
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Extension State\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Session Storage\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\JumpListIconsRecentClosed\*.tmp" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Cache\*.*" >nul 2>nul
+echo.
+
+echo 清理Internet Explorer缓存
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Internet Explorer\DOMStore\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\container.dat" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\deprecated.cookie" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCache\IE\*.*" >nul 2>nul
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\WebCache\*.*" >nul 2>nul
+echo.
+
+echo 修复SSL3.0选项
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "CheckedValue" /t REG_DWORD /d 32 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "HelpID" /d "iexplore.hlp#50129" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "HKeyRoot" /t REG_DWORD /d 2147483649 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "Mask" /t REG_DWORD /d 32 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "PlugUIText" /d "@C:\Windows\System32\inetcpl.cpl,-4753" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "RegPath" /d "SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "RegPoliciesPath" /d "SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "Text" /d "SSL 3.0" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "Type" /d "checkbox" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "ValueName" /d "SecureProtocols" /f >nul
+echo 操作执行完成
+echo.
+
+echo 修复TLS1.0选项
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "CheckedValue" /t REG_DWORD /d 128 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "DefaultValue" /t REG_DWORD /d 128 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "HKeyRoot" /t REG_DWORD /d 2147483649 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "Mask" /t REG_DWORD /d 128 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "PlugUIText" /d "@C:\Windows\System32\inetcpl.cpl,-4754" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "RegPath" /d "SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "RegPoliciesPath" /d "SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "Text" /d "TLS 1.0" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "Type" /d "checkbox" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "ValueName" /d "SecureProtocols" /f >nul
+echo 操作执行完成
+echo.
+
+echo 修复TLS1.1选项
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "CheckedValue" /t REG_DWORD /d 512 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "DefaultValue" /t REG_DWORD /d 512 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "HKeyRoot" /t REG_DWORD /d 2147483649 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "Mask" /t REG_DWORD /d 512 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "OSVersion" /d "3.6.1.0.0" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "PlugUIText" /d "@C:\Windows\System32\inetcpl.cpl,-6800" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "RegPath" /d "SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "RegPoliciesPath" /d "SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "Text" /d "TLS 1.1" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "Type" /d "checkbox" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "ValueName" /d "SecureProtocols" /f >nul
+echo 操作执行完成
+echo.
+
+echo 修复TLS1.2选项
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "CheckedValue" /t REG_DWORD /d 2048 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "DefaultValue" /t REG_DWORD /d 2048 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "HKeyRoot" /t REG_DWORD /d 2147483649 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "Mask" /t REG_DWORD /d 2048 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "OSVersion" /d "3.6.1.0.0" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "PlugUIText" /d "@C:\Windows\System32\inetcpl.cpl,-6801" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "RegPath" /d "SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "RegPoliciesPath" /d "SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "Text" /d "TLS 1.2" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "Type" /d "checkbox" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "ValueName" /d "SecureProtocols" /f >nul
+echo 操作执行完成
+echo.
+
+echo 修复TLS1.3选项
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "CheckedValue" /t REG_DWORD /d 8192 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "HKeyRoot" /t REG_DWORD /d 2147483649 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "Mask" /t REG_DWORD /d 8192 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "OSVersion" /d "3.6.1.0.0" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "PlugUIText" /d "@C:\Windows\System32\inetcpl.cpl,-6802" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "RegPath" /d "SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "RegPoliciesPath" /d "SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "Text" /d "TLS 1.3" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "Type" /d "checkbox" /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "UncheckedValue" /t REG_DWORD /d 0 /f >nul
+reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "ValueName" /d "SecureProtocols" /f >nul
+echo 操作执行完成
+echo.
+
+echo IE 组件修复
+regsvr32 /s jscript.dll
+regsvr32 /s vbscript.dll
+echo.
+set var=0
+for /l %%i in (15,-1,1) do echo 正在停止驱动服务: %var%%%i && ping -n 2 127.1 >nul
+
+echo 再次重置 IE
+echo.
+del /f /q "%temp%\mb" >nul 2>nul
+echo Miniblink 缓存清理成功
+Rundll32 InetCpl.cpl,ClearMyTracksByProcess 255
+echo IE 缓存清理成功
+echo 请在弹出窗口里勾选“删除个人设置“，再点击重置，最后点击关闭
+echo 程序将在完成操作后继续进行
+RunDll32.exe InetCpl.cpl,ResetIEtoDefaults
+echo IE 已重置
+regsvr32 /s jscript.dll
+regsvr32 /s vbscript.dll
+echo 清空 IE 代理设置
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /d "" /f
+echo.
+echo 开始修复 IE 主页
+reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Start Page" /d "about:start" /f >nul
+reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Default_Page_URL" /d "https://www.msn.cn/zh-cn" /f >nul
+reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Search Page" /d "http://go.microsoft.com/fwlink/?LinkId=54896" /f >nul
+reg add "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Start Page" /d "http://go.microsoft.com/fwlink/?LinkId=625115" /f >nul
+echo 修复完成
+
+echo IE 组件已修复
+echo.
+
+rem 删除驱动文件失败后重命名
+del %userprofile%\appData\local\QiYou\processFilter.sys %userprofile%\appData\local\QiYou\npf.sys >nul 2>nul
+
+set driverFile=vkdpi.sys uuwfp.sys uupacket.sys XunYouFilter.sys networktunnel10_x64.sys ylwfp.sys xunyounpf.sys TP2CNNetFilter.sys LgdCatcher.sys LgdCatcherTdi.sys xfilter.sys savitar.sys netrtp.sys
+for %%i in (%driverFile%) do (
+cd /d %WINDIR%\system32\drivers >nul 2>nul
+del /f /q %%i >nul 2>nul
+if EXIST %%i (
+rename %%i %%i_bak_%random%
+) else (
+echo. >nul 2>nul
+)
+)
+cd /d %WINDIR%\system32\ >nul 2>nul
+echo.
+echo 加速器驱动服务停止成功
+echo.
+
+echo.
+echo LSP 修复
+netsh winsock reset
+netsh winsock reset
+netsh winsock reset
+echo.
+echo 已修复
+echo.
+echo 更换 DNS
+call:dnssetting 223.5.5.5 8.8.8.8
+echo.
+echo 尝试设置电源选项为卓越性能/高性能
+echo 正在设置电源选项...
+echo.
+if "%systemver%"=="10" (
+goto powercfgwin10
+) else (
+goto powercfgwin7
+)
+:powercfgwin10
+powercfg /LIST |findstr "卓越性能"
+if "%errorlevel%"=="1" (
+powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+echo.
+) else (
+echo. >nul 2>nul
+)
+for /f "tokens=3" %%i in ('powercfg /LIST ^|findstr "卓越性能"') do set powerguid=%%i
+powercfg -s %powerguid%
+echo.
+goto powerlabelexit
+:powercfgwin7
+for /f "tokens=3" %%i in ('powercfg /LIST ^|findstr "高性能"') do set powerguid=%%i
+powercfg -s %powerguid%
+echo.
+echo 电源管理: 高性能(设置成功)
+echo.
+:powerlabelexit
+echo 设置电源选项完成
+echo 如遇设置异常，可在系统诊断修复菜单中，选择电源选项恢复进行修复
+echo.
+echo     提醒：如果帧率仍然比预想的要低或者不正常，请检查系统问题
+echo     包括但不限于软件层面：OEM定制驱动软件限制功耗影响帧率（节能模式、办公模式等）
+echo     NVIDIA Experience、AMD等控制面板限制功耗影响帧率
+echo     系统虚拟内存设置异常、各种系统小问题堆积导致大异常
+echo     某些软件环境后台（不一定显示）占用大量系统资源进行运算（模型训练、挖矿软件、木马病毒等）
+echo     硬件层面：电池电压不稳，计算机供电异常，运行内存过小、内存条接触异常识别异常
+echo     固态硬盘损坏，机械硬盘老化（推荐除了文件存储需求外，软件均安装至固态硬盘内）
+echo     请自行排查重试，若均难以解决，请联系专业用户。
+echo.
+echo 修复 Xbox 多人游戏
+echo.
+echo 临时禁用 Teredo 隧道
+netsh int teredo set state disable > NUL
+
+echo 禁用华硕 GameFirst (建议卸载！)
+sc config AsusGameFirstService start= DISABLED > NUL
+sc stop AsusGameFirstService > NUL
+
+echo 暂时停止系统服务
+sc stop XblAuthManager > NUL
+sc stop XboxNetApiSvc > NUL
+sc stop iphlpsvc > NUL
+sc stop upnphost > NUL
+sc stop SSDPSRV > NUL
+sc stop FDResPub > NUL
+
+echo 修复系统时间同步服务
+sc stop w32time > NUL
+w32tm /unregister > NUL
+w32tm /register > NUL
+sc start w32time > NUL
+
+echo 重置 Windows 防火墙策略
+netsh advfirewall reset > NUL
+netsh advfirewall set allprofiles state on > NUL
+echo 排除冲突的Windows防火墙策略
+netsh advfirewall set currentprofile firewallpolicy blockinbound,allowoutbound > NUL
+netsh advfirewall firewall set rule name="4jxr4b3r3du76ina39a98x8k2" new enable=no > NUL
+
+echo 同步系统时间
+w32tm /resync /force > NUL
+
+echo 修复服务自启项
+sc config IKEEXT start= AUTO > NUL
+sc config FDResPub start= AUTO > NUL
+sc config SSDPSRV start= AUTO > NUL
+sc config upnphost start= AUTO > NUL
+sc config XblAuthManager start= AUTO > NUL
+sc config XboxNetApiSvc start= AUTO > NUL
+
+echo 重置系统 IPv6 设置
+netsh int ipv6 reset
+reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_DefaultQualified /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Force_Tunneling /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_DefaultQualified /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_ClientPort /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_RefreshRate /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_ServerName /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v Teredo_State /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v 6to4_RouterNameResolutionInterval /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v 6to4_RouterName /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v 6to4_State /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v ISATAP_RouterName /f > NUL
+reg delete HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\TCPIP\v6Transition /v ISATAP_State /f > NUL
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters" /v DisabledComponents /t REG_DWORD /d 0x20 /f > NUL
+
+echo 操作执行完成
+echo.
+
+echo 启动系统服务
+sc start IKEEXT > NUL
+sc start FDResPub > NUL
+sc start SSDPSRV > NUL
+sc start upnphost > NUL
+
+echo 设置 IPv6 前缀优先级
+netsh int ipv6 set prefix ::1/128 50 0 > NUL
+netsh int ipv6 set prefix ::/0 40 1 > NUL
+netsh int ipv6 set prefix 2002::/16 30 2 > NUL
+netsh int ipv6 set prefix ::/96 20 3 > NUL
+netsh int ipv6 set prefix ::ffff:0:0/96 100 4 > NUL
+
+echo 启动 IP Helper 服务
+sc start iphlpsvc > NUL
+
+echo 配置 Teredo 隧道参数
+route delete ::/0 > NUL
+netsh int teredo set state type=default > NUL
+netsh int teredo set state enterpriseclient teredo.remlab.net 20 0 > NUL
+netsh int ipv6 add route ::/0 "Teredo Tunneling Pseudo-Interface" > NUL
+
+echo 启动 Xbox 网络服务
+sc start XboxNetApiSvc > NUL
+sc start XblAuthManager > NUL
+
+echo 修复工具运行结束！
+echo Teredo 配置状态：
+netsh int teredo show state
+echo.
+echo 已修复 Xbox 多人游戏
+
+echo 开始修复 Steam
+echo.
+echo 正在检测 Steam 是否开启......
+tasklist | find /I "Steam.exe"
+if errorlevel 1 goto steamchina
+if not errorlevel 1 goto startvacfix
+
+:steamchina
+echo 正在检测国服启动器是否开启......
+tasklist | find /I "steamchina.exe"
+if errorlevel 1 goto stopsteam
+if not errorlevel 1 goto startvacfix
+
+:stopsteam
+echo Steam 和国服启动器均未开启
+goto startvacfix
+
+:killsteam
+echo Steam 已开启
+echo 正在强制关闭
+taskkill /F /IM Steam.exe
+echo 已强制关闭
+goto startvacfix
+
+:killsteamchina
+echo Steam 已开启
+echo 正在强制关闭
+taskkill /F /IM steamchina.exe
+echo 已强制关闭
+goto startvacfix
+
+:startvacfix
+echo 开始解决 VAC 屏蔽
+
+echo 开启 Network Connections
+sc config Netman start= AUTO
+sc start Netman
+
+echo 开启 Remote Access Connection Manager
+sc config RasMan start= AUTO
+sc start RasMan
+
+echo 开启 Telephony
+sc config TapiSrv start= AUTO
+sc start TapiSrv
+
+echo 开启 Windows Firewall
+sc config MpsSvc start= AUTO
+sc start MpsSvc
+netsh advfirewall set allprofiles state on
+
+echo 恢复 Data Execution Prevention 启动设置为默认值
+bcdedit /deletevalue nointegritychecks
+bcdedit /deletevalue loadoptions
+bcdedit /debug off
+bcdedit /deletevalue nx
+
+echo 正在获取你的 Steam 或国服启动器目录
+for /f "tokens=1,2,* " %%i in ('REG QUERY "HKEY_CURRENT_USER\SOFTWARE\Valve\Steam" ^| find /i "SteamPath"') do set "SteamPath=%%k" 
+if "%SteamPath%" NEQ "0x1" (goto Autosteampath) else (goto Manualerr)
+
+:Autosteampath
+echo Steam 或国服启动器目录为%SteamPath% 
+
+echo 开始安装 Steam Services
+cd /d "%SteamPath%\bin"
+steamservice  /install
+ping -n 3 127.0.0.1>nul
+echo 开始修复 Steam Services
+steamservice  /repair
+ping -n 3 127.0.0.1>nul
+echo .
+echo 修复 Steam Services 完毕
+echo 出现"Steam client service installation complete"且无任何"Fail"字样
+echo (如"Add firewall exception failed for steamservice.exe"出现)才可以结束，
+echo 否则请检查您的防火墙设置(关闭“不允许例外”选项)
+
+echo 启动Steam Services服务
+sc config "Steam Client Service" start= AUTO
+sc start "Steam Client Service"
+
+echo 修复完成，请重启Steam
+echo.
+echo 开始清理 Flash Player 播放器缓存
+reg delete "HKCU\Software\Macromedia\FlashPlayer" /f >nul
+echo 清理完成
+
+echo 重启 EAC 相关服务
+sc stop EasyAntiCheat_EOS >nul 2>nul
+sc stop EasyAntiCheat >nul 2>nul
+sc start EasyAntiCheat_EOS >nul 2>nul
+sc start EasyAntiCheat >nul 2>nul
+echo 操作执行完成
+echo.
+echo LSP 修复及 DNS 缓存清理
+netsh winsock reset
+ipconfig /flushdns
+echo 操作执行完成
+echo.
+echo 所有操作已执行完成
+echo 请重新启动计算机以完成修复
+set /p choice="你想要现在重启计算机吗？ (y/N) "
+if /I "%choice%"=="y" shutdown -r -t 0
+if /I "%choice%"=="Y" shutdown -r -t 0
+goto :EOF
+
+rem 网络整合重置代码结束
+
+:sysuserbackup
+cls
+echo     即将开始用户数据备份工作，请指定备份路径（请用引号引用路径）
+echo     请确保目标备份路径空间充足，避免出现备份失败的问题！
+echo     若不想备份请在备份路径中输入 0 返回主菜单
+set /p bakpath=→  备份路径：
+echo.
+if %bakpath% equ 0 goto menu
+echo.
+echo 识别到的用户路径为%bakpath%
+if not exist %bakpath% md %bakpath%
+
+if %ERRORLEVEL% equ 0 (
+	echo. >nul 2>nul
+) else (
+	echo 无法创建指定目录，请检查是否存在此路径或是否限制程序权限！
+  pause
+  goto sysuserbackup
+)
+
+echo 开始系统盘（C盘）用户资料备份
+echo.
+echo 读取用户数据，导出文件目录结构
+tree %userprofile% >%bakpath%\UserProfile_Data_Tree.log
+echo 导出完成文件目录结构完成，路径为：%bakpath%\UserProfile_Data_Tree.log
+echo.
+echo 数据备份未屏蔽用户输出，方便查看定位备份进度
+echo.
+echo 开始备份用户数据
+echo 数据较多，请耐心等待...
+echo.
+echo 用户文档备份...
+echo 数据较多，请耐心等待...
+echo D| xcopy /v /s /e /y /i /c "%userprofile%\Documents" "%bakpath%\UserProfile_Data\Documents"
+echo 用户文档备份完成
+echo.
+echo 用户图片备份...
+echo 数据较多，请耐心等待...
+echo D| xcopy /v /s /e /y /i /c "%userprofile%\Pictures" "%bakpath%\UserProfile_Data\Pictures"
+echo 用户图片备份完成
+echo.
+echo 用户下载文件备份...
+echo 数据较多，请耐心等待...
+echo D| xcopy /v /s /e /y /i /c "%userprofile%\Downloads" "%bakpath%\UserProfile_Data\Downloads"
+echo 用户下载文件备份完成
+echo.
+echo 用户视频备份...
+echo 数据较多，请耐心等待...
+echo D| xcopy /v /s /e /y /i /c "%userprofile%\Videos" "%bakpath%\UserProfile_Data\Videos"
+echo 用户视频备份完成
+echo.
+echo 用户音乐备份...
+echo 数据较多，请耐心等待...
+echo D| xcopy /v /s /e /y /i /c "%userprofile%\Music" "%bakpath%\UserProfile_Data\Music"
+echo 用户音乐备份完成
+echo.
+echo 用户桌面数据备份...
+echo 数据较多，请耐心等待...
+echo D| xcopy /v /s /e /y /i /c "%userprofile%\Desktop" "%bakpath%\UserProfile_Data\Desktop"
+echo 用户桌面数据备份完成
+echo.
+echo 即将开始备份 AppData 数据
+echo.
+echo AppData 数据较大，多为软件数据游戏存档等，推荐手动备份
+echo.
+echo 请确保目标备份路径空间充足，避免出现备份失败的问题！
+echo set /p appbak=是否要备份 AppData 数据？（y/N）
+if %appbak% equ y goto appdatabak
+if %appbak% equ Y goto appdatabak
+if %appbak% equ n goto passappdata
+if %appbak% equ N goto passappdata
+
+:appdatabak
+echo 开始备份 AppData 数据...
+echo AppData 数据较大，耗时较久，请耐心等待
+echo D| xcopy /v /s /e /y /i /c "%userprofile%\AppData" "%bakpath%\UserProfile_Data\AppData"
+echo 备份 AppData 数据完成
+goto OEMBAK
+
+:passappdata
+echo 已跳过 AppData 数据备份
+echo 正在打开 AppData 路径，请自行选择数据备份！
+start %userprofile%\AppData
+echo 操作执行完成
+echo.
+goto OEMBAK
+
+:OEMBAK
+echo 备份 OEM 定制文件
+echo D| xcopy /v /s /e /y /i /c "C:\Recovery" "%bakpath%\C_Driver_Data\Recovery"
+echo OEM 定制文件备份完成
+echo.
+if exist "C:\FLiNGTrainers" (
+	echo 开始备份风灵月影修改器数据
+	echo D| xcopy /v /s /e /y /i /c "C:\FLiNGTrainers" "%bakpath%\C_Driver_Data\FLiNGTrainers"
+	echo 备份风灵月影修改器数据完成
+)
+echo 请自行备份其余C盘根目录数据
+start C:\
+echo.
+echo 操作执行完成
+echo.
+echo 所有操作已执行完成
+echo.
+echo 用户数据备份完成，备份存储路径为：%bakpath%
+start %bakpath%
+echo.
+echo     部分数据请自行备份，确保备份完全
+echo     备份过程中已增加文件校验环节，保险起见请二次检查备份文件是否完整！
+echo     如果因磁盘空间不足而导致备份失败，请务必重新备份数据！
+echo     重装系统等敏感操作前请仔细检查备份工作是否到位！
+pause
+goto menu
+
+:desktopiconset
+cls
+echo.
+echo 正在打开桌面图标设置
+rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0
+echo 操作执行完成
+pause
+goto menu
+
+:useraccset
+cls
+echo.
+echo 正在打开用户账户设置
+rundll32.exe shell32.dll,Control_RunDLL nusrmgr.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:firewallset
+cls
+echo.
+echo 正在打开 Windows Defender 防火墙设置
+rundll32.exe shell32.dll,Control_RunDLL firewall.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:applistset
+cls
+echo.
+echo 正在打开程序和功能（卸载或更改程序）
+rundll32.exe shell32.dll,Control_RunDLL appwiz.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:computerpropset
+cls
+echo.
+echo 正在打开系统属性设置
+rundll32.exe shell32.dll,Control_RunDLL sysdm.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:timezoneset
+cls
+echo.
+echo 正在打开时间和区域设置
+rundll32.exe shell32.dll,Control_RunDLL intl.cpl,,0
+echo 操作执行完成
+pause
+goto menu
+
+:easyuseset
+cls
+echo.
+echo 正在打开轻松使用设置中心
+rundll32.exe shell32.dll,Control_RunDLL access.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:scrpropset
+cls
+echo.
+echo 正在打开显示属性（屏幕设置）
+rundll32.exe shell32.dll,Control_RunDLL desk.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:securitycenter
+cls
+echo.
+echo 正在打开安全和维护（Windows 安全中心）
+rundll32.exe shell32.dll,Control_RunDLL wscui.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:netconnectcenter
+cls
+echo.
+echo 打开网络连接设置（传统设置）
+rundll32.exe shell32.dll,Control_RunDLL ncpa.cpl
+echo 操作执行完成
 pause
 goto menu
