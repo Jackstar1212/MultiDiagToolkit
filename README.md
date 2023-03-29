@@ -2,7 +2,12 @@
 ## 多合一系统诊断工具箱
 
 一个针对 Windows 系统的诊断修复工具箱
+
 下载地址：[发布页](https://github.com/Jackstar1212/MutiDiagToolkit/releases)
+
+内测群抢先体验 PreRelease，欢迎一起debug！
+
+可通过我的主页邮箱联系到我
 
 ### 20230316——1.0版本
 
