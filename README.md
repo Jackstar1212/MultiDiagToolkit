@@ -112,7 +112,7 @@ Steam VAC屏蔽修复与闪退问题修复工具（打csgo报vac验证错误断�
 
 记事本默认保存编码修改
 
-加入Windows预览体验计划[Windows Insider Channel](https://github.com/abbodi1406/offlineinsiderenroll/releases/tag/2.6.4)
+加入Windows预览体验计划 原项目地址：[Windows Insider Channel](https://github.com/abbodi1406/offlineinsiderenroll/releases/tag/2.6.4)
 
 查看电池健康度（看看电脑电池损耗如何）
 
@@ -134,7 +134,7 @@ Steam VAC屏蔽修复与闪退问题修复工具（打csgo报vac验证错误断�
 
 ### 20230320——1.5版本
 
-整合 [MAS 微软激活脚本](https://github.com/massgravel/Microsoft-Activation-Scripts)
+整合 MAS 微软激活脚本 原项目地址：[MAS 微软激活脚本](https://github.com/massgravel/Microsoft-Activation-Scripts)
 
 ### 20230321——2.0版本
 
