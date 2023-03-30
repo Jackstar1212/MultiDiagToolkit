@@ -1,4 +1,4 @@
-# MutiDiagToolkit
+# MultiDiagToolkit
 ## 多合一系统诊断工具箱
 
 一个针对 Windows 系统的诊断修复工具箱
