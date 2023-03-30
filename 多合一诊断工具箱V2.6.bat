@@ -13648,14 +13648,15 @@ reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\networktunnel10
 reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XunYouFilter" /f >nul 2>nul
 
 echo 清理系统临时文件
-rd /s /q %windir%\temp & md %windir%\temp
+rd /s /q %windir%\temp & md %windir%\temp >nul 2>nul
 del /f /s /q "%userprofile%\AppData\Local\Temp\*.*" >nul 2>nul
 del /f /s /q "%userprofile%\Local Settings\Temp\*.*" >nul 2>nul
 echo.
 
 echo 清理 Cookies
 del /f /q %userprofile%\cookies\*.* >nul 2>nul
-echo Recent & Jump list
+
+echo 清理最近的使用文件和跳转列表
 del /f /q %userprofile%\recent\*.* >nul 2>nul
 del /f /s /q "%userprofile%\recent\*.*" >nul 2>nul
 del /f /s /q "%AppData%\Microsoft\Windows\Recent\CustomDestinations\*.*" >nul 2>nul
@@ -14069,7 +14070,7 @@ echo 操作执行完成
 echo.
 echo 所有操作已执行完成
 echo 请重新启动计算机以完成修复
-set /p choice="你想要现在重启计算机吗？ (y/N) "
+set /p choice=你想要现在重启计算机吗？ (y/N) 
 if /I "%choice%"=="y" shutdown -r -t 0
 if /I "%choice%"=="Y" shutdown -r -t 0
 goto :EOF
