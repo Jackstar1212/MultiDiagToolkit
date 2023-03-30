@@ -2565,7 +2565,7 @@ del /f /q %userprofile%\cookies\*.* >nul 2>nul
 echo 操作执行完成
 echo.
 
-echo 最近使用文件和跳转列表
+echo 清理最近使用文件和跳转列表
 del /f /q %userprofile%\recent\*.* >nul 2>nul
 del /f /s /q "%userprofile%\recent\*.*" >nul 2>nul
 del /f /s /q "%AppData%\Microsoft\Windows\Recent\CustomDestinations\*.*" >nul 2>nul
@@ -13656,7 +13656,7 @@ echo.
 echo 清理 Cookies
 del /f /q %userprofile%\cookies\*.* >nul 2>nul
 
-echo 清理最近的使用文件和跳转列表
+echo 清理最近使用文件和跳转列表
 del /f /q %userprofile%\recent\*.* >nul 2>nul
 del /f /s /q "%userprofile%\recent\*.*" >nul 2>nul
 del /f /s /q "%AppData%\Microsoft\Windows\Recent\CustomDestinations\*.*" >nul 2>nul
@@ -13678,14 +13678,14 @@ echo.
 echo 清理预加载文件
 del /f /s /q "%windir%\Prefetch\*.pf" >nul 2>nul
 echo.
-echo 清理Microsoft Edge缓存
+echo 清理 Microsoft Edge 缓存
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Extension State\*.*" >nul 2>nul
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Session Storage\*.*" >nul 2>nul
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\JumpListIconsRecentClosed\*.tmp" >nul 2>nul
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Cache\*.*" >nul 2>nul
 echo.
 
-echo 清理Internet Explorer缓存
+echo 清理 Internet Explorer 缓存
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Internet Explorer\DOMStore\*.*" >nul 2>nul
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\container.dat" >nul 2>nul
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCookies\deprecated.cookie" >nul 2>nul
@@ -13693,7 +13693,7 @@ del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\INetCache\IE\*.*" >n
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Windows\WebCache\*.*" >nul 2>nul
 echo.
 
-echo 修复SSL3.0选项
+echo 修复 SSL 3.0 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "CheckedValue" /t REG_DWORD /d 32 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0" /v "HelpID" /d "iexplore.hlp#50129" /f >nul
@@ -13709,7 +13709,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\SSL3.0
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.0选项
+echo 修复 TLS 1.0 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "CheckedValue" /t REG_DWORD /d 128 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "DefaultValue" /t REG_DWORD /d 128 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -13725,7 +13725,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.0
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.1选项
+echo 修复 TLS 1.1 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "CheckedValue" /t REG_DWORD /d 512 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "DefaultValue" /t REG_DWORD /d 512 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -13742,7 +13742,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.1
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.2选项
+echo 修复 TLS 1.2 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "CheckedValue" /t REG_DWORD /d 2048 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "DefaultValue" /t REG_DWORD /d 2048 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
@@ -13759,7 +13759,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.2
 echo 操作执行完成
 echo.
 
-echo 修复TLS1.3选项
+echo 修复 TLS 1.3 选项
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "CheckedValue" /t REG_DWORD /d 8192 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "DefaultValue" /t REG_DWORD /d 0 /f >nul
 reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\AdvancedOptions\CRYPTO\TLS1.3" /v "HelpID" /d "iexplore.hlp#50511" /f >nul
