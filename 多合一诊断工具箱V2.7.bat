@@ -64,10 +64,12 @@ if %ERRORLEVEL% equ 0 (
 echo     操作执行完成
 echo.
 echo     检查软件兼容性问题
+
+rem 此处开始检查安全软件，避免后续操作遭到拦截导致修复失败或异常
 %systemroot%\system32\tasklist /fi "IMAGENAME eq 360tray.exe" |findstr /i 360tray.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo     请退出360安全卫士, 以免操作过程中出现错误！
-	mshta vbscript:msgbox("请退出360安全卫士, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
+	echo     请退出 360 安全卫士, 以免操作过程中出现错误！
+	mshta vbscript:msgbox("请退出 360 安全卫士, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -102,8 +104,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq ccSvcHst.exe" |findstr /i ccSvcHst.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo     请退出Norton杀毒, 以免操作过程中出现错误！
-	mshta vbscript:msgbox("请退出Norton杀毒, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
+	echo     请退出 Norton 杀毒, 以免操作过程中出现错误！
+	mshta vbscript:msgbox("请退出 Norton 杀毒, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -120,8 +122,8 @@ if %ERRORLEVEL% equ 0 (
 
 %systemroot%\system32\tasklist /fi "IMAGENAME eq 360sd.exe" |findstr /i 360sd.exe >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	echo     请退出360杀毒, 以免操作过程中出现错误！
-	mshta vbscript:msgbox("请退出360杀毒, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
+	echo     请退出 360 杀毒, 以免操作过程中出现错误！
+	mshta vbscript:msgbox("请退出 360 杀毒, 以免操作过程中出现错误！",64,"消息"^)(window.close^)
 	exit
 ) else (
 	echo. >nul >nul
@@ -148,7 +150,7 @@ echo.
 echo     操作执行完成
 
 rem 设置程序版本、作者信息
-set "progver=2.6"
+set "progver=2.7"
 set "Author=LonelyFish"
 
 setlocal enabledelayedexpansion
@@ -235,10 +237,11 @@ echo. >nul 2>nul
 :preGetOSinfo
 rem 提前读取，避免重复读取加快目录加载速度
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
-
+rem 如果目录存在，则确保所有权
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 rem 生成文件夹说明文件
 echo.>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
-echo 此文件夹为 MutiDiagToolkit（MDT）程序的日志输出文件夹>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo 此文件夹为 MultiDiagToolkit（MDT）程序的日志输出文件夹>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo MDT 生成的所有日志均会保存在此文件夹内>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo 如不再需要日志信息，可以在 MDT 程序退出后删除此文件夹>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo.>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
@@ -276,6 +279,8 @@ echo.
 echo     程序初始化完成
 timeout /t 1 /nobreak > NUL
 
+
+rem 主目录 ——————————————————————————————————————————————————————————————————
 :menu
 for /f "tokens=4" %%i in ('powercfg /LIST ^|findstr /v "Active" ^|findstr "*"') do set powerstate=%%i
 set powerstate=!powerstate:(=! 2>nul
@@ -296,10 +301,14 @@ set "gamebar=    游戏模式:                     开"
 echo. >nul
 )
 
+
+
+
 cls
 echo.
 echo     基本系统信息: 
 echo.
+
 rem 此处不再执行systeminfo命令，直接读取预加载的文件，但是做MD55校验，与最开始生成的文件不同则重新生成文件
 rem 文件不存在则重新生成
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
@@ -308,6 +317,25 @@ if not exist "%userprofile%\desktop\MDT\OS_Info.txt" (
   call :generatesysinfo
   echo     已重新保存系统信息
 )
+
+rem 校验屏幕分辨率和虚拟内存更改情况
+rem 虚拟内存信息校验
+for /f %%i in ('wmic os get SizeStoredInPagingFiles ^|findstr [0-9]') do set /a virtualramcheck=%%i/1024
+rem 屏幕分辨率信息校验
+for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do set scrresolutioncheck=%%j*%%i
+
+if %virtualramcheck% neq %virtualram% (
+  echo     系统环境发生变化，重新读取系统信息
+  call :generatesysinfo
+  echo     已重新保存系统信息
+)
+
+if %scrresolutioncheck% neq %scrresolution% (
+  echo     系统环境发生变化，重新读取系统信息
+  call :generatesysinfo
+  echo     已重新保存系统信息
+)
+
 rem 开始MD5校验，不通过则重新生成
 for /f %%i in ('certutil -hashfile %userprofile%\desktop\MDT\OS_Info.txt MD5 ^|findstr /v "[^0-9a-z]"') do set osinfoMD5New=%%i
 if %osinfoMD5% neq %osinfoMD5New% (
@@ -315,6 +343,7 @@ if %osinfoMD5% neq %osinfoMD5New% (
   call :generatesysinfo
   echo     已重新保存系统信息
 )
+
 rem 进入菜单，输出记录
 type %userprofile%\desktop\MDT\OS_Info.txt
 rem 以下每次返回目录输出
@@ -395,28 +424,28 @@ echo     8. Windows 电源选项恢复（想要高性能、节能、平衡等那
 echo.
 echo     9. Windows Update 更新安装问题（0x80070002/0x80070005）其他故障请使用系统修复
 echo.
-echo     10. taskmgr.exe 没有与之关联的程序运行（任务管理器定位程序进程路径出问题，选我）
+echo    10. taskmgr.exe 没有与之关联的程序运行（任务管理器定位程序进程路径出问题，选我）
 echo.
-echo     11. 多种 exe 没有与之关联的程序运行（打开软件报这个错选我）
+echo    11. 多种 exe 没有与之关联的程序运行（打开软件报这个错选我）
 echo.
-echo     12. 取消 Windows 激活状态并重置评估期（慎用！会使 Windows 变为未激活状态！）（小白别点）
+echo    12. 取消 Windows 激活状态并重置评估期（慎用！会使 Windows 变为未激活状态！）（小白别点）
 echo.
-echo     13. 组策略添加、修复（适用于家庭版添加组策略或者升级专业版后组策略丢失异常等问题）
+echo    13. 组策略添加、修复（适用于家庭版添加组策略或者升级专业版后组策略丢失异常等问题）
 echo.
-echo     14. 修复桌面图标间距异常、窗口右上角关闭最大化最小化按钮异常
-echo     （桌面图标间距好大，怪怪的，右上角关闭图标也怪怪的，选我）
+echo    14. 修复桌面图标间距异常、窗口右上角关闭最大化最小化按钮异常
+echo        （桌面图标间距好大，怪怪的，右上角关闭图标也怪怪的，选我）
 echo.
-echo     15. 修复微软商店打不开、转圈、白屏等问题（微软商店打不开选我）
+echo    15. 修复微软商店打不开、转圈、白屏等问题（微软商店打不开选我）
 echo.
-echo     16. IE 主页劫持修复（主页被乱改了）
+echo    16. IE 主页劫持修复（主页被乱改了）
 echo.
-echo     17. 修复由于远程连接导致的剪贴板复制粘贴失效问题
+echo    17. 修复由于远程连接导致的剪贴板复制粘贴失效问题
 echo.
-echo     18. 停用 vmmem ，解决 vmmem 占用过高问题
+echo    18. 停用 vmmem ，解决 vmmem 占用过高问题
 echo.
-echo     19. 查看电池健康度（看看电脑电池损耗如何）
+echo    19. 查看电池健康度（看看电脑电池损耗如何）
 echo.
-echo     20. 查看下一页（当前页面为：P1）
+echo    20. 查看下一页（当前页面为：P1）
 echo ------------------------------------------------------------------------------------------
 set /p sysdiaginput1=→  请选择项目：
 if %sysdiaginput1% equ 0 goto menu
@@ -464,6 +493,26 @@ echo.
 echo     6. 列出所有进程（不论活跃与否）
 echo.
 echo     7. 列出此计算机的所有用户
+echo.
+echo     8. 启动系统配置（启动、引导管理）
+echo.
+echo     9. 启动系统信息
+echo.
+echo    10. 启动 Windows 内存诊断
+echo.
+echo    11. 启动优化驱动器（碎片整理）
+echo.
+echo    12. 禁用 Windows Defender（文件一直被系统拦截选我）
+echo.
+echo    13. 启用 Windows Defender（恢复Defender功能选我）
+echo.
+echo    14. 禁用 Windows Update
+echo.
+echo    15. 启用、重置、修复 Windows Update
+echo.
+echo    16. 恢复UAC（我后悔禁用了，还是想要权限在自己手里控制舒服）
+echo.
+echo    17. 禁用UAC（关了uac，打开软件不会再申请管理员权限，省的选是选否不知道）
 echo ------------------------------------------------------------------------------------------
 set /p sysdiaginput2=→  请选择项目：
 if %sysdiaginput2% equ 0 goto menu
@@ -474,6 +523,16 @@ if %sysdiaginput2% equ 4 goto MAS_ACTIVATOR
 if %sysdiaginput2% equ 5 goto allprocessrunning
 if %sysdiaginput2% equ 6 goto allprocess
 if %sysdiaginput2% equ 7 goto userlist
+if %sysdiaginput2% equ 8 goto ms_config
+if %sysdiaginput2% equ 9 goto startsysinfo
+if %sysdiaginput2% equ 10 goto memcheckprogram
+if %sysdiaginput2% equ 11 goto startdefrag
+if %sysdiaginput2% equ 12 goto defenderoff
+if %sysdiaginput2% equ 13 goto defenderon
+if %sysdiaginput2% equ 14 goto wudisable
+if %sysdiaginput2% equ 15 goto wureset
+if %sysdiaginput2% equ 16 goto enableuac
+if %sysdiaginput2% equ 17 goto disableuac
 echo →  输入异常，请检查输入选项
 pause
 goto menusysrepairP2
@@ -505,11 +564,17 @@ echo     8. 重置 IE（上古神器 IE 浏览器，没人用，但是有时候�
 echo.
 echo     9. DNS 缓存域名记录（看看网页解析）
 echo.
-echo     10. 查看本机网络连接信息详情
+echo    10. 查看本机网络连接信息详情
 echo.
-echo     11. 网络完全重置（我不知道哪里出问题了，帮我全部重置一遍，含 Steam、Xbox 修复）
+echo    11. 网络完全重置（我不知道哪里出问题了，帮我全部重置一遍，含 Steam、Xbox 修复）
 echo.
-echo     12. 打开网络连接设置（传统设置）
+echo    12. 打开网络连接设置（传统设置）
+echo.
+echo    13. 刷新 DNS 缓存（上网 DNS 解析错误，试试我或者换个 DNS）
+echo.
+echo    14. 本机当前设置的 DNS 服务器查询
+echo.
+echo    15. 网络 Ping 工具（连通性测试）
 echo ------------------------------------------------------------------------------------------
 set /p netdiaginput=→  请选择项目：
 if %netdiaginput% equ 0 goto menu
@@ -525,6 +590,9 @@ if %netdiaginput% equ 9 goto dnscachelist
 if %netdiaginput% equ 10 goto ipconfigsys
 if %netdiaginput% equ 11 goto NetworkAllReset
 if %netdiaginput% equ 12 goto netconnectcenter
+if %netdiaginput% equ 13 goto flushdnscache
+if %netdiaginput% equ 14 goto dnsquery
+if %netdiaginput% equ 15 goto pingtoolmenu
 echo →  输入异常，请检查输入选项
 pause
 goto menunetfix
@@ -556,27 +624,27 @@ echo     8. 打开可移动磁盘自动运行（想一插u盘自动播放选我�
 echo.
 echo     9. 关闭可移动磁盘自动运行（不要自动播放选我）
 echo.
-echo     10. 开启系统休眠（想要一盖电脑就冻结，打开电脑就恢复之前样子，选我，默认开）
+echo    10. 开启系统休眠（想要一盖电脑就冻结，打开电脑就恢复之前样子，选我，默认开）
 echo.
-echo     11. 关闭系统休眠（极致性能，我就一个臭打游戏的，台式机巴拉巴拉，选我）
+echo    11. 关闭系统休眠（极致性能，我就一个臭打游戏的，台式机巴拉巴拉，选我）
 echo.
-echo     12. 系统盘缓存垃圾清理（使用有风险，会清理日志文件等，请做好备份）（删个垃圾选我）
+echo    12. 系统盘缓存垃圾清理（使用有风险，会清理日志文件等，请做好备份）（删个垃圾选我）
 echo.
-echo     13. （WIN7限定）在较老的电脑上开启Aero透明毛玻璃效果
+echo    13. （WIN7限定）在较老的电脑上开启Aero透明毛玻璃效果
 echo.
-echo     14. 清除快捷方式小箭头（美化类：不要桌面上快捷方式左下角的小箭头）
+echo    14. 清除快捷方式小箭头（美化类：不要桌面上快捷方式左下角的小箭头）
 echo.
-echo     15. 恢复快捷方式小箭头（美化类：恢复桌面上快捷方式左下角的小箭头）
+echo    15. 恢复快捷方式小箭头（美化类：恢复桌面上快捷方式左下角的小箭头）
 echo.
-echo     16. 停用vmmem，解决vmmem占用过高问题
+echo    16. 停用vmmem，解决vmmem占用过高问题
 echo.
-echo     17. 停用TabletPC功能
+echo    17. 停用TabletPC功能
 echo.
-echo     18. 记事本默认保存编码修改（高版本Windows不一定适用）
+echo    18. 记事本默认保存编码修改（高版本Windows不一定适用）
 echo.
-echo     19. 加入Windows预览体验计划（Windows Insider Channel）
+echo    19. 加入Windows预览体验计划（Windows Insider Channel）
 echo.
-echo     20. 查看下一页（当前页面为：P1）
+echo    20. 查看下一页（当前页面为：P1）
 echo ------------------------------------------------------------------------------------------
 set /p sysopt1=→  请选择项目：
 if %sysopt1% equ 0 goto menu
@@ -626,6 +694,8 @@ echo.
 echo     7. 禁用 Windows Update
 echo.
 echo     8. 启用、重置、修复 Windows Update
+echo.
+echo     9. 启动优化驱动器（碎片整理）
 echo ------------------------------------------------------------------------------------------
 set /p sysopt2=→  请选择项目：
 if %sysopt2% equ 0 goto menu
@@ -637,6 +707,7 @@ if %sysopt2% equ 5 goto defenderoff
 if %sysopt2% equ 6 goto defenderon
 if %sysopt2% equ 7 goto wudisable
 if %sysopt2% equ 8 goto wureset
+if %sysopt2% equ 9 goto startdefrag
 echo →  输入异常，请检查输入选项
 pause
 goto menusysoptimizeP2
@@ -711,27 +782,27 @@ echo     8. 启动 Windows PowerShell 命令行（Powershell.exe 管理员身份
 echo.
 echo     9. 列出此计算机的所有用户
 echo.
-echo     10. 启动本地组策略编辑器（gpedit.msc）
+echo    10. 启动本地组策略编辑器（gpedit.msc）
 echo.
-echo     11. 启动服务管理单元（services.msc）
+echo    11. 启动服务管理单元（services.msc）
 echo.
-echo     12. 启动注册表编辑器（regedit.exe）
+echo    12. 启动注册表编辑器（regedit.exe）
 echo.
-echo     13. 启动计算机管理（compmgmt.msc）
+echo    13. 启动计算机管理（compmgmt.msc）
 echo.
-echo     14. 启动事件查看器（eventvwr.msc）
+echo    14. 启动事件查看器（eventvwr.msc）
 echo.
-echo     15. 启动控制面板
+echo    15. 启动控制面板
 echo.
-echo     16. 查看系统版本信息（关于“Windows”）
+echo    16. 查看系统版本信息（关于“Windows”）
 echo.
-echo     17. 打开系统设置页面（老版本 Windows 不适用）
+echo    17. 打开系统设置页面（老版本 Windows 不适用）
 echo.
-echo     18. 启动磁盘管理（diskmgmt.msc）
+echo    18. 启动磁盘管理（diskmgmt.msc）
 echo.
-echo     19. 启动任务管理器（taskmgr.exe）
+echo    19. 启动任务管理器（taskmgr.exe）
 echo.
-echo     20. 查看下一页（当前页面为：P1）
+echo    20. 查看下一页（当前页面为：P1）
 echo ------------------------------------------------------------------------------------------
 set /p otherinput1=→  请选择项目：
 if %otherinput1% equ 0 goto menu
@@ -787,27 +858,27 @@ echo     8. 启动性能监视器（perfmon.msc）
 echo.
 echo     9. 启动本地安全组策略（secpol.msc）
 echo.
-echo     10. 启动 DirectX 检测工具（dxdiag）
+echo    10. 启动 DirectX 检测工具（dxdiag）
 echo.
-echo     11. 启动远程桌面连接
+echo    11. 启动远程桌面连接
 echo.
-echo     12. 用户资料数据备份（便捷备份用户数据，重装电脑前选我备份数据）
+echo    12. 用户资料数据备份（便捷备份用户数据，重装电脑前选我备份数据）
 echo.
-echo     13. 打开桌面图标设置（计算机、此电脑我的文档不见了，只有回收站，选我）
+echo    13. 打开桌面图标设置（计算机、此电脑我的文档不见了，只有回收站，选我）
 echo.
-echo     14. 打开用户账户设置
+echo    14. 打开用户账户设置
 echo.
-echo     15. 打开 Windows Defender 防火墙设置
+echo    15. 打开 Windows Defender 防火墙设置
 echo.
-echo     16. 打开程序和功能（卸载或更改程序）
+echo    16. 打开程序和功能（卸载或更改程序）
 echo.
-echo     17. 打开系统属性设置（虚拟内存、分页文件等高级系统设置）
+echo    17. 打开系统属性设置（虚拟内存、分页文件等高级系统设置）
 echo.
-echo     18. 打开时间和区域设置（时间格式调整、时区调整）
+echo    18. 打开时间和区域设置（时间格式调整、时区调整）
 echo.
-echo     19. 打开网络连接设置（传统设置）
+echo    19. 打开网络连接设置（传统设置）
 echo.
-echo     20. 查看下一页（当前页面为：P2）
+echo    20. 查看下一页（当前页面为：P2）
 echo ------------------------------------------------------------------------------------------
 set /p otherinput2=→  请选择项目：
 if %otherinput2% equ 0 goto menu
@@ -849,6 +920,8 @@ echo.
 echo     3. 打开显示属性（屏幕设置）
 echo.
 echo     4. 打开安全和维护（Windows 安全中心）
+echo.
+echo     5. 启动优化驱动器（碎片整理）
 rem echo.
 rem echo 20. 查看下一页（当前页面为：P3）
 echo ------------------------------------------------------------------------------------------
@@ -858,6 +931,7 @@ if %otherinput3% equ 1 goto menuotherP2
 if %otherinput3% equ 2 goto easyuseset
 if %otherinput3% equ 3 goto scrpropset
 if %otherinput3% equ 4 goto securitycenter
+if %otherinput3% equ 5 goto startdefrag
 rem if %otherinput3% equ 20 goto menuotherP4
 echo →  输入异常，请检查输入选项
 pause
@@ -911,6 +985,20 @@ goto menu
 
 :generatesysinfo
 rem 生成系统信息，读取信息
+rem 先清除文件属性，再删除文件重建，避免权限问题
+rem 取得所有权
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
+takeown /f %userprofile%\desktop\MDT\OS_Info.txt >nul 2>nul
+icacls %userprofile%\desktop\MDT\OS_Info.txt /remove:d administrators >nul 2>nul
+icacls %userprofile%\desktop\MDT\OS_Info.txt /grant administrators:F >nul 2>nul
+echo y| cacls.exe %userprofile%\desktop\MDT\OS_Info.txt /t /p /c Everyone:F >nul 2>nul
+echo y| cacls.exe %userprofile%\desktop\MDT\OS_Info.txt /t /g /c Everyone:F >nul 2>nul
+rem 清理属性
+attrib -r -h -s -a %userprofile%\desktop\MDT\OS_Info.txt >nul 2>nul
+rem 重建文件
+if exist %userprofile%\desktop\MDT\OS_Info.txt del /q /f %userprofile%\desktop\MDT\OS_Info.txt
+type nul>%userprofile%\desktop\MDT\OS_Info.txt
+rem 开始生成系统信息
 rem 操作系统名称
 for /f "tokens=*" %%i in ('systeminfo ^| findstr /C:"OS 名称"') do set osnametmp=%%i
 for /f "tokens=2 delims=:" %%i in ('echo %osnametmp%') do set osname=%%i
@@ -936,10 +1024,14 @@ rem 统一输出信息
 echo     操作系统名称:                %osname%>%userprofile%\desktop\MDT\OS_Info.txt
 echo     系统版本:                     %sysv%>>%userprofile%\desktop\MDT\OS_Info.txt
 echo     中央处理器 CPU:               %cpuinfo%>>%userprofile%\desktop\MDT\OS_Info.txt
-echo     图形处理器 GPU（独立显卡）:   %vganame%>>%userprofile%\desktop\MDT\OS_Info.txt
+echo     图形处理器 GPU:               %vganame%>>%userprofile%\desktop\MDT\OS_Info.txt
 echo     屏幕分辨率:                   %scrresolution%>>%userprofile%\desktop\MDT\OS_Info.txt
 echo     内存:                         %ram% MB>>%userprofile%\desktop\MDT\OS_Info.txt
 echo     当前分配虚拟内存:             %VirtualRAM% MB>>%userprofile%\desktop\MDT\OS_Info.txt
+
+rem 存储重新生成系统信息文件 MD5 值，作为校验标准（因为用户可能会更改分辨率之类的，所以需要同步更新正确文件的 MD5）
+for /f %%i in ('certutil -hashfile %userprofile%\desktop\MDT\OS_Info.txt MD5 ^|findstr /v "[^0-9a-z]"') do set osinfoMD5=%%i
+echo osinfoMD5 = %osinfoMD5% >nul
 goto :eof
 
 :envdiag
@@ -1168,7 +1260,7 @@ echo     0. 前置服务修复
 echo     1. SFC 修复（基础修复）
 echo     2. DISM 检查修复（高级修复）
 echo     3. 返回主菜单
-
+echo.
 set /p user_input=→  请选择一个项目：
 if %user_input% equ 0 goto PreSFix
 if %user_input% equ 1 goto SFCFIX
@@ -1215,6 +1307,7 @@ echo.
 echo     1. 可以修复组件存储
 echo     2. 未检测到组件存储损坏
 echo     3. 其他问题
+echo.
 set /p host=→  请根据情况选择项目：
 if %host% equ 1 goto DISMRestore
 if %host% equ 2 goto DISMFin
@@ -1262,7 +1355,6 @@ echo     4. 使 Hosts 只读
 echo     5. 使 Hosts 可写
 echo     6. 设置指定路径文件拒绝访问
 echo     7. 设置指定路径文件完全访问
-
 echo.
 set /p host=→  请选择: 
 if %host% equ 0 goto host0
@@ -1403,9 +1495,6 @@ echo.
 pause
 goto menu
 
-
-
-
 :iereset
 cls
 echo.
@@ -1428,15 +1517,419 @@ echo.
 echo     DNS 设置菜单
 echo.
 echo     0. 返回主菜单
-echo     1. 首选: 119.29.29.29    备用: 8.8.8.8
-echo     2. 首选: 223.5.5.5       备用: 8.8.8.8
-echo     3. 首选: 114.114.114.114 备用: 8.8.8.8
-echo     4. 首选: 180.76.76.76    备用: 8.8.8.8
-echo     5. 首选: 8.8.8.8         备用: 223.5.5.5
-echo     6. 首选: 9.9.9.9         备用: 223.5.5.5(防运营商劫持^)
-echo     7. 首选: 4.2.2.2         备用: 223.5.5.5
-echo     8. 移动: 101.226.4.6     备用: 223.5.5.5
-echo     9. 首选: 80.80.80.80     备用: 223.5.5.5(防运营商劫持^)
+echo.
+echo     IPv4 DNS 设置：
+echo     1. 手动筛选设置 IPv4 DNS 服务器（专业用户）
+echo     2. 优选组合 IPv4 DNS 服务器（新手小白用户）
+echo     3. 手动输入设置 IPv4 DNS 服务器（专业用户）
+echo.
+echo     IPv6 DNS 设置：
+echo     4. 手动筛选设置 IPv6 DNS 服务器（专业用户）
+echo     5. 优选组合 IPv6 DNS 服务器（新手小白用户）
+echo     6. 手动输入设置 IPv6 DNS 服务器（专业用户）
+echo.
+set /p dns=→  请选择: 
+if %dns% equ 0 goto menu
+if %dns% equ 1 goto dnssetup1
+if %dns% equ 2 goto dnssetup2
+if %dns% equ 3 goto dnssetup3
+if %dns% equ 4 goto dnssetup4
+if %dns% equ 5 goto dnssetup5
+if %dns% equ 6 goto dnssetup6
+goto menu
+
+:dnssetup1
+cls
+:dnssetupmenu1
+cls
+echo.
+echo     请选择 IPv4 首选 DNS 服务器：
+echo.
+echo     0. 返回设置菜单
+echo.
+echo     1. 服务器：119.29.29.29        （腾讯 Public DNS+）
+echo     2. 服务器：182.254.116.116     （腾讯 Public DNS+ 备用）
+echo.
+echo     3. 服务器：223.5.5.5           （阿里 DNS）
+echo     4. 服务器：223.6.6.6           （阿里 DNS 备用）
+echo.
+echo     5. 服务器：8.8.8.8             （谷歌 DNS）
+echo     6. 服务器：8.8.4.4             （谷歌 DNS 备用）
+echo.
+echo     7. 服务器：119.29.29.29        （百度公共 DNS）
+echo.
+echo     8. 服务器：1.1.1.1             （CloudFlare DNS）
+echo     9. 服务器：1.0.0.1             （CloudFlare DNS 备用）
+echo.
+echo    10. 服务器：114.114.114.114     （114 DNS）
+echo    11. 服务器：114.114.115.115     （114 DNS 备用）
+echo.
+echo    12. 服务器：80.80.80.80         （Freenom DNS）
+echo    13. 服务器：80.80.81.81         （Freenom DNS 备用）
+echo.
+echo    14. 服务器：156.154.70.25       （Comodo DNS）
+echo    15. 服务器：156.154.71.25       （Comodo DNS 备用）
+echo.
+echo    16. 服务器：208.67.222.222      （Open DNS）
+echo    17. 服务器：208.67.220.220      （Open DNS 备用）
+echo.
+echo    18. 服务器：101.226.4.6         （360 电信、移动、铁通 DNS）
+echo    19. 服务器：123.125.81.6        （360 联通 DNS）
+echo.
+set /p manualdns=→  请输入选项：
+if %manualdns% equ 0 goto dnsfix
+if %manualdns% equ 1 goto m1setdns1
+if %manualdns% equ 2 goto m1setdns2
+if %manualdns% equ 3 goto m1setdns3
+if %manualdns% equ 4 goto m1setdns4
+if %manualdns% equ 5 goto m1setdns5
+if %manualdns% equ 6 goto m1setdns6
+if %manualdns% equ 7 goto m1setdns7
+if %manualdns% equ 8 goto m1setdns8
+if %manualdns% equ 9 goto m1setdns9
+if %manualdns% equ 10 goto m1setdns10
+if %manualdns% equ 11 goto m1setdns11
+if %manualdns% equ 12 goto m1setdns12
+if %manualdns% equ 13 goto m1setdns13
+if %manualdns% equ 14 goto m1setdns14
+if %manualdns% equ 15 goto m1setdns15
+if %manualdns% equ 16 goto m1setdns16
+if %manualdns% equ 17 goto m1setdns17
+if %manualdns% equ 18 goto m1setdns18
+if %manualdns% equ 19 goto m1setdns19
+echo →  输入异常，请检查输入选项
+timeout /t 2 /nobreak > NUL
+goto dnssetupmenu1
+
+:dnsjump1
+echo.
+echo 保存 IPv4 首选 DNS 设置成功
+echo 即将转到备选 DNS 设置页面
+timeout /t 2 /nobreak > NUL
+goto dnssetupmenu2
+
+:m1setdns1 
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=119.29.29.29"
+call:dnsjump1
+
+:m1setdns2
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=182.254.116.116"
+call:dnsjump1
+
+:m1setdns3
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=223.5.5.5"
+call:dnsjump1
+
+:m1setdns4
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=223.6.6.6"
+call:dnsjump1
+
+:m1setdns5
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=8.8.8.8"
+call:dnsjump1
+
+:m1setdns6
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=4.4.4.4"
+call:dnsjump1
+
+:m1setdns7
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=119.29.29.29"
+call:dnsjump1
+
+:m1setdns8
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=1.1.1.1"
+call:dnsjump1
+
+:m1setdns9
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=1.0.0.1"
+call:dnsjump1
+
+:m1setdns10
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=114.114.114.114"
+call:dnsjump1
+
+:m1setdns11
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=114.114.115.115"
+call:dnsjump1
+
+:m1setdns12
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=80.80.80.80"
+call:dnsjump1
+
+:m1setdns13
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=80.80.81.81"
+call:dnsjump1
+
+:m1setdns14
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=156.154.70.25"
+call:dnsjump1
+
+:m1setdns15
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=156.154.71.25"
+call:dnsjump1
+
+:m1setdns16
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=208.67.222.222"
+call:dnsjump1
+
+:m1setdns17
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=208.67.220.220"
+call:dnsjump1
+
+:m1setdns18
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=101.226.4.6"
+call:dnsjump1
+
+:m1setdns19
+echo.
+echo 正在保存首选 IPv4 DNS 设置
+set "m1dns=123.125.81.6"
+call:dnsjump1
+
+:dnssetupmenu2
+cls
+echo.
+echo     请选择 IPv4 备选 DNS 服务器：
+echo.
+echo     0. 返回设置菜单
+echo.
+echo     1. 服务器：119.29.29.29        （腾讯 Public DNS+）
+echo     2. 服务器：182.254.116.116     （腾讯 Public DNS+ 备用）
+echo.
+echo     3. 服务器：223.5.5.5           （阿里 DNS）
+echo     4. 服务器：223.6.6.6           （阿里 DNS 备用）
+echo.
+echo     5. 服务器：8.8.8.8             （谷歌 DNS）
+echo     6. 服务器：8.8.4.4             （谷歌 DNS 备用）
+echo.
+echo     7. 服务器：119.29.29.29        （百度公共 DNS）
+echo.
+echo     8. 服务器：1.1.1.1             （CloudFlare DNS）
+echo     9. 服务器：1.0.0.1             （CloudFlare DNS 备用）
+echo.
+echo    10. 服务器：114.114.114.114     （114 DNS）
+echo    11. 服务器：114.114.115.115     （114 DNS 备用）
+echo.
+echo    12. 服务器：80.80.80.80         （Freenom DNS）
+echo    13. 服务器：80.80.81.81         （Freenom DNS 备用）
+echo.
+echo    14. 服务器：156.154.70.25       （Comodo DNS）
+echo    15. 服务器：156.154.71.25       （Comodo DNS 备用）
+echo.
+echo    16. 服务器：208.67.222.222      （Open DNS）
+echo    17. 服务器：208.67.220.220      （Open DNS 备用）
+echo.
+echo    18. 服务器：101.226.4.6         （360 电信、移动、铁通 DNS）
+echo    19. 服务器：123.125.81.6        （360 联通 DNS）
+echo.
+set /p manualdns=→  请输入选项：
+if %manualdns% equ 0 goto dnsfix
+if %manualdns% equ 1 goto m2setdns1
+if %manualdns% equ 2 goto m2setdns2
+if %manualdns% equ 3 goto m2setdns3
+if %manualdns% equ 4 goto m2setdns4
+if %manualdns% equ 5 goto m2setdns5
+if %manualdns% equ 6 goto m2setdns6
+if %manualdns% equ 7 goto m2setdns7
+if %manualdns% equ 8 goto m2setdns8
+if %manualdns% equ 9 goto m2setdns9
+if %manualdns% equ 10 goto m2setdns10
+if %manualdns% equ 11 goto m2setdns11
+if %manualdns% equ 12 goto m2setdns12
+if %manualdns% equ 13 goto m2setdns13
+if %manualdns% equ 14 goto m2setdns14
+if %manualdns% equ 15 goto m2setdns15
+if %manualdns% equ 16 goto m2setdns16
+if %manualdns% equ 17 goto m2setdns17
+if %manualdns% equ 18 goto m2setdns18
+if %manualdns% equ 19 goto m2setdns19
+echo →  输入异常，请检查输入选项
+timeout /t 2 /nobreak > NUL
+goto dnssetupmenu2
+
+:m2setdns1 
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=119.29.29.29"
+call:dnsjump2
+
+:m2setdns2
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=182.254.116.116"
+call:dnsjump2
+
+:m2setdns3
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=223.5.5.5"
+call:dnsjump2
+
+:m2setdns4
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=223.6.6.6"
+call:dnsjump2
+
+:m2setdns5
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=8.8.8.8"
+call:dnsjump2
+
+:m2setdns6
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=4.4.4.4"
+call:dnsjump2
+
+:m2setdns7
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=119.29.29.29"
+call:dnsjump2
+
+:m2setdns8
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=1.1.1.1"
+call:dnsjump2
+
+:m2setdns9
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=1.0.0.1"
+call:dnsjump2
+
+:m2setdns10
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=114.114.114.114"
+call:dnsjump2
+
+:m2setdns11
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=114.114.115.115"
+call:dnsjump2
+
+:m2setdns12
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=80.80.80.80"
+call:dnsjump2
+
+:m2setdns13
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=80.80.81.81"
+call:dnsjump2
+
+:m2setdns14
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=156.154.70.25"
+call:dnsjump2
+
+:m2setdns15
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=156.154.71.25"
+call:dnsjump2
+
+:m2setdns16
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=208.67.222.222"
+call:dnsjump2
+
+:m2setdns17
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=208.67.220.220"
+call:dnsjump2
+
+:m2setdns18
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=101.226.4.6"
+call:dnsjump2
+
+:m2setdns19
+echo.
+echo 正在保存备选 IPv4 DNS 设置
+set "m2dns=123.125.81.6"
+call:dnsjump2
+
+:dnsjump2
+echo.
+echo 保存 IPv4 备选 DNS 设置成功
+echo 开始设置 IPv4 DNS 服务器
+
+:manualdnssetup
+echo 首选 IPv4 DNS 服务器：%m1dns%
+echo 备选 IPv4 DNS 服务器：%m2dns%
+netsh interface ip set dnsservers %networkname1% static %m1dns%
+netsh interface ip add dnsservers %networkname1% %m2dns%
+echo.
+call:dnsserver DNS已设置成功: 
+ipconfig /flushdns >nul 2>nul
+echo DNS 缓存已刷新
+pause
+goto menu
+
+:dnssetup2
+cls
+echo.
+echo     IPv4 DNS 优选设置菜单
+echo.
+echo     0. 返回主菜单
+echo     1. 首选: 119.29.29.29（腾讯 Public DNS+）    备用: 8.8.8.8（谷歌 DNS）
+echo     2. 首选: 223.5.5.5（阿里 DNS）               备用: 8.8.8.8（谷歌 DNS）
+echo     3. 首选: 114.114.114.114（114 DNS）          备用: 8.8.8.8（谷歌 DNS）
+echo     4. 首选: 180.76.76.76（百度公共 DNS）         备用: 8.8.8.8（谷歌 DNS）
+echo     5. 首选: 8.8.8.8（谷歌 DNS）                 备用: 223.5.5.5（阿里 DNS）
+echo     6. 首选: 9.9.9.9（IBM Quad9 DNS）            备用: 223.5.5.5(防运营商劫持^)（阿里 DNS）
+echo     7. 首选: 4.2.2.2（微软 DNS）                  备用: 223.5.5.5（阿里 DNS）
+echo     8. 移动: 101.226.4.6（电信 DNS）              备用: 223.5.5.5（阿里 DNS）
+echo     9. 首选: 80.80.80.80（Freenom DNS）          备用: 223.5.5.5(防运营商劫持^)（阿里 DNS）
+echo    10. 首选: 223.5.5.5（阿里 DNS）                备用: 4.2.2.2（微软 DNS）
 echo.
 set /p dns=→  请选择: 
 if %dns% equ 0 goto dnsip0
@@ -1449,6 +1942,7 @@ if %dns% equ 6 goto dnsip6
 if %dns% equ 7 goto dnsip7
 if %dns% equ 8 goto dnsip8
 if %dns% equ 9 goto dnsip9
+if %dns% equ 10 goto dnsip10
 goto menu
 
 :dnsip0
@@ -1465,7 +1959,7 @@ goto menu
 call:dnssetting 114.114.114.114 8.8.8.8
 nslookup whether.114dns.com 114.114.114.114 2>nul |findstr 127.0.0 >nul
 If %ERRORLEVEL% equ 0 (
-echo    警告: ISP劫持了114DNS
+echo    警告: ISP 劫持了 114 DNS
 echo.
 ) else (
 echo. >nul 2>nul
@@ -1496,6 +1990,33 @@ goto menu
 call:dnssetting 80.80.80.80 223.5.5.5
 pause
 goto menu
+:dnsip10
+call:dnssetting 223.5.5.5 4.2.2.2
+pause
+goto menu
+
+:dnssetup3
+rem set m1dns=^\^<[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\^>
+rem set m2dns=^\^<[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\^>
+echo.
+echo 请输入 IPv4 首选 DNS 服务器地址
+echo 范围：0.0.0.0 至 255.255.255.255
+echo 格式错误会导致 DNS 服务器设置失败或 DNS 服务异常
+echo.
+set /p m1dns=→  请输入首选 DNS 服务器地址（注意格式）：
+echo.
+echo 识别到的首选 DNS 服务器地址为：%m1dns%
+echo.
+echo 请输入 IPv4 备选 DNS 服务器地址
+echo 范围：0.0.0.0 至 255.255.255.255
+echo 格式错误会导致 DNS 服务器设置失败或 DNS 服务异常
+echo.
+set /p m2dns=→  请输入备选 DNS 服务器地址（注意格式）：
+echo.
+echo 识别到的备选 DNS 服务器地址为：%m2dns%
+echo.
+echo 开始设置 DNS 服务器
+call:manualdnssetup
 
 :dnssetting
 netsh interface ip set dnsservers %networkname1% static %1 >nul 2>nul
@@ -1503,7 +2024,548 @@ netsh interface ip add dnsservers %networkname1% %2 >nul 2>nul
 echo.
 call:dnsserver DNS已设置成功: 
 ipconfig /flushdns >nul 2>nul
-echo DNS缓存已刷新
+echo DNS 缓存已刷新
+echo.
+goto:eof
+
+:dnssetup4
+cls
+:dnssetupv6menu1
+cls
+echo.
+echo     请选择 IPv6 首选 DNS 服务器：
+echo.
+echo     0. 返回设置菜单
+echo.
+echo     1. 服务器：240c::6666          （下一代互联网北京研究中心 DNS）
+echo     2. 服务器：240c::6644          （下一代互联网北京研究中心 DNS 备用）
+echo.
+echo     3. 服务器：2409:8088::a        （中国移动 IPv6 DNS）
+echo     4. 服务器：2409:8088::b        （中国移动 IPv6 DNS 备用）
+echo.
+echo     5. 服务器：240e:4c:4008::1     （中国电信 IPv6 DNS）
+echo     6. 服务器：240e:4c:4808::1     （中国电信 IPv6 DNS 备用）
+echo.
+echo     7. 服务器：2408:8899::8        （中国联通 IPv6 DNS）
+echo     8. 服务器：2408:8888::8        （中国联通 IPv6 DNS 备用）
+echo.
+echo     9. 服务器：2001:dc7:1000::1    （中国互联网信息中心 CNNIC IPv6 DNS）
+echo.
+echo    10. 服务器：2001:de4::101       （TWNIC IPv6 DNS Quad 101）
+echo    11. 服务器：2001:de4::102       （TWNIC IPv6 DNS Quad 101 备用）
+echo.
+echo    12. 服务器：2400:3200::1        （阿里 IPv6 DNS）
+echo    13. 服务器：2400:3200:baba::1   （阿里 IPv6 DNS 备用）
+echo.
+echo    14. 服务器：2402:4e00::         （腾讯 DNSPod IPv6 DNS）
+echo.
+echo    15. 服务器：2400:da00::6666     （百度 IPv6 DNS 备用）
+echo.
+echo    16. 服务器：2001:4860:4860::8888（谷歌公共 IPv6 DNS）
+echo    17. 服务器：2001:4860:4860::8844（谷歌公共 IPv6 DNS 备用）
+echo.
+echo    18. 服务器：2606:4700:4700::1111（Cloudflare IPv6 DNS）
+echo    19. 服务器：2606:4700:4700::1001（Cloudflare IPv6 DNS 备用）
+echo.
+echo    20. 服务器：2620:0:ccc::2       （OpenDNS IPv6 DNS）
+echo    21. 服务器：2620:0:ccd::2       （OpenDNS IPv6 DNS 备用）
+echo.
+echo    22. 服务器：2620:fe::fe         （Quad9 IPv6 DNS）
+echo    23. 服务器：2620:fe::9          （Quad9 IPv6 DNS 备用）
+echo.
+set /p manualdns=→  请输入选项：
+if %manualdns% equ 0 goto dnsfix
+if %manualdns% equ 1 goto m1setv6dns1
+if %manualdns% equ 2 goto m1setv6dns2
+if %manualdns% equ 3 goto m1setv6dns3
+if %manualdns% equ 4 goto m1setv6dns4
+if %manualdns% equ 5 goto m1setv6dns5
+if %manualdns% equ 6 goto m1setv6dns6
+if %manualdns% equ 7 goto m1setv6dns7
+if %manualdns% equ 8 goto m1setv6dns8
+if %manualdns% equ 9 goto m1setv6dns9
+if %manualdns% equ 10 goto m1setv6dns10
+if %manualdns% equ 11 goto m1setv6dns11
+if %manualdns% equ 12 goto m1setv6dns12
+if %manualdns% equ 13 goto m1setv6dns13
+if %manualdns% equ 14 goto m1setv6dns14
+if %manualdns% equ 15 goto m1setv6dns15
+if %manualdns% equ 16 goto m1setv6dns16
+if %manualdns% equ 17 goto m1setv6dns17
+if %manualdns% equ 18 goto m1setv6dns18
+if %manualdns% equ 19 goto m1setv6dns19
+if %manualdns% equ 20 goto m1setv6dns20
+if %manualdns% equ 21 goto m1setv6dns21
+if %manualdns% equ 22 goto m1setv6dns22
+if %manualdns% equ 23 goto m1setv6dns23
+echo →  输入异常，请检查输入选项
+timeout /t 2 /nobreak > NUL
+goto dnssetupv6menu1
+
+:dnsv6jump1
+echo.
+echo 保存 IPv6 首选 DNS 设置成功
+echo 即将转到备选 DNS 设置页面
+timeout /t 2 /nobreak > NUL
+goto dnssetupv6menu2
+
+:m1setv6dns1 
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=240c::6666"
+call:dnsv6jump1
+
+:m1setv6dns2
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=240c::6644"
+call:dnsv6jump1
+
+:m1setv6dns3
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2409:8088::a"
+call:dnsv6jump1
+
+:m1setv6dns4
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2409:8088::b"
+call:dnsv6jump1
+
+:m1setv6dns5
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=240e:4c:4008::1"
+call:dnsv6jump1
+
+:m1setv6dns6
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=240e:4c:4808::1"
+call:dnsv6jump1
+
+:m1setv6dns7
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2408:8899::8"
+call:dnsv6jump1
+
+:m1setv6dns8
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2408:8888::8"
+call:dnsv6jump1
+
+:m1setv6dns9
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2001:dc7:1000::1"
+call:dnsv6jump1
+
+:m1setv6dns10
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2001:de4::101"
+call:dnsv6jump1
+
+:m1setv6dns11
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2001:de4::102"
+call:dnsv6jump1
+
+:m1setv6dns12
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2400:3200::1"
+call:dnsv6jump1
+
+:m1setv6dns13
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2400:3200:baba::1"
+call:dnsv6jump1
+
+:m1setv6dns14
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2402:4e00::"
+call:dnsv6jump1
+
+:m1setv6dns15
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2400:da00::6666"
+call:dnsv6jump1
+
+:m1setv6dns16
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2001:4860:4860::8888"
+call:dnsv6jump1
+
+:m1setv6dns17
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2001:4860:4860::8844"
+call:dnsv6jump1
+
+:m1setv6dns18
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2606:4700:4700::1111"
+call:dnsv6jump1
+
+:m1setv6dns19
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2606:4700:4700::1001"
+call:dnsv6jump1
+
+:m1setv6dns20
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2620:0:ccc::2"
+call:dnsv6jump1
+
+:m1setv6dns21
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2620:0:ccd::2"
+call:dnsv6jump1
+
+:m1setv6dns22
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2620:fe::fe"
+call:dnsv6jump1
+
+:m1setv6dns23
+echo.
+echo 正在保存首选 IPv6 DNS 设置
+set "m1dnsv6=2620:fe::9"
+call:dnsv6jump1
+
+:dnssetupv6menu2
+cls
+echo.
+echo     请选择 IPv6 备选 DNS 服务器：
+echo.
+echo     0. 返回设置菜单
+echo.
+echo     1. 服务器：240c::6666          （下一代互联网北京研究中心 DNS）
+echo     2. 服务器：240c::6644          （下一代互联网北京研究中心 DNS 备用）
+echo.
+echo     3. 服务器：2409:8088::a        （中国移动 IPv6 DNS）
+echo     4. 服务器：2409:8088::b        （中国移动 IPv6 DNS 备用）
+echo.
+echo     5. 服务器：240e:4c:4008::1     （中国电信 IPv6 DNS）
+echo     6. 服务器：240e:4c:4808::1     （中国电信 IPv6 DNS 备用）
+echo.
+echo     7. 服务器：2408:8899::8        （中国联通 IPv6 DNS）
+echo     8. 服务器：2408:8888::8        （中国联通 IPv6 DNS 备用）
+echo.
+echo     9. 服务器：2001:dc7:1000::1    （中国互联网信息中心 CNNIC IPv6 DNS）
+echo.
+echo    10. 服务器：2001:de4::101       （TWNIC IPv6 DNS Quad 101）
+echo    11. 服务器：2001:de4::102       （TWNIC IPv6 DNS Quad 101 备用）
+echo.
+echo    12. 服务器：2400:3200::1        （阿里 IPv6 DNS）
+echo    13. 服务器：2400:3200:baba::1   （阿里 IPv6 DNS 备用）
+echo.
+echo    14. 服务器：2402:4e00::         （腾讯 DNSPod IPv6 DNS）
+echo.
+echo    15. 服务器：2400:da00::6666     （百度 IPv6 DNS 备用）
+echo.
+echo    16. 服务器：2001:4860:4860::8888（谷歌公共 IPv6 DNS）
+echo    17. 服务器：2001:4860:4860::8844（谷歌公共 IPv6 DNS 备用）
+echo.
+echo    18. 服务器：2606:4700:4700::1111（Cloudflare IPv6 DNS）
+echo    19. 服务器：2606:4700:4700::1001（Cloudflare IPv6 DNS 备用）
+echo.
+echo    20. 服务器：2620:0:ccc::2       （OpenDNS IPv6 DNS）
+echo    21. 服务器：2620:0:ccd::2       （OpenDNS IPv6 DNS 备用）
+echo.
+echo    22. 服务器：2620:fe::fe         （Quad9 IPv6 DNS）
+echo    23. 服务器：2620:fe::9          （Quad9 IPv6 DNS 备用）
+echo.
+set /p manualdns=→  请输入选项：
+if %manualdns% equ 0 goto dnsfix
+if %manualdns% equ 1 goto m2setv6dns1
+if %manualdns% equ 2 goto m2setv6dns2
+if %manualdns% equ 3 goto m2setv6dns3
+if %manualdns% equ 4 goto m2setv6dns4
+if %manualdns% equ 5 goto m2setv6dns5
+if %manualdns% equ 6 goto m2setv6dns6
+if %manualdns% equ 7 goto m2setv6dns7
+if %manualdns% equ 8 goto m2setv6dns8
+if %manualdns% equ 9 goto m2setv6dns9
+if %manualdns% equ 10 goto m2setv6dns10
+if %manualdns% equ 11 goto m2setv6dns11
+if %manualdns% equ 12 goto m2setv6dns12
+if %manualdns% equ 13 goto m2setv6dns13
+if %manualdns% equ 14 goto m2setv6dns14
+if %manualdns% equ 15 goto m2setv6dns15
+if %manualdns% equ 16 goto m2setv6dns16
+if %manualdns% equ 17 goto m2setv6dns17
+if %manualdns% equ 18 goto m2setv6dns18
+if %manualdns% equ 19 goto m2setv6dns19
+if %manualdns% equ 20 goto m2setv6dns20
+if %manualdns% equ 21 goto m2setv6dns21
+if %manualdns% equ 22 goto m2setv6dns22
+if %manualdns% equ 23 goto m2setv6dns23
+echo →  输入异常，请检查输入选项
+timeout /t 2 /nobreak > NUL
+goto dnssetupv6menu1
+
+:m2setv6dns1 
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=240c::6666"
+call:dnsv6jump2
+
+:m2setv6dns2
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=240c::6644"
+call:dnsv6jump2
+
+:m2setv6dns3
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2409:8088::a"
+call:dnsv6jump2
+
+:m2setv6dns4
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2409:8088::b"
+call:dnsv6jump2
+
+:m2setv6dns5
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=240e:4c:4008::1"
+call:dnsv6jump2
+
+:m2setv6dns6
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=240e:4c:4808::1"
+call:dnsv6jump2
+
+:m2setv6dns7
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2408:8899::8"
+call:dnsv6jump2
+
+:m2setv6dns8
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2408:8888::8"
+call:dnsv6jump2
+
+:m2setv6dns9
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2001:dc7:1000::1"
+call:dnsv6jump2
+
+:m2setv6dns10
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2001:de4::101"
+call:dnsv6jump2
+
+:m2setv6dns11
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2001:de4::102"
+call:dnsv6jump2
+
+:m2setv6dns12
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2400:3200::1"
+call:dnsv6jump2
+
+:m2setv6dns13
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2400:3200:baba::1"
+call:dnsv6jump2
+
+:m2setv6dns14
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2402:4e00::"
+call:dnsv6jump2
+
+:m2setv6dns15
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2400:da00::6666"
+call:dnsv6jump2
+
+:m2setv6dns16
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2001:4860:4860::8888"
+call:dnsv6jump2
+
+:m2setv6dns17
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2001:4860:4860::8844"
+call:dnsv6jump2
+
+:m2setv6dns18
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2606:4700:4700::1111"
+call:dnsv6jump2
+
+:m2setv6dns19
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2606:4700:4700::1001"
+call:dnsv6jump2
+
+:m2setv6dns20
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2620:0:ccc::2"
+call:dnsv6jump2
+
+:m2setv6dns21
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2620:0:ccd::2"
+call:dnsv6jump2
+
+:m2setv6dns22
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2620:fe::fe"
+call:dnsv6jump2
+
+:m2setv6dns23
+echo.
+echo 正在保存备选 IPv6 DNS 设置
+set "m2dnsv6=2620:fe::9"
+call:dnsv6jump2
+
+:dnsv6jump2
+echo.
+echo 保存 IPv6 备选 DNS 设置成功
+echo 开始设置 IPv6 DNS 服务器
+:manualdnsv6setup
+echo 首选 IPv6 DNS 服务器：%m1dnsv6%
+echo 备选 IPv6 DNS 服务器：%m2dnsv6%
+netsh interface ipv6 set dnsservers %networkname1% static %m1dnsv6%
+netsh interface ipv6 add dnsservers %networkname1% %m2dnsv6%
+echo.
+echo IPv6 DNS已设置成功
+ipconfig /flushdns >nul 2>nul
+echo DNS 缓存已刷新
+pause
+goto menu
+
+:dnssetup5
+cls
+echo.
+echo     IPv6 DNS 优选设置菜单
+echo.
+echo     0. 返回主菜单
+echo     1. 首选: 240c::6666（下一代互联网北京研究中心 DNS）    备用: 2400:3200::1（阿里 IPv6 DNS）
+echo     2. 首选: 2400:3200::1（阿里 IPv6 DNS）               备用: 2001:4860:4860::8888（谷歌公共 IPv6 DNS）
+echo     3. 首选: 2001:dc7:1000::1（CNNIC IPv6 DNS）          备用: 2400:3200::1（阿里 IPv6 DNS）
+echo     4. 首选: 2402:4e00::（腾讯 DNSPod IPv6 DNS）         备用: 240c::6666（下一代互联网北京研究中心 DNS）
+echo     5. 首选: 2620:0:ccc::2（OpenDNS IPv6 DNS）           备用: 240c::6666（阿里 DNS）
+echo     6. 首选: 240e:4c:4008::1（中国电信 IPv6 DNS）         备用: 2620:fe::fe（Quad9 IPv6 DNS）
+echo     7. 首选: 2400:da00::6666（百度 IPv6 DNS 备用）        备用: 2001:dc7:1000::1（CNNIC IPv6 DNS）
+echo.
+set /p dns=→  请选择: 
+if %dns% equ 0 goto dnsv6ip0
+if %dns% equ 1 goto dnsv6ip1
+if %dns% equ 2 goto dnsv6ip2
+if %dns% equ 3 goto dnsv6ip3
+if %dns% equ 4 goto dnsv6ip4
+if %dns% equ 5 goto dnsv6ip5
+if %dns% equ 6 goto dnsv6ip6
+if %dns% equ 7 goto dnsv6ip7
+goto menu
+
+:dnsv6ip0
+goto menu
+
+:dnsv6ip1
+call:dnssettingv6 240c::6666 2400:3200::1
+pause
+goto menu
+
+:dnsv6ip2
+call:dnssettingv6 2400:3200::1 2001:4860:4860::8888
+pause
+goto menu
+
+:dnsv6ip3
+call:dnssettingv6 2001:dc7:1000::1 2400:3200::1
+pause
+goto menu
+
+:dnsv6ip4
+call:dnssettingv6 2402:4e00:: 240c::6666
+pause
+goto menu
+
+:dnsv6ip5
+call:dnssettingv6 2620:0:ccc::2 240c::6666
+pause
+goto menu
+
+:dnsv6ip6
+call:dnssettingv6 240e:4c:4008::1 2620:fe::fe
+pause
+goto menu
+
+:dnsv6ip7
+call:dnssettingv6 2400:da00::6666 2001:dc7:1000::1
+pause
+goto menu
+
+:dnssetup6
+rem set m1dnsv6=^\^<[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\^>
+rem set m2dnsv6=^\^<[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\^>
+echo.
+echo 请输入 IPv6 首选 DNS 服务器地址
+echo 范围：:::: 至 FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF
+echo 格式错误会导致 DNS 服务器设置失败或 DNS 服务异常
+echo.
+set /p m1dnsv6=→  请输入首选 DNS 服务器地址（注意格式）：
+echo.
+echo 识别到的首选 DNS 服务器地址为：%m1dnsv6%
+echo.
+echo 请输入 IPv6 备选 DNS 服务器地址
+echo 范围：:::: 至 FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF
+echo 格式错误会导致 DNS 服务器设置失败或 DNS 服务异常
+echo.
+set /p m2dnsv6=→  请输入备选 DNS 服务器地址（注意格式）：
+echo.
+echo 识别到的备选 DNS 服务器地址为：%m2dnsv6%
+echo.
+echo 开始设置 DNS 服务器
+call:manualdnsv6setup
+
+:dnssettingv6
+netsh interface ipv6 set dnsservers %networkname1% static %1 >nul 2>nul
+netsh interface ipv6 add dnsservers %networkname1% %2 >nul 2>nul
+echo.
+echo DNS已设置成功
+ipconfig /flushdns >nul 2>nul
+echo DNS 缓存已刷新
 echo.
 goto:eof
 
@@ -1511,6 +2573,7 @@ goto:eof
 echo.
 echo 开始导出用户程序列表
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 echo.
 (for /f "tokens=3,4*" %%i in ('reg query HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<微软 \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
 (for /f "tokens=3,4*" %%i in ('reg query HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall /s 2^>nul ^|findstr "\<DisplayName" ^|findstr /v /r "\<微软 \<Catalyst \<Office \<Microsoft \<AMD \<NVIDIA \<Intel \<Realtek \<Skype \<NVAPI"') do echo %%i %%j %%k) >%userprofile%\desktop\MDT\ProgramList.log
@@ -1813,7 +2876,7 @@ if DEFINED vpngateway (
 	echo. >nul 2>nul
 )
 
-echo %1路由跟踪结果
+echo 路由跟踪结果
 echo     IPv4路由表统计: %routeall%(行)
 if not "!vpngateway!" == "" (
 	echo     模式B网关: %vpngateway%
@@ -1831,7 +2894,7 @@ echo  %%i   %%j ms   %%k ms   %%l ms    %%m !IPquyu! |%temp%\mtee /a /+ %temp%\t
 )
 )
 ) else (
-for /f "tokens=*" %%i in ('tracert -w 100 -d -h 5 114.114.114.114 ^|findstr ^[1-9] ^|findstr /v "114.114.114.114" ^|findstr /i "%ipv4ipv6%"') do echo    %%i |%temp%\mtee /a /+ %temp%\traceroute.txt
+for /f "tokens=*" %%i in ('tracert -w 100 -d -h 5 114.114.114.114 ^|findstr ^[1-9] ^|findstr /v "114.114.114.114" ^|findstr /i "%ipv4ipv6%"') do echo   吧 %%i |%temp%\mtee /a /+ %temp%\traceroute.txt
 )
 
 rem 诊断数据
@@ -1917,7 +2980,7 @@ for /f %%i in ('wmic os get TotalVisibleMemorySize ^|findstr [0-9]') do set /a r
 for /f %%i in ('wmic os get SizeStoredInPagingFiles ^|findstr [0-9]') do set /a virtualram=%%i/1024
 echo     内存:  %ram% MB; 当前分配虚拟内存:  %VirtualRAM% MB
 for /f "tokens=2 delims==" %%i in ('wmic path Win32_VideoController get AdapterRAM^,Name /value ^|findstr Name') do set vganame=%%i
-echo     独立显卡 GPU:  %vganame%
+echo     显卡 GPU:  %vganame%
 for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do echo     分辨率:  %%j*%%i
 rem 应用程序错误信息
 if "%systemver%"=="10" (
@@ -2189,6 +3252,7 @@ del /f /q %temp%\NetDiag.txt >nul 2>nul
 rem 游戏数据信息备份桌面
 	if EXIST %temp%\infocollect.txt (
 		taskkill /F /FI "WINDOWTITLE eq NetDiag.txt*" >nul 2>nul
+    takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 		echo F| xcopy "%temp%\infocollect.txt" "%userprofile%\desktop\MDT\NetDiag.txt" /s /c /y /i >nul 2>nul
 	) else (
 		echo. >nul 2>nul
@@ -2274,7 +3338,7 @@ echo     1. 恢复节能模式
 echo     2. 恢复平衡模式
 echo     3. 恢复高性能模式
 echo     4. 恢复卓越性能模式（仅限于Win10/11专业版以上）
-set /p binput=→  请输入：
+set /p binput=→  请输入选项：
 if %binput% equ 0 goto menu
 if %binput% equ 1 goto lowbatteryrec
 if %binput% equ 2 goto medbatteryrec
@@ -2322,7 +3386,7 @@ echo     请选择你要继续的操作：
 echo     0. 返回主菜单
 echo     1. 恢复其他电源选项
 echo     2. 设置计算机使用的电源选项
-set /p bfinput=→  请输入：
+set /p bfinput=→  请输入选项：
 if %bfinput% equ 0 goto menu
 if %bfinput% equ 1 goto borecmenu
 if %bfinput% equ 2 goto setbatteryoption
@@ -3332,6 +4396,7 @@ echo 启动诊断服务...
 sc start DPS
 echo 导出电池健康报告...
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 powercfg /batteryreport /output "%userprofile%\Desktop\MDT\Battery_Report.html"
 echo.
 echo 定位报告路径...
@@ -3363,6 +4428,7 @@ goto menu
 :GETHASH
 cls
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 echo.
 echo     HASH 获取
 echo.
@@ -3418,6 +4484,7 @@ echo     请选择你要继续的操作：
 echo.
 echo     1. 继续获取其他文件的HASH值
 echo     2. 返回主菜单
+echo.
 set /p cinput=→  请输入选项：
 if %cinput% equ 1 goto GETHASH
 if %cinput% equ 2 goto menu
@@ -12508,6 +13575,7 @@ rem 微软激活脚本 End
 :allprocessrunning
 echo 正在导出计算机所有正在运行的进程
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 tasklist /v /fi "STATUS eq running" >%userprofile%\desktop\MDT\AllProcess_Running.log
 echo.
 echo 导出完成，请查看桌面 MDT 文件夹中的 AllProcess_Running.log 文件
@@ -12519,6 +13587,7 @@ goto menu
 :allprocess
 echo 正在导出计算机所有进程
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 tasklist >%userprofile%\desktop\MDT\AllProcess.log
 echo.
 echo 导出完成，请查看桌面 MDT 文件夹中的 AllProcess.log 文件
@@ -12569,6 +13638,7 @@ echo     已尝试结束目标进程
 echo.
 echo     1. 继续杀死其他特定进程
 echo     2. 返回主菜单
+echo.
 set /p cinput=→  请输入选项：
 if %cinput% equ 1 goto killprocess
 if %cinput% equ 2 goto menu
@@ -12582,6 +13652,7 @@ echo     EAC小蓝熊卸载脚本
 echo.
 echo     此操作将卸载 EasyAntiCheat（小蓝熊）并清除所有数据
 echo     包括但不限于 EpicGames、Steam 平台的小蓝熊数据
+echo.
 set /p eacinput=→  是否继续操作？（Y/n）
 if %eacinput% equ Y goto deleacdata
 if %eacinput% equ y goto deleacdata
@@ -12685,6 +13756,7 @@ goto userlist
 :ulbasic
 echo 开始导出用户列表（基础）
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 echo.
 powershell.exe Get-LocalUser >%userprofile%\desktop\MDT\Userlist_Basic.log
 echo.
@@ -12697,6 +13769,7 @@ goto menu
 :uldetail
 echo 开始导出用户列表（详细）
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 echo.
 powershell.exe "Get-LocalUser | Select *" >%userprofile%\desktop\MDT\Userlist_Detail.log
 echo.
@@ -13438,6 +14511,7 @@ echo 查看本机网络连接信息
 echo 执行命令
 rem 如果路径不存在则创建路径
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
+takeown /f %userprofile%\desktop\MDT /r /d Y >nul 2>nul
 ipconfig /all >%userprofile%\desktop\MDT\Sys_ipconfig_Detail.log
 ipconfig >%userprofile%\desktop\MDT\Sys_ipconfig_Basic.log
 type %userprofile%\desktop\MDT\Sys_ipconfig_Basic.log
@@ -13460,7 +14534,8 @@ echo     1. 节能模式
 echo     2. 平衡模式
 echo     3. 高性能模式
 echo     4. 卓越性能模式（仅限于Win10/11专业版以上）
-set /p binput=→  请输入：
+echo.
+set /p binput=→  请输入选项：
 if %binput% equ 0 goto menu
 if %binput% equ 1 goto setlowbattery
 if %binput% equ 2 goto setmedbattery
@@ -13508,7 +14583,8 @@ echo     请选择你要继续的操作：
 echo     0. 返回主菜单
 echo     1. 重新设置计算机使用的电源选项
 echo     2. 恢复其他电源选项
-set /p bfinput=→  请输入：
+echo.
+set /p bfinput=→  请输入选项：
 if %bfinput% equ 0 goto menu
 if %bfinput% equ 1 goto setbatteryoption
 if %bfinput% equ 2 goto borecmenu
@@ -14280,3 +15356,110 @@ rundll32.exe shell32.dll,Control_RunDLL ncpa.cpl
 echo 操作执行完成
 pause
 goto menu
+
+:flushdnscache
+cls
+echo.
+echo 开始刷新 DNS 缓存
+echo.
+ipconfig /flushdns
+echo.
+pause
+goto menu
+
+:dnsquery
+cls
+echo.
+echo 开始查询本机设置的 DNS 服务器
+echo.
+call:dnsserver 本地DNS服务器: 
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:startdefrag
+cls
+echo.
+echo 正在启动优化驱动器
+start dfrgui
+echo 操作执行完成
+pause
+goto menu
+
+:pingtoolmenu
+cls
+echo.
+echo     网络 Ping 工具菜单
+echo.
+echo     0. 返回主菜单
+echo     1. 进入基础 Ping 工具
+echo     2. 进入高级自定义 Ping 工具
+echo.
+set /p netinput=→  请选择项目：
+if %netinput% equ 0 goto menu
+if %netinput% equ 1 goto pingtool1
+if %netinput% equ 2 goto pingtool2
+
+:pingtool1
+cls
+echo.
+echo     基础 Ping 工具
+echo.
+echo     请输入你要测试的域名或者 IP 地址
+echo     若想返回主菜单，请输入 0 并回车确认
+echo.
+set /p userping=→  请输入域名或 IP：
+if %userping% equ 0 goto pingtoolmenu
+echo.
+echo 识别到的域名或 IP 为：%userping%
+echo.
+echo 即将向 %userping% 发送 32 字节的 Ping 包，共计 4 次：
+echo.
+ping %userping%
+echo.
+echo 操作执行完成
+pause
+goto pingtoolmenu
+
+:pingtool2
+cls
+echo.
+echo     高级自定义 Ping 工具
+echo.
+echo     请输入你要测试的域名或者 IP 地址
+echo     若想返回主菜单，请在“请输入域名或 IP”处输入 0 并回车确认
+echo     若想无限次 Ping 请在“请设置你要 Ping 的次数“处输入 0 并回车确认
+echo.
+set /p userping=→  请输入域名或 IP：
+if %userping% equ 0 goto pingtoolmenu
+set /p pingcount=→  请设置你要 Ping 的次数：
+if %pingcount% equ 0 goto pinginfinite
+set /p pingpack=→  请输入包大小（单位：字节，默认大小为 32 字节）：
+echo.
+echo 识别到的域名或 IP 为：%userping%
+echo 识别到的 Ping 次数为：%pingcount% 次
+echo 识别到的包大小为：%pingpack% Byte
+echo.
+echo 即将向 %userping% 发送 %pingpack% 字节的 Ping 包，共计 %pingcount% 次：
+echo.
+ping %userping% -n %pingcount% -l %pingpack%
+echo.
+echo 操作执行完成
+pause
+goto pingtoolmenu
+
+:pinginfinite
+set /p pingpack=→  请输入包大小（单位：字节，默认大小为 32 字节）：
+echo.
+echo 识别到的域名或 IP 为：%userping%
+echo 识别到的包大小为：%pingpack% Byte
+echo.
+echo 即将向 %userping% 发送 %pingpack% 字节的 Ping 包
+echo 若要取消 Ping 的过程，请手动按键盘上的“Ctrl + C”
+echo.
+ping %userping% -l %pingpack% -t
+echo.
+echo 操作执行完成
+pause
+goto pingtoolmenu
