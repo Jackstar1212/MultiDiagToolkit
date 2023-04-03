@@ -150,7 +150,7 @@ echo.
 echo     操作执行完成
 
 rem 设置程序版本、作者信息
-set "progver=2.7"
+set "progver=2.8"
 set "Author=LonelyFish"
 
 setlocal enabledelayedexpansion
@@ -255,6 +255,7 @@ echo GET_HASH.log                    HASH 值日志                  由查看�
 echo NetDiag.txt                     内网信息日志                  由系统环境诊断功能生成，可以查看内网情况信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo OS_Info.txt                     系统信息转储文件              由 MDT 主程序初始化生成，可以查看系统相关信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo ProgramList.log                 此设备安装的程序列表日志       由导出程序列表功能生成，可以查看此设备安装的程序>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
+echo System_Info.txt                 此设备的详细系统信息文件       由系统环境诊断功能、生成详细系统信息报告功能生成，可以查看系统详细信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo Sys_ipconfig_Basic.log          系统网络 IP 配置信息基础日志   由查看本机网络连接信息功能生成，可以查看系统网络连接基础情况>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo Sys_ipconfig_Detail.log         系统网络 IP 配置信息详细日志   由查看本机网络连接信息功能生成，可以查看系统网络连接详细情况>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
 echo Userlist_Basic.log              用户列表基础信息日志           由列出此计算机的所有用户功能生成，可以查看此设备用户的基础信息>>%userprofile%\desktop\MDT\此文件夹是干什么的？_ReadMe.txt
@@ -322,7 +323,7 @@ rem 校验屏幕分辨率和虚拟内存更改情况
 rem 虚拟内存信息校验
 for /f %%i in ('wmic os get SizeStoredInPagingFiles ^|findstr [0-9]') do set /a virtualramcheck=%%i/1024
 rem 屏幕分辨率信息校验
-for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do set scrresolutioncheck=%%j*%%i
+rem for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do set scrresolutioncheck=%%j*%%i
 
 if %virtualramcheck% neq %virtualram% (
   echo     系统环境发生变化，重新读取系统信息
@@ -330,11 +331,12 @@ if %virtualramcheck% neq %virtualram% (
   echo     已重新保存系统信息
 )
 
-if %scrresolutioncheck% neq %scrresolution% (
-  echo     系统环境发生变化，重新读取系统信息
-  call :generatesysinfo
-  echo     已重新保存系统信息
-)
+rem 此校验无效，可能导致部分设备闪退
+rem if %scrresolutioncheck% neq %scrresolution% (
+rem   echo     系统环境发生变化，重新读取系统信息
+rem   call :generatesysinfo
+rem   echo     已重新保存系统信息
+rem )
 
 rem 开始MD5校验，不通过则重新生成
 for /f %%i in ('certutil -hashfile %userprofile%\desktop\MDT\OS_Info.txt MD5 ^|findstr /v "[^0-9a-z]"') do set osinfoMD5New=%%i
@@ -513,6 +515,8 @@ echo.
 echo    16. 恢复UAC（我后悔禁用了，还是想要权限在自己手里控制舒服）
 echo.
 echo    17. 禁用UAC（关了uac，打开软件不会再申请管理员权限，省的选是选否不知道）
+echo.
+echo    18. 生成详细系统信息报告
 echo ------------------------------------------------------------------------------------------
 set /p sysdiaginput2=→  请选择项目：
 if %sysdiaginput2% equ 0 goto menu
@@ -533,6 +537,7 @@ if %sysdiaginput2% equ 14 goto wudisable
 if %sysdiaginput2% equ 15 goto wureset
 if %sysdiaginput2% equ 16 goto enableuac
 if %sysdiaginput2% equ 17 goto disableuac
+if %sysdiaginput2% equ 18 goto getsysteminfo
 echo →  输入异常，请检查输入选项
 pause
 goto menusysrepairP2
@@ -723,19 +728,19 @@ echo     0. 返回主菜单
 echo.
 echo     1. 导出程序列表（看看老子/老娘电脑里装了些啥）
 echo.
-echo     2. Xbox平台修复（打游戏用到xbox了，这玩意出问题选我）
+echo     2. Xbox 平台修复（打游戏用到 Xbox 了，这玩意出问题选我）
 echo.
-echo     3. Steam VAC屏蔽修复与闪退问题修复工具（打csgo报vac验证错误断开连接之类的选我）
+echo     3. Steam VAC 屏蔽修复与闪退问题修复工具（玩 CSGO 等报 VAC 验证错误断开连接之类的选我）
 echo.
-echo     4. 清理本地FlashPlayer播放器记录（单文件FlashPlayer播放器的记录清理）
+echo     4. 清理本地 FlashPlayer 播放器记录（单文件 FlashPlayer 播放器的记录清理）
 echo.
 echo     5. 记事本默认保存编码修改
 echo.
-echo     6. 获取文件HASH值
+echo     6. 获取文件 HASH 值
 echo.
 echo     7. 杀死特定进程
 echo.
-echo     8. EasyAntiCheat 异常、启动失败、卸载（EAC小蓝熊删除重装）
+echo     8. EasyAntiCheat 异常、启动失败、卸载（EAC 小蓝熊删除重装）
 echo.
 echo     9. Apex Legends 商店图片不显示出现禁用标志（ASSET FAILED TO LOAD）
 echo ------------------------------------------------------------------------------------------
@@ -922,6 +927,8 @@ echo.
 echo     4. 打开安全和维护（Windows 安全中心）
 echo.
 echo     5. 启动优化驱动器（碎片整理）
+echo.
+echo     6. 生成详细系统信息报告
 rem echo.
 rem echo 20. 查看下一页（当前页面为：P3）
 echo ------------------------------------------------------------------------------------------
@@ -932,6 +939,7 @@ if %otherinput3% equ 2 goto easyuseset
 if %otherinput3% equ 3 goto scrpropset
 if %otherinput3% equ 4 goto securitycenter
 if %otherinput3% equ 5 goto startdefrag
+if %otherinput3% equ 6 goto getsysteminfo
 rem if %otherinput3% equ 20 goto menuotherP4
 echo →  输入异常，请检查输入选项
 pause
@@ -974,6 +982,15 @@ echo     即用户桌面上的 MDT 文件夹。
 echo     软件所有的日志都保存在此文件夹内，如不需要可以在程序运行完毕后删除。如果不知道哪个
 echo     日志对应哪个功能，可以查看文件夹内的 此文件夹是干什么的？_ReadMe.txt 文件。
 echo.
+echo     常见问题：主菜单系统显卡信息有误，独立显卡、屏幕分辨率没有正确显示。
+echo.
+echo     电脑存在多个显卡如同时存在集显和独显时，查询到的显卡信息顺序可能会变化。而此命令行
+echo     查询只会返回的查询到的最后一个显卡信息，并不能显示所有显卡信息。在绝大多数情况下，
+echo     独显会是最后查询到的显卡。但是也有极个别情况集显排序在独显之前，因此返回的结果就是
+echo     集显的相关信息。综上所述，主界面的显卡信息不一定准确，主界面布局空间有限，若要详细
+echo     查看显卡信息，请使用系统环境诊断功能检测显卡信息。
+echo     部分设备的系统可能存在 OEM 定制策略等问题导致无法查询到屏幕分辨率，请谅解。
+echo.
 echo     当前程序版本：%progver%
 echo     作者：%Author%
 echo.
@@ -1014,6 +1031,9 @@ rem 显卡信息
 for /f "tokens=2 delims==" %%i in ('wmic path Win32_VideoController get AdapterRAM^,Name /value ^|findstr Name') do set vganame=%%i
 rem 屏幕分辨率信息
 for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do set scrresolution=%%j*%%i
+rem 主板信息
+for /f "tokens=*" %%i in ('systeminfo ^| findstr /C:"BIOS"') do set biosinfotmp=%%i
+for /f "tokens=2 delims=:" %%i in ('echo %biosinfotmp%') do set biosinfo=%%i
 rem 应用程序错误信息
 if "%systemver%"=="10" (
 for /f "tokens=1,2,4* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName Application -EntryType Error -Newest 2 -After %year%-%month%-%day% -Source 'Application Error' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j 错误: %%k %%l
@@ -1028,11 +1048,68 @@ echo     图形处理器 GPU:               %vganame%>>%userprofile%\desktop\MDT
 echo     屏幕分辨率:                   %scrresolution%>>%userprofile%\desktop\MDT\OS_Info.txt
 echo     内存:                         %ram% MB>>%userprofile%\desktop\MDT\OS_Info.txt
 echo     当前分配虚拟内存:             %VirtualRAM% MB>>%userprofile%\desktop\MDT\OS_Info.txt
-
+echo     主板信息:                    %biosinfo%>>%userprofile%\desktop\MDT\OS_Info.txt
 rem 存储重新生成系统信息文件 MD5 值，作为校验标准（因为用户可能会更改分辨率之类的，所以需要同步更新正确文件的 MD5）
 for /f %%i in ('certutil -hashfile %userprofile%\desktop\MDT\OS_Info.txt MD5 ^|findstr /v "[^0-9a-z]"') do set osinfoMD5=%%i
 echo osinfoMD5 = %osinfoMD5% >nul
 goto :eof
+
+:getvgainfo
+echo 显卡 GPU 详细信息:
+rem set vgatrimstr="Name="
+rem set vganame=!vganame:%vgatrimstr%=!
+wmic path Win32_VideoController get AdapterRAM^,Name /value |findstr Name >%temp%\vgainfo.txt
+rem for /f "tokens=*" %%i in (%temp%\vgainfo.txt) do echo %%i
+
+rem 设置延迟环境变量扩展
+rem setlocal enabledelayedexpansion
+
+set fn=%temp%\vgainfo.txt
+rem for循环读取文本，使用usebackq可以使文本文件名包含空格等字符
+(for /f "usebackq delims=" %%i in ("%fn%")do (
+	rem 输出读取到的单行字符串到控制台（con）
+	echo %%i>con  >nul
+	set h=%%i
+	
+	rem 输出单行字符串去除前5个字符的数据，并在前面加4个空格调整格式
+	echo     !h:~5!
+	rem 结束延迟环境变量扩展
+	rem endlocal
+))>%temp%\vgainfo_trim.txt
+
+del /s /q %temp%\vgainfo.txt >nul
+type %temp%\vgainfo_trim.txt
+rem del /s /q %temp%\vgainfo_trim.txt >nul
+goto:eof
+
+:getdiskinfo
+echo 磁盘信息:
+wmic DISKDRIVE get model /value |findstr Model >%temp%\diskinfo.txt
+
+set fn=%temp%\diskinfo.txt
+rem for循环读取文本，使用usebackq可以使文本文件名包含空格等字符
+(for /f "usebackq delims=" %%i in ("%fn%")do (
+	rem 输出读取到的单行字符串到控制台（con）
+	echo %%i>con  >nul
+	set h=%%i
+	
+	rem 输出单行字符串去除前6个字符的数据，并在前面加4个空格调整格式
+	echo     !h:~6!
+	rem 结束延迟环境变量扩展
+	rem endlocal
+))>%temp%\diskinfo_trim.txt
+
+del /s /q %temp%\diskinfo.txt >nul
+type %temp%\diskinfo_trim.txt
+rem del /s /q %temp%\diskinfo_trim.txt >nul
+goto:eof
+
+:getbiosinfo
+echo BIOS 主板信息:
+for /f "tokens=*" %%i in ('systeminfo ^| findstr /C:"BIOS"') do set biosinfotmp=%%i
+for /f "tokens=2 delims=:" %%i in ('echo %biosinfotmp%') do set biosinfo=%%i
+echo    %biosinfo%
+goto:eof
 
 :envdiag
 cls
@@ -1071,6 +1148,18 @@ call:systemtime
 call:ipaddress 运营商: http://myip.ipip.net/
 call:infocollect
 echo.
+echo 生成详细系统信息报告
+echo.
+systeminfo >%userprofile%\desktop\MDT\System_Info.txt
+echo 显卡详细信息: >>%userprofile%\desktop\MDT\System_Info.txt
+type %temp%\vgainfo_trim.txt >>%userprofile%\desktop\MDT\System_Info.txt
+echo 磁盘信息: >>%userprofile%\desktop\MDT\System_Info.txt
+type %temp%\diskinfo_trim.txt >>%userprofile%\desktop\MDT\System_Info.txt
+del /s /q %temp%\vgainfo_trim.txt >nul
+del /s /q %temp%\diskinfo_trim.txt >nul
+
+echo 已保存系统详细信息，路径：%userprofile%\desktop\MDT\System_Info.txt
+echo →  请按任意键回到主菜单
 pause
 goto menu
 
@@ -2862,7 +2951,16 @@ echo.
 goto:eof
 
 :tracerttable
-rem IPV4路由行数统计
+rem 检查mtee是否存在
+if not exist %appdata%\mtee.exe (
+  echo.
+  echo 路由统计等功能需要 mtee.exe 辅助
+  echo 请确保 %appdata% 路径下存在 mtee.exe 文件
+  echo.
+  echo 未检测到 mtee.exe，跳过相关功能...
+  goto:eof
+)
+rem IPv4路由行数统计
 for /f %%i in ('route print -4 300.300.300.300 ^|find /c /v ""') do set routeexclude=%%i
 for /f %%i in ('route print -4 ^|find /c /v ""') do set routeall=%%i
 set /a routeall=%routeall%-%routeexclude%-2
@@ -2871,15 +2969,15 @@ for /f "tokens=4" %%i in ('route print 10.33.0.0 ^|findstr "10.33.0.0"') do set 
 
 rem 数据诊断
 if DEFINED vpngateway (
-	if %routeall% GEQ 10 ( echo. >nul 2>nul ) else ( set routeresult=模式B路由表异常 )
+  if %routeall% GEQ 10 ( echo. >nul 2>nul ) else ( set routeresult=模式B路由表异常 )
 ) else (
-	echo. >nul 2>nul
+  echo. >nul 2>nul
 )
 
 echo 路由跟踪结果
 echo     IPv4路由表统计: %routeall%(行)
 if not "!vpngateway!" == "" (
-	echo     模式B网关: %vpngateway%
+  echo    模式B网关: %vpngateway%
 )
 set vpngateway=<nul
 if "%powershellver%" GEQ "3" (
@@ -2890,85 +2988,92 @@ set tracestr=!tracestr:^<=!
 set tracestr=!tracestr:毫秒=!
 for /f "tokens=1,2,3,4,5" %%i in ('echo !tracestr!') do (
 for /f %%a in ('powershell -executionpolicy bypass Invoke-RestMethod http://whois.pconline.com.cn/ip.jsp?ip^=%%m -TimeoutSec 15 2^>nul') do set IPquyu=%%a
-echo  %%i   %%j ms   %%k ms   %%l ms    %%m !IPquyu! |%temp%\mtee /a /+ %temp%\traceroute.txt
+echo  %%i   %%j ms   %%k ms   %%l ms    %%m !IPquyu! |%appdata%\mtee /a /+ %temp%\traceroute.txt
 )
 )
 ) else (
-for /f "tokens=*" %%i in ('tracert -w 100 -d -h 5 114.114.114.114 ^|findstr ^[1-9] ^|findstr /v "114.114.114.114" ^|findstr /i "%ipv4ipv6%"') do echo   吧 %%i |%temp%\mtee /a /+ %temp%\traceroute.txt
+for /f "tokens=*" %%i in ('tracert -w 100 -d -h 5 114.114.114.114 ^|findstr ^[1-9] ^|findstr /v "114.114.114.114" ^|findstr /i "%ipv4ipv6%"') do echo     %%i |%appdata%\mtee /a /+ %temp%\traceroute.txt
 )
 
 rem 诊断数据
 type %temp%\traceroute.txt 2>nul |findstr /N "." |findstr "\<2:" |findstr "172.1[0-9]\. 10.[0-9]\. 10.10\." >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-	set tracertresult=多重内网
+  set tracertresult=多重内网
 ) else (
-	type %temp%\traceroute.txt 2>nul |findstr /N "." |findstr "\<3:" |findstr "192.168\. 172.1[0-9]\. 10.[0-9]\. 10.10\." >nul 2>nul
-	if !ERRORLEVEL! equ 0 (
-		set tracertresult=多重内网
-	) else (
-		echo. >nul 2>nul
-	)
+  type %temp%\traceroute.txt 2>nul |findstr /N "." |findstr "\<3:" |findstr "192.168\. 172.1[0-9]\. 10.[0-9]\. 10.10\." >nul 2>nul
+  if !ERRORLEVEL! equ 0 (
+    set tracertresult=多重内网
+  ) else (
+    echo. >nul 2>nul
+  )
 )
 del /f /q %temp%\traceroute.txt >nul 2>nul
-
 echo.
 goto:eof
 
 :nicinterface
+if not exist %appdata%\mtee.exe (
+  echo.
+  echo 网卡信息功能需要 mtee.exe 辅助
+  echo 请确保 %appdata% 路径下存在 mtee.exe 文件
+  echo.
+  echo 未检测到 mtee.exe，跳过相关功能...
+  goto:eof
+)
 echo 网卡: 
 rem 网卡列表
-	for /f "tokens=1,2,4 delims=," %%i in ('Getmac /v /nh /fo csv') do (
-		set networkstatus=%%k
-		echo     %%i %%j  !networkstatus:~1,7! |%temp%\mtee /a /+ %temp%\networkadapter.txt
-	)
+  for /f "tokens=1,2,4 delims=," %%i in ('Getmac /v /nh /fo csv') do (
+    set networkstatus=%%k
+    echo     %%i %%j  !networkstatus:~1,7! |%appdata%\mtee /a /+ %temp%\networkadapter.txt
+  )
 
 netsh wlan show Interfaces |findstr /R "\<SSID" >nul
 if "%errorlevel%"=="0" (
 
-	rem 获取无线 WIFI 字段信息
-	set WF=0
-	for /f "tokens=2 delims=:" %%i in ('netsh wlan show Interfaces') do (
-		for /f "tokens=1" %%a in ('echo %%i') do (
-		set /a WF+=1
-		set wifi!WF!=%%a
-		)
-	)
+  rem 获取无线 WIFI 字段信息
+  set WF=0
+  for /f "tokens=2 delims=:" %%i in ('netsh wlan show Interfaces') do (
+    for /f "tokens=1" %%a in ('echo %%i') do (
+    set /a WF+=1
+    set wifi!WF!=%%a
+    )
+  )
 
-	echo     WiFi:!wifi7!   状态:!wifi6!   信道:!wifi14!   信号:!wifi17!   速度:!wifi16!Mbps
+  echo     WiFi:!wifi7!   状态:!wifi6!   信道:!wifi14!   信号:!wifi17!   速度:!wifi16!Mbps
 
-	rem WIFI 网络质量判断
-	if "!wifi17:~0,-1!" LEQ "95" ( set wifiresult1=WIFI信号不稳定 ) else ( echo. >nul 2>nul )
-	if "!wifi14!" GEQ "36" ( set wifiresult2=当前正在使用 5GHz WIFI，网络游戏建议使用 2.4GHz，有线网络最佳 ) else ( echo. >nul 2>nul )
+  rem WIFI 网络质量判断
+  if "!wifi17:~0,-1!" LEQ "95" ( set wifiresult1=WIFI信号不稳定 ) else ( echo. >nul 2>nul )
+  if "!wifi14!" GEQ "36" ( set wifiresult2=当前正在使用 5GHz WIFI，网络游戏建议使用 2.4GHz，有线网络最佳 ) else ( echo. >nul 2>nul )
 
-	rem wifi驱动信息
-	for /f "tokens=2,4 delims=," %%i in ('DRIVERQUERY /fo csv ^|findstr "Wireless" ^|findstr "[0-9]/[0-9]/[0-9]"') do echo    %%i 驱动日期%%j
+  rem wifi驱动信息
+  for /f "tokens=2,4 delims=," %%i in ('DRIVERQUERY /fo csv ^|findstr "Wireless" ^|findstr "[0-9]/[0-9]/[0-9]"') do echo    %%i 驱动日期%%j
 
 ) else (
-	echo >nul 2>nul
+  echo >nul 2>nul
 )
 
 rem 统计网卡个数
-	call:textlines %temp%\networkadapter.txt -100
-	if "!textlinesnum!" GEQ "2" (
-			type %temp%\networkadapter.txt 2>nul |findstr /i "tap SangforVNIC yltap" >nul 2>nul
-			if !ERRORLEVEL! equ 0 (
-				set networkcardresult1=网卡数量:!textlinesnum!，存在其它加速器VPN设备虚拟网卡
-			) else (
-				echo. >nul 2>nul
-			)
+  call:textlines %temp%\networkadapter.txt -100
+  if "!textlinesnum!" GEQ "2" (
+      type %temp%\networkadapter.txt 2>nul |findstr /i "tap SangforVNIC yltap" >nul 2>nul
+      if !ERRORLEVEL! equ 0 (
+        set networkcardresult1=网卡数量:!textlinesnum!，存在其它加速器VPN设备虚拟网卡
+      ) else (
+        echo. >nul 2>nul
+      )
 
-			type %temp%\networkadapter.txt 2>nul |findstr /i "vmware virtualbox" >nul 2>nul
-			if !ERRORLEVEL! equ 0 (
-				set networkcardresult2=存在虚拟机网卡
-			) else (
-				echo. >nul 2>nul
-			)
+      type %temp%\networkadapter.txt 2>nul |findstr /i "vmware virtualbox" >nul 2>nul
+      if !ERRORLEVEL! equ 0 (
+        set networkcardresult2=存在虚拟机网卡
+      ) else (
+        echo. >nul 2>nul
+      )
 
-	) else (
-		echo. >nul 2>nul
-	)
+  ) else (
+    echo. >nul 2>nul
+  )
 
-	del /f /q %temp%\networkadapter.txt >nul 2>nul
+  del /f /q %temp%\networkadapter.txt >nul 2>nul
 
 echo.
 goto:eof
@@ -2979,9 +3084,16 @@ for /f "tokens=*" %%i in ('wmic cpu get name ^|findstr /v "Name" ^|findstr "[^\S
 for /f %%i in ('wmic os get TotalVisibleMemorySize ^|findstr [0-9]') do set /a ram=%%i/1024
 for /f %%i in ('wmic os get SizeStoredInPagingFiles ^|findstr [0-9]') do set /a virtualram=%%i/1024
 echo     内存:  %ram% MB; 当前分配虚拟内存:  %VirtualRAM% MB
-for /f "tokens=2 delims==" %%i in ('wmic path Win32_VideoController get AdapterRAM^,Name /value ^|findstr Name') do set vganame=%%i
-echo     显卡 GPU:  %vganame%
+rem for /f "tokens=2 delims==" %%i in ('wmic path Win32_VideoController get AdapterRAM^,Name /value ^|findstr Name') do set vganame=%%i
+rem echo     显卡 GPU:  %vganame%
+echo.
+rem 显卡详细信息:
+call:getvgainfo
 for /f "tokens=1,2" %%i in ('wmic DesktopMonitor Get ScreenWidth^,ScreenHeight ^|findstr /i "\<[0-9]"') do echo     分辨率:  %%j*%%i
+echo.
+call:getdiskinfo
+echo.
+call:getbiosinfo
 rem 应用程序错误信息
 if "%systemver%"=="10" (
 for /f "tokens=1,2,4* skip=3" %%i in ('powershell -executionpolicy bypass Get-EventLog -LogName Application -EntryType Error -Newest 2 -After %year%-%month%-%day% -Source 'Application Error' 2^>nul ^^^| Select-Object TimeGenerated^,Message 2^>nul') do echo    %%i %%j 错误: %%k %%l
@@ -13713,7 +13825,7 @@ icacls "%userprofile%\Saved Games\Respawn\Apex" /grant Everyone:F
 takeown /f "%userprofile%\Saved Games\Respawn\Apex\assets"
 icacls "%userprofile%\Saved Games\Respawn\Apex\assets" /grant Everyone:F
 echo.
-echo 权限修改完成，请重新验证游戏完整性（推荐全新安装）
+echo 权限修改完成，请重新验证游戏完整性（推荐卸载后全新安装）
 echo 此问题多半是由加速器修复卡屏造成的，请慎用卡屏修复工具！
 pause
 goto menu
@@ -15372,7 +15484,11 @@ cls
 echo.
 echo 开始查询本机设置的 DNS 服务器
 echo.
-call:dnsserver 本地DNS服务器: 
+echo IPv4 DNS 服务器：
+call:dnsserver
+echo.
+echo IPv6 DNS 服务器：
+netsh int ipv6 show dns %networkname1%
 echo.
 echo 操作执行完成
 pause
@@ -15463,3 +15579,62 @@ echo.
 echo 操作执行完成
 pause
 goto pingtoolmenu
+
+:getsysteminfo
+echo.
+echo 生成详细系统信息报告
+echo.
+systeminfo >%userprofile%\desktop\MDT\System_Info.txt
+call:getvgainfosilent
+call:getdiskinfosilent
+echo 显卡详细信息: >>%userprofile%\desktop\MDT\System_Info.txt
+type %temp%\vgainfo_trim.txt >>%userprofile%\desktop\MDT\System_Info.txt
+echo 磁盘信息: >>%userprofile%\desktop\MDT\System_Info.txt
+type %temp%\diskinfo_trim.txt >>%userprofile%\desktop\MDT\System_Info.txt
+del /s /q %temp%\vgainfo_trim.txt >nul
+del /s /q %temp%\diskinfo_trim.txt >nul
+echo 已保存系统详细信息，路径：%userprofile%\desktop\MDT\System_Info.txt
+echo →  请按任意键回到主菜单
+pause
+goto menu
+
+:getvgainfosilent
+rem 显卡 GPU 详细信息:
+wmic path Win32_VideoController get AdapterRAM^,Name /value |findstr Name >%temp%\vgainfo.txt
+
+set fn=%temp%\vgainfo.txt
+(for /f "usebackq delims=" %%i in ("%fn%")do (
+	rem 输出读取到的单行字符串到控制台（con）
+	echo %%i>con  >nul
+	set h=%%i
+	
+	rem 输出单行字符串去除前5个字符的数据，并在前面加4个空格调整格式
+	echo     !h:~5!
+	rem 结束延迟环境变量扩展
+	rem endlocal
+))>%temp%\vgainfo_trim.txt
+
+del /s /q %temp%\vgainfo.txt >nul
+rem del /s /q %temp%\vgainfo_trim.txt >nul
+goto:eof
+
+:getdiskinfosilent
+rem 磁盘信息:
+wmic DISKDRIVE get model /value |findstr Model >%temp%\diskinfo.txt
+
+set fn=%temp%\diskinfo.txt
+rem for循环读取文本，使用usebackq可以使文本文件名包含空格等字符
+(for /f "usebackq delims=" %%i in ("%fn%")do (
+	rem 输出读取到的单行字符串到控制台（con）
+	echo %%i>con  >nul
+	set h=%%i
+	
+	rem 输出单行字符串去除前6个字符的数据，并在前面加4个空格调整格式
+	echo     !h:~6!
+	rem 结束延迟环境变量扩展
+	rem endlocal
+))>%temp%\diskinfo_trim.txt
+
+del /s /q %temp%\diskinfo.txt >nul
+rem del /s /q %temp%\diskinfo_trim.txt >nul
+goto:eof
