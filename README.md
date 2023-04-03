@@ -3,6 +3,8 @@
 
 一个针对 Windows 系统的诊断修复工具箱
 
+开发调试需求：[Mtee](https://ritchielawrence.github.io/mtee/)、Windows 环境
+
 下载地址：[发布页](https://github.com/Jackstar1212/MutiDiagToolkit/releases)
 
 内测群抢先体验 PreRelease，欢迎一起debug！
