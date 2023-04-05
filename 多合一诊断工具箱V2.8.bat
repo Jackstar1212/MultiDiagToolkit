@@ -12,7 +12,7 @@ rem 取得管理员权限
     echo     若不同意请关闭程序，或在出现“你要允许此应用对您的设备进行更改吗？”对话框时，选择“否”
     echo.
 
-    timeout /t 5 /nobreak > NUL
+    timeout /t 3 /nobreak > NUL
     ECHO SET UAC = CreateObject^("Shell.Application"^) > "%TEMP%\Getadmin.vbs"
     ECHO UAC.ShellExecute "%~f0", "%1", "", "runas", 1 >> "%TEMP%\Getadmin.vbs"
     "%TEMP%\Getadmin.vbs"
@@ -32,6 +32,32 @@ rem 颜色属性由两个十六进制数字指定 -- 第一个对应于背景，
 rem 0 = 黑色 1 = 蓝色 2 = 绿色 3= 浅绿色 4 = 红色 5 = 紫色 6 = 黄色 7 = 白色 8 = 灰色 9 = 淡蓝色 A = 淡绿色 B = 淡浅绿色 C = 淡红色 D = 淡紫色 E = 淡黄色 F = 亮白色
 rem 检查系统环境变量
 
+rem 快速初始化开关，默认0，为1时跳过生成系统信息初始化
+rem 方便调试优化，测试时可以设置fastlaunch为1
+set fastlaunch=0
+rem 若需要菜单，请删除L73的goto InitializeCheck
+rem goto InitializeCheck
+
+rem 启动菜单
+cls
+echo.
+echo ---------------------------------------
+echo     多合一系统诊断修复工具 启动菜单
+echo ---------------------------------------
+echo.
+echo     0. 退出程序
+echo     1. 常规启动
+echo     2. 快速启动（常规启动异常时可以选我）
+echo.
+set /p bootmode=→  请选择启动模式：
+if %bootmode% equ 0 goto exitprogram
+if %bootmode% equ 1 set fastlaunch=0
+if %bootmode% equ 2 set fastlaunch=1
+goto InitializeCheck
+rem 启动菜单 End
+
+:InitializeCheck
+cls
 echo.
 echo     正在初始化程序...
 echo.
@@ -150,7 +176,7 @@ echo.
 echo     操作执行完成
 
 rem 设置程序版本、作者信息
-set "progver=2.8"
+set "progver=3.0"
 set "Author=LonelyFish"
 
 setlocal enabledelayedexpansion
@@ -269,7 +295,15 @@ echo 作者：%Author%>>%userprofile%\desktop\MDT\此文件夹是干什么的？
 echo.
 echo     正在生成系统信息转储文件
 rem 调用生成系统信息方法
+rem 快速启动检查
+if %fastlaunch% equ 1 (
+    echo.
+    echo     快速启动模式下，已禁用系统信息生成
+    echo.
+    goto InitializeFinish
+)
 call :generatesysinfo
+
 echo.
 rem 存储首次生成系统信息文件MD5值，作为校验标准
 for /f %%i in ('certutil -hashfile %userprofile%\desktop\MDT\OS_Info.txt MD5 ^|findstr /v "[^0-9a-z]"') do set osinfoMD5=%%i
@@ -277,6 +311,7 @@ echo osinfoMD5 = %osinfoMD5% >nul
 echo     已保存系统信息校验值
 echo     已保存系统信息，路径：%userprofile%\desktop\MDT\OS_Info.txt
 echo.
+:InitializeFinish
 echo     程序初始化完成
 timeout /t 1 /nobreak > NUL
 
@@ -304,12 +339,18 @@ echo. >nul
 
 
 
-
+:mainmenubaseinfo
 cls
 echo.
 echo     基本系统信息: 
 echo.
-
+rem 快速启动检查
+if %fastlaunch% equ 1 (
+    echo.
+    echo     快速启动模式下，已禁用系统信息生成
+    echo.
+    goto mainmenuenter
+)
 rem 此处不再执行systeminfo命令，直接读取预加载的文件，但是做MD55校验，与最开始生成的文件不同则重新生成文件
 rem 文件不存在则重新生成
 if not exist "%userprofile%\desktop\MDT" md "%userprofile%\desktop\MDT"
@@ -358,6 +399,7 @@ echo     电源模式:                     %powerstate%
 if "%systemver%"=="10" (
 echo %gamebar%
 )
+:mainmenuenter
 echo.
 echo     欢迎使用多合一系统诊断修复工具！
 echo.
@@ -377,6 +419,8 @@ echo.
 echo     4. 常用软件修复（Steam 异常等选我）
 echo.
 echo     5. 其他功能杂项（其他的选我）
+echo.
+echo     6. 退出程序
 echo ------------------------------------------------------------------------------------------
 echo.
 echo     脚本作者：%Author%
@@ -395,6 +439,7 @@ if %maininput% equ 2 goto menunetfix
 if %maininput% equ 3 goto menusysoptimizeP1
 if %maininput% equ 4 goto menusoft
 if %maininput% equ 5 goto menuotherP1
+if %maininput% equ 6 goto exitprogramstart
 echo →  输入异常，请检查输入选项
 pause
 goto menu
@@ -743,6 +788,8 @@ echo.
 echo     8. EasyAntiCheat 异常、启动失败、卸载（EAC 小蓝熊删除重装）
 echo.
 echo     9. Apex Legends 商店图片不显示出现禁用标志（ASSET FAILED TO LOAD）
+echo.
+echo    10. QQ 音乐歌曲专辑图片无法正常显示
 echo ------------------------------------------------------------------------------------------
 set /p softinput=→  请选择项目：
 if %softinput% equ 0 goto menu
@@ -755,6 +802,7 @@ if %softinput% equ 6 goto GETHASH
 if %softinput% equ 7 goto killprocess
 if %softinput% equ 8 goto eacuninstall
 if %softinput% equ 9 goto apexshopimgerr
+if %softinput% equ 10 goto qqmusicimgfix
 echo →  输入异常，请检查输入选项
 pause
 goto menusoft
@@ -857,29 +905,29 @@ echo     5. 启动 Windows 内存诊断
 echo.
 echo     6. 启动组件服务管理
 echo.
-echo     7. 启动共享文件夹管理（fsmgmt.msc）
+echo     7. 启动性能监视器（perfmon.msc）
 echo.
-echo     8. 启动性能监视器（perfmon.msc）
+echo     8. 启动本地安全组策略（secpol.msc）
 echo.
-echo     9. 启动本地安全组策略（secpol.msc）
+echo     9. 启动 DirectX 检测工具（dxdiag）
 echo.
-echo    10. 启动 DirectX 检测工具（dxdiag）
+echo    10. 启动远程桌面连接
 echo.
-echo    11. 启动远程桌面连接
+echo    11. 用户资料数据备份（便捷备份用户数据，重装电脑前选我备份数据）
 echo.
-echo    12. 用户资料数据备份（便捷备份用户数据，重装电脑前选我备份数据）
+echo    12. 打开桌面图标设置（计算机、此电脑我的文档不见了，只有回收站，选我）
 echo.
-echo    13. 打开桌面图标设置（计算机、此电脑我的文档不见了，只有回收站，选我）
+echo    13. 打开用户账户设置
 echo.
-echo    14. 打开用户账户设置
+echo    14. 打开 Windows Defender 防火墙设置
 echo.
-echo    15. 打开 Windows Defender 防火墙设置
+echo    15. 打开程序和功能（卸载或更改程序）
 echo.
-echo    16. 打开程序和功能（卸载或更改程序）
+echo    16. 打开系统属性设置（虚拟内存、分页文件等高级系统设置）
 echo.
-echo    17. 打开系统属性设置（虚拟内存、分页文件等高级系统设置）
+echo    17. 打开时间和区域设置（时间格式调整、时区调整）
 echo.
-echo    18. 打开时间和区域设置（时间格式调整、时区调整）
+echo    18. 打开时间和日期设置（时间和日期的经典设置）
 echo.
 echo    19. 打开网络连接设置（传统设置）
 echo.
@@ -893,18 +941,18 @@ if %otherinput2% equ 3 goto ms_config
 if %otherinput2% equ 4 goto startsysinfo
 if %otherinput2% equ 5 goto memcheckprogram
 if %otherinput2% equ 6 goto componentmgr
-if %otherinput2% equ 7 goto sharemanage
-if %otherinput2% equ 8 goto startperfmon
-if %otherinput2% equ 9 goto securemgr
-if %otherinput2% equ 10 goto dxcheck
-if %otherinput2% equ 11 goto rdapp
-if %otherinput2% equ 12 goto sysuserbackup
-if %otherinput2% equ 13 goto desktopiconset
-if %otherinput2% equ 14 goto useraccset
-if %otherinput2% equ 15 goto firewallset
-if %otherinput2% equ 16 goto applistset
-if %otherinput2% equ 17 goto computerpropset
-if %otherinput2% equ 18 goto timezoneset
+if %otherinput2% equ 7 goto startperfmon
+if %otherinput2% equ 8 goto securemgr
+if %otherinput2% equ 9 goto dxcheck
+if %otherinput2% equ 10 goto rdapp
+if %otherinput2% equ 11 goto sysuserbackup
+if %otherinput2% equ 12 goto desktopiconset
+if %otherinput2% equ 13 goto useraccset
+if %otherinput2% equ 14 goto firewallset
+if %otherinput2% equ 15 goto applistset
+if %otherinput2% equ 16 goto computerpropset
+if %otherinput2% equ 17 goto timezoneset
+if %otherinput2% equ 18 goto timedateset
 if %otherinput2% equ 19 goto netconnectcenter
 if %otherinput2% equ 20 goto menuotherP3
 echo →  输入异常，请检查输入选项
@@ -929,6 +977,10 @@ echo.
 echo     5. 启动优化驱动器（碎片整理）
 echo.
 echo     6. 生成详细系统信息报告
+echo.
+echo     7. 启动鼠标属性
+echo.
+echo     8. 启动共享文件夹管理（fsmgmt.msc）
 rem echo.
 rem echo 20. 查看下一页（当前页面为：P3）
 echo ------------------------------------------------------------------------------------------
@@ -940,6 +992,8 @@ if %otherinput3% equ 3 goto scrpropset
 if %otherinput3% equ 4 goto securitycenter
 if %otherinput3% equ 5 goto startdefrag
 if %otherinput3% equ 6 goto getsysteminfo
+if %otherinput3% equ 7 goto mousesetup
+if %otherinput2% equ 8 goto sharemanage
 rem if %otherinput3% equ 20 goto menuotherP4
 echo →  输入异常，请检查输入选项
 pause
@@ -2019,6 +2073,8 @@ echo     7. 首选: 4.2.2.2（微软 DNS）                  备用: 223.5.5.5�
 echo     8. 移动: 101.226.4.6（电信 DNS）              备用: 223.5.5.5（阿里 DNS）
 echo     9. 首选: 80.80.80.80（Freenom DNS）          备用: 223.5.5.5(防运营商劫持^)（阿里 DNS）
 echo    10. 首选: 223.5.5.5（阿里 DNS）                备用: 4.2.2.2（微软 DNS）
+echo    11. 首选：119.29.29.29（腾讯 Public DNS+）    备用：223.5.5.5（阿里 DNS）
+echo    12. 首选：119.29.29.29（腾讯 Public DNS+）    备用：114.114.114.114（114 DNS）
 echo.
 set /p dns=→  请选择: 
 if %dns% equ 0 goto dnsip0
@@ -2032,6 +2088,8 @@ if %dns% equ 7 goto dnsip7
 if %dns% equ 8 goto dnsip8
 if %dns% equ 9 goto dnsip9
 if %dns% equ 10 goto dnsip10
+if %dns% equ 11 goto dnsip11
+if %dns% equ 12 goto dnsip12
 goto menu
 
 :dnsip0
@@ -2083,6 +2141,15 @@ goto menu
 call:dnssetting 223.5.5.5 4.2.2.2
 pause
 goto menu
+:dnsip11
+call:dnssetting 119.29.29.29 223.5.5.5
+pause
+goto menu
+:dnsip12
+call:dnssetting 119.29.29.29 114.114.114.114
+pause
+goto menu
+
 
 :dnssetup3
 rem set m1dns=^\^<[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\^>
@@ -2955,7 +3022,9 @@ rem 检查mtee是否存在
 if not exist %appdata%\mtee.exe (
   echo.
   echo 路由统计等功能需要 mtee.exe 辅助
+  echo MDT 程序运行时会释放 mtee.exe 至 AppData 路径下
   echo 请确保 %appdata% 路径下存在 mtee.exe 文件
+  echo 若不存在可尝试重新运行 MDT 主程序，并检查是否存在安全软件拦截和误删的情况
   echo.
   echo 未检测到 mtee.exe，跳过相关功能...
   goto:eof
@@ -3015,7 +3084,9 @@ goto:eof
 if not exist %appdata%\mtee.exe (
   echo.
   echo 网卡信息功能需要 mtee.exe 辅助
+  echo MDT 程序运行时会释放 mtee.exe 至 AppData 路径下
   echo 请确保 %appdata% 路径下存在 mtee.exe 文件
+  echo 若不存在可尝试重新运行 MDT 主程序，并检查是否存在安全软件拦截和误删的情况
   echo.
   echo 未检测到 mtee.exe，跳过相关功能...
   goto:eof
@@ -3130,8 +3201,12 @@ echo.
 ) else (
 echo. >nul 2>nul
 )
-
-echo %1 %dnsserverip% %dnsresult%
+echo IPv4 DNS 服务器：
+echo     %dnsserverip% %dnsresult%
+echo.
+echo IPv6 DNS 服务器：
+netsh int ipv6 show dns %networkname1% |findstr /i "%ipv6only%"
+echo.
 goto:eof
 
 :dnseventlog
@@ -3449,17 +3524,21 @@ echo     0. 返回主菜单
 echo     1. 恢复节能模式
 echo     2. 恢复平衡模式
 echo     3. 恢复高性能模式
-echo     4. 恢复卓越性能模式（仅限于Win10/11专业版以上）
+echo     4. 恢复卓越性能模式（仅限于 Win10/11 专业版以上）
+echo     5. 自定义设置（打开系统电源选项设置页面）
+echo.
 set /p binput=→  请输入选项：
 if %binput% equ 0 goto menu
 if %binput% equ 1 goto lowbatteryrec
 if %binput% equ 2 goto medbatteryrec
 if %binput% equ 3 goto highperfbatteryrec
 if %binput% equ 4 goto extremeperfbatteryrec
+if %binput% equ 5 goto setcustombattery
 echo →  输入异常，请检查输入选项
 goto borecover
 :lowbatteryrec
-echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
+echo 开始恢复电源选项设置（部分机型可能无效，例如 Surface）
 echo.
 echo 恢复节能模式
 powercfg -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a
@@ -3467,7 +3546,8 @@ echo.
 goto batteryrecfin
 
 :medbatteryrec
-echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
+echo 开始恢复电源选项设置（部分机型可能无效，例如 Surface）
 echo.
 echo 恢复平衡模式
 powercfg -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e
@@ -3475,7 +3555,8 @@ echo.
 goto batteryrecfin
 
 :highperfbatteryrec
-echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
+echo 开始恢复电源选项设置（部分机型可能无效，例如 Surface）
 echo.
 echo 恢复高性能模式
 powercfg -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
@@ -3483,7 +3564,8 @@ echo.
 goto batteryrecfin
 
 :extremeperfbatteryrec
-echo 开始恢复电源选项设置（部分机型可能无效，例如Surface）
+echo.
+echo 开始恢复电源选项设置（部分机型可能无效，例如 Surface）
 echo.
 echo 恢复卓越性能模式（仅限于Win10/11专业版以上）
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
@@ -3498,6 +3580,7 @@ echo     请选择你要继续的操作：
 echo     0. 返回主菜单
 echo     1. 恢复其他电源选项
 echo     2. 设置计算机使用的电源选项
+echo.
 set /p bfinput=→  请输入选项：
 if %bfinput% equ 0 goto menu
 if %bfinput% equ 1 goto borecmenu
@@ -4027,40 +4110,43 @@ netsh winsock reset
 echo 前置修复：清理 DNS 缓存
 ipconfig /flushdns
 
-goto steam
-
-:steam
+echo.
+echo 开始修复 Steam VAC 屏蔽问题
+echo.
 echo 正在检测 Steam 是否开启......
-tasklist | find /I "Steam.exe"
-if errorlevel 1 goto steamchina
-if not errorlevel 1 goto startvacfix
+%systemroot%\system32\tasklist /fi "IMAGENAME eq Steam.exe" |findstr /i Steam.exe >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+  echo.
+  echo 找到 Steam 进程
+  echo.
+  taskkill /im Steam.exe /f >nul 2>nul
+  echo.
+  echo 已结束 Steam 进程
+  echo.
+) else (
+  echo.
+	echo Steam 未开启
+  echo.
+)
 
-:steamchina
 echo 正在检测国服启动器是否开启......
-tasklist | find /I "steamchina.exe"
-if errorlevel 1 goto stopsteam
-if not errorlevel 1 goto startvacfix
-
-:stopsteam
-echo Steam 和国服启动器均未开启
-goto startvacfix
-
-:killsteam
-echo Steam已开启
-echo 正在强制关闭
-taskkill /F /IM Steam.exe
-echo 已强制关闭
-goto startvacfix
-
-:killsteamchina
-echo Steam 已开启
-echo 正在强制关闭
-taskkill /F /IM steamchina.exe
-echo 已强制关闭
-goto startvacfix
+%systemroot%\system32\tasklist /fi "IMAGENAME eq Steamchina.exe" |findstr /i Steamchina.exe >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+  echo.
+  echo 找到 Steam 国服启动器进程
+  echo.
+  taskkill /im Steamchina.exe /f >nul 2>nul
+  echo.
+  echo 已结束 Steam 国服启动器进程
+  echo.
+) else (
+  echo.
+	echo Steam 国服启动器未开启
+  echo.
+)
 
 :startvacfix
-echo 开始解决 VAC 屏蔽
+echo 开始解决 VAC 屏蔽问题
 
 echo 开启 Network Connections
 sc config Netman start= AUTO
@@ -14646,6 +14732,7 @@ echo     1. 节能模式
 echo     2. 平衡模式
 echo     3. 高性能模式
 echo     4. 卓越性能模式（仅限于Win10/11专业版以上）
+echo     5. 自定义设置（打开系统电源选项设置页面）
 echo.
 set /p binput=→  请输入选项：
 if %binput% equ 0 goto menu
@@ -14653,10 +14740,12 @@ if %binput% equ 1 goto setlowbattery
 if %binput% equ 2 goto setmedbattery
 if %binput% equ 3 goto sethighperfbattery
 if %binput% equ 4 goto setextremeperfbattery
+if %binput% equ 5 goto setcustombattery
 echo →  输入异常，请检查输入选项
 goto setbatteryoption
 :setlowbattery
-echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 正在设置电源选项（部分机型可能无效，例如 Surface）
 echo.
 echo 设置节能模式
 powercfg /s a1841308-3541-4fab-bc81-f71556f20b4a
@@ -14664,7 +14753,8 @@ echo.
 goto setbatteryfin
 
 :setmedbattery
-echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 正在设置电源选项（部分机型可能无效，例如 Surface）
 echo.
 echo 设置平衡模式
 powercfg /s 381b4222-f694-41f0-9685-ff5bb260df2e
@@ -14672,7 +14762,8 @@ echo.
 goto setbatteryfin
 
 :sethighperfbattery
-echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 正在设置电源选项（部分机型可能无效，例如 Surface）
 echo.
 echo 设置高性能模式
 powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
@@ -14680,11 +14771,20 @@ echo.
 goto setbatteryfin
 
 :setextremeperfbattery
-echo 正在设置电源选项（部分机型可能无效，例如Surface）
+echo.
+echo 正在设置电源选项（部分机型可能无效，例如 Surface）
 echo.
 echo 设置卓越性能模式（仅限于Win10/11专业版以上）
 powercfg /s e9a42b02-d5df-448d-aa00-03f14749eb61
 echo.
+goto setbatteryfin
+
+:setcustombattery
+echo.
+echo 正在打开电源选项设置页面
+rundll32.exe shell32.dll,Control_RunDLL powercfg.cpl
+echo 操作执行完成
+pause
 goto setbatteryfin
 
 :setbatteryfin
@@ -15160,36 +15260,39 @@ echo 已修复 Xbox 多人游戏
 echo 开始修复 Steam
 echo.
 echo 正在检测 Steam 是否开启......
-tasklist | find /I "Steam.exe"
-if errorlevel 1 goto steamchina
-if not errorlevel 1 goto startvacfix
+%systemroot%\system32\tasklist /fi "IMAGENAME eq Steam.exe" |findstr /i Steam.exe >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+  echo.
+  echo 找到 Steam 进程
+  echo.
+  taskkill /im Steam.exe /f
+  echo.
+  echo 已结束 Steam 进程
+  echo.
+) else (
+  echo.
+	echo Steam 未开启
+  echo.
+)
 
-:steamchina
 echo 正在检测国服启动器是否开启......
-tasklist | find /I "steamchina.exe"
-if errorlevel 1 goto stopsteam
-if not errorlevel 1 goto startvacfix
-
-:stopsteam
-echo Steam 和国服启动器均未开启
-goto startvacfix
-
-:killsteam
-echo Steam 已开启
-echo 正在强制关闭
-taskkill /F /IM Steam.exe
-echo 已强制关闭
-goto startvacfix
-
-:killsteamchina
-echo Steam 已开启
-echo 正在强制关闭
-taskkill /F /IM steamchina.exe
-echo 已强制关闭
-goto startvacfix
+%systemroot%\system32\tasklist /fi "IMAGENAME eq Steamchina.exe" |findstr /i Steamchina.exe >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+  echo.
+  echo 找到 Steam 国服启动器进程
+  echo.
+  taskkill /im Steamchina.exe /f
+  echo.
+  echo 已结束 Steam 国服启动器进程
+  echo.
+) else (
+  echo.
+	echo Steam 国服启动器未开启
+  echo.
+)
 
 :startvacfix
-echo 开始解决 VAC 屏蔽
+echo 开始解决 VAC 屏蔽问题
 
 echo 开启 Network Connections
 sc config Netman start= AUTO
@@ -15433,6 +15536,15 @@ echo 操作执行完成
 pause
 goto menu
 
+:timedateset
+cls
+echo.
+echo 正在打开时间和日期设置（经典设置）
+rundll32.exe shell32.dll,Control_RunDLL timedate.cpl
+echo 操作执行完成
+pause
+goto menu
+
 :easyuseset
 cls
 echo.
@@ -15484,11 +15596,7 @@ cls
 echo.
 echo 开始查询本机设置的 DNS 服务器
 echo.
-echo IPv4 DNS 服务器：
 call:dnsserver
-echo.
-echo IPv6 DNS 服务器：
-netsh int ipv6 show dns %networkname1%
 echo.
 echo 操作执行完成
 pause
@@ -15638,3 +15746,54 @@ rem for循环读取文本，使用usebackq可以使文本文件名包含空格�
 del /s /q %temp%\diskinfo.txt >nul
 rem del /s /q %temp%\diskinfo_trim.txt >nul
 goto:eof
+
+:qqmusicimgfix
+echo.
+echo 开始修复 QQ 音乐歌曲专辑图片无法正常显示问题
+echo.
+%systemroot%\system32\tasklist /fi "IMAGENAME eq qqmusic.exe" |findstr /i qqmusic.exe >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+  echo 找到 QQ 音乐进程
+  taskkill /im qqmusic.exe /f >nul 2>nul
+  echo 已结束 QQ 音乐进程
+) else (
+	echo. >nul >nul
+)
+:startfixqqmusic
+echo 修复 DNS 设置
+call:dnssetting 119.29.29.29 223.5.5.5
+echo.
+echo 操作执行完成，请重新打开 QQ 音乐
+pause
+goto menu
+
+:mousesetup
+cls
+echo.
+echo 正在打开鼠标属性
+start control main.cpl
+echo 操作执行完成
+pause
+goto menu
+
+:exitprogramstart
+cls
+echo.
+set /p dellog=→  在离开之前，是否要删除 MDT 程序生成的所有日志文件？（y/N）
+if %dellog% equ y goto mdtlogdel
+if %dellog% equ Y goto mdtlogdel
+goto exitprogram
+:mdtlogdel
+echo.
+echo     正在删除 MDT 程序生成的日志文件
+rd /s /q %userprofile%\desktop\MDT
+echo     已删除所有 MDT 程序生成的日志文件
+timeout /t 2 /nobreak > NUL
+:exitprogram
+cls
+del /s /q %appdata%\mtee.exe >nul 2>nul
+echo.
+echo     感谢使用多合一系统诊断修复工具，希望它能帮到你！
+echo.
+timeout /t 2 /nobreak > NUL
+exit
