@@ -216,3 +216,13 @@ Windows Update 屏蔽与修复工具
 ### 20230405-3.0
 
 增加快速启动选项，绕过系统信息生成，DNS查询改进，改进 IPv6 DNS 服务器查询
+
+## 注意事项
+
+**All my projects are only uploaded and distributed on Github and my personal blog, do not trust any information stolen by CSDN platform!**
+
+**我的所有项目只在GitHub和个人博客上上传和分发，请勿相信CSDN平台偷取的任何信息！**
+
+CSDN = Copy, Steal and Download-paid Net
+
+请不要相信C.S.D.N.和Git.Code上的任何搬运内容，最好不要使用这些平台！
