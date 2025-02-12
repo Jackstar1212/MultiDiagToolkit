@@ -13,6 +13,8 @@
 
 快乐闲聊水友群抢先体验 PreRelease，欢迎一起 debug！
 
+更新日志见 UpdateLog.md
+
 可通过我的主页邮箱联系到我
 
 新版本优先博客更新，下面的内容直接来源于博客复制↓
@@ -275,3 +277,6 @@
 CSDN = Copy, Steal and Download-paid Net
 
 请不要相信C.S.D.N.和Git.Code上的任何搬运内容，最好不要使用这些平台！
+
+### License
+This project is licensed under the MIT License. See `LICENSE` for details.
