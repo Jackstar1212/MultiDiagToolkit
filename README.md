@@ -7,11 +7,13 @@
 
 下载地址：[发布页](https://github.com/Jackstar1212/MutiDiagToolkit/releases)
 
-内测群抢先体验 PreRelease，欢迎一起debug！
+博客下载地址：[多合一诊断工具箱](https://www.nekomoe.fun/?p=69)
+
+快乐闲聊水友群抢先体验 PreRelease，欢迎一起debug！
 
 可通过我的主页邮箱联系到我
 
-新版本请访问：https://www.nekomoe.fun/?p=69
+新版本优先博客更新
 
 ### 20230316——1.0版本
 
