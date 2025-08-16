@@ -143,7 +143,7 @@ rem 此选项为是否允许安全软件检查，设置为1时跳过安全检查
 rem 开启此选项以禁用本程序的安全软件检查
 
 rem 设置程序版本、作者信息
-set "progver=5.1"
+set "progver=5.2"
 set "Author=LonelyFish"
 
 title 系统诊断修复工具 v%progver% by %Author%
@@ -637,6 +637,9 @@ echo %gamebar%
 echo.
 rem 主菜单：多合一系统诊断修复工具
 
+rem 校验标题
+title 系统诊断修复工具 v%progver% by %Author%
+
 echo ------------------------------------------------------------------------------------------
 echo                                    多合一系统诊断修复工具
 echo ------------------------------------------------------------------------------------------
@@ -656,7 +659,7 @@ echo     6. 退出程序
 echo ------------------------------------------------------------------------------------------
 echo.
 echo     脚本作者：%Author%
-echo     脚本版本：v%progver% 2025 乙巳蛇年快乐版
+echo     脚本版本：v%progver% 2025 LUV.
 echo.
 echo     声明：脚本修复功能不一定适用于您的问题，作者对使用脚本后果概不负责，请自行斟酌使用
 echo     声明：继续使用代表您同意免除脚本作者对您电脑进行修改缩造成后果的责任，自行承担后果
@@ -1041,9 +1044,9 @@ echo     9. 启动优化驱动器（碎片整理）
 echo.
 echo    10. 鼠标右键菜单“发送到...”选项出现异常，有重复选项修复（可支持自定义快捷方式）
 echo.
-echo    11. 禁用ZIP压缩包文件索引与预览，降低资源管理器占用
+echo    11. 禁用 ZIP 压缩包文件索引与预览，降低资源管理器占用
 echo.
-echo    12. 还原ZIP压缩包文件索引与预览，恢复默认值
+echo    12. 还原 ZIP 压缩包文件索引与预览，恢复默认值
 echo.
 echo    13. 系统托盘时间显示星期设置
 echo.
@@ -1052,6 +1055,12 @@ echo.
 echo    15. 设备安全性-内核隔离（Hyper-V 功能）开启/关闭
 echo.
 echo    16. C盘 WinSxS 清理（系统存储组件清理）
+echo.
+echo    17. 解除 Windows 文件路径长度上限
+echo.
+echo    18. 恢复 Windows 文件路径长度上限
+echo.
+echo    19. Windows 系统日志清理
 echo ------------------------------------------------------------------------------------------
 set /p sysopt2=→  请选择项目：
 if "%sysopt2%"=="" set sysopt2=null
@@ -1072,6 +1081,9 @@ if %sysopt2% equ 13 goto weeksetmenu
 if %sysopt2% equ 14 goto adsetmenu
 if %sysopt2% equ 15 goto hypervmenu
 if %sysopt2% equ 16 goto winsxsclean
+if %sysopt2% equ 17 goto longpathenable
+if %sysopt2% equ 18 goto longpathdisable
+if %sysopt2% equ 19 goto wevcl
 echo →  输入异常，请检查输入选项
 pause
 goto menusysoptimizeP2
@@ -1321,6 +1333,12 @@ echo.
 echo    11. 获取缓存的 Windows 聚焦壁纸
 echo.
 echo    12. 获取设备启动时间与运行时间
+echo.
+echo    13. 打开可靠性监视程序
+echo.
+echo    14. 打开性能监视器
+echo.
+echo    15. 打开资源监视器
 rem echo.
 rem echo 20. 查看下一页（当前页面为：P3）
 echo ------------------------------------------------------------------------------------------
@@ -1339,6 +1357,9 @@ if %otherinput3% equ 9 goto openstartup
 if %otherinput3% equ 10 goto runassystem
 if %otherinput3% equ 11 goto WinFocusbg
 if %otherinput3% equ 12 goto boot_run_time
+if %otherinput3% equ 13 goto perfmon_page
+if %otherinput3% equ 14 goto perfmon_program
+if %otherinput3% equ 15 goto resmon_program
 rem if %otherinput3% equ 20 goto menuotherP4
 echo →  输入异常，请检查输入选项
 pause
@@ -4456,6 +4477,10 @@ echo echo. >>%appdata%\junkclean.bat
 
 echo echo 清理 Windows 日志 >>%appdata%\junkclean.bat
 echo del /f /s /q "%%windir%%\*.log" ^>nul 2^>nul >>%appdata%\junkclean.bat
+
+rem 独立该日志清理功能
+rem echo for /F "tokens=*" %%1 in ('wevtutil.exe el') DO wevtutil cl "%%1" ^>nul 2^>nul >>%appdata%\junkclean_log.bat
+
 echo echo 操作执行完成 >>%appdata%\junkclean.bat
 echo echo. >>%appdata%\junkclean.bat
 
@@ -5357,6 +5382,7 @@ echo →  输入异常，请检查输入选项
 timeout /t 2 /nobreak > NUL
 goto finhash
 
+rem 以下功能输出较多信息为正常情况，可用 sc query 		 二次查询服务状态检验
 :PrivCtrloff
 cls
 echo 禁用遥测系统跟踪服务
@@ -8347,7 +8373,7 @@ goto menu
 :zipPreviewOff
 cls
 echo.
-echo 禁用ZIP压缩包文件索引与预览，降低资源管理器占用
+echo 禁用 ZIP 压缩包文件索引与预览，降低资源管理器占用
 echo.
 echo 方法如下：
 echo.
@@ -8391,7 +8417,7 @@ rem echo echo.>>%temp%\zipPreviewOn.bat
 rem %appdata%\psexec.exe -i -s %temp%\zipPreviewOn.bat
 rem echo.
 rem echo 操作执行完成
-rem echo 已成功禁用ZIP压缩包文件索引与预览
+rem echo 已成功禁用 ZIP 压缩包文件索引与预览
 
 pause
 goto menu
@@ -8399,7 +8425,7 @@ goto menu
 :zipPreviewOn
 cls
 echo.
-echo 恢复ZIP压缩包文件索引与预览，恢复默认值
+echo 恢复 ZIP 压缩包文件索引与预览，恢复默认值
 echo.
 echo 方法如下：
 echo.
@@ -8432,7 +8458,7 @@ echo 关闭注册表编辑器，重启计算机，完成更改
 echo.
 regedit.exe
 echo 操作执行完成
-rem echo 还原ZIP压缩包文件索引与预览，恢复默认值
+rem echo 还原 ZIP 压缩包文件索引与预览，恢复默认值
 rem echo.
 rem echo @echo off >%temp%\zipPreviewOn.bat
 rem echo echo.>>%temp%\zipPreviewOn.bat
@@ -8443,7 +8469,7 @@ rem echo echo.>>%temp%\zipPreviewOn.bat
 rem %appdata%\psexec.exe -i -s %temp%\zipPreviewOn.bat
 rem echo.
 rem echo 操作执行完成
-rem echo 已成功恢复ZIP压缩包文件索引与预览
+rem echo 已成功恢复 ZIP 压缩包文件索引与预览
 
 pause
 goto menu
@@ -9778,6 +9804,67 @@ echo.
 echo 开始清理系统组件存储
 echo.
 Dism /online /Cleanup-Image /StartComponentCleanup
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:longpathenable
+cls
+echo.
+echo 解除 Windows 文件路径长度上限
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d 1 /f >nul 2>nul
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:longpathdisable
+cls
+echo.
+echo 恢复 Windows 文件路径长度上限
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d 0 /f >nul 2>nul
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:perfmon_page
+cls
+echo 正在打开可靠性监视程序...
+perfmon /rel
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:perfmon_program
+cls
+echo 正在打开性能监视器...
+perfmon.exe
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:resmon_program
+cls
+echo 正在打开资源监视器...
+resmon.exe
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:wevcl
+cls
+echo 开始清理 Windows 系统日志
+echo title 正在清理 Windows 系统日志，请稍等 >%appdata%\junkclean_log.bat
+echo for /F "tokens=*" %%%%1 in ('wevtutil.exe el') DO wevtutil cl "%%%%1" >>%appdata%\junkclean_log.bat
+echo echo Windows 系统日志清理完毕 >>%appdata%\junkclean_log.bat
+echo timeout /t 2 /nobreak >nul >>%appdata%\junkclean_log.bat
+echo exit >>%appdata%\junkclean_log.bat
+start %appdata%\junkclean_log.bat
 echo.
 echo 操作执行完成
 pause
