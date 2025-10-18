@@ -143,7 +143,7 @@ rem 此选项为是否允许安全软件检查，设置为1时跳过安全检查
 rem 开启此选项以禁用本程序的安全软件检查
 
 rem 设置程序版本、作者信息
-set "progver=5.2"
+set "progver=5.2.1"
 set "Author=LonelyFish"
 
 title 系统诊断修复工具 v%progver% by %Author%
@@ -1061,6 +1061,8 @@ echo.
 echo    18. 恢复 Windows 文件路径长度上限
 echo.
 echo    19. Windows 系统日志清理
+echo.
+echo    20. 查看下一页（当前页面为：P2） 
 echo ------------------------------------------------------------------------------------------
 set /p sysopt2=→  请选择项目：
 if "%sysopt2%"=="" set sysopt2=null
@@ -1084,9 +1086,38 @@ if %sysopt2% equ 16 goto winsxsclean
 if %sysopt2% equ 17 goto longpathenable
 if %sysopt2% equ 18 goto longpathdisable
 if %sysopt2% equ 19 goto wevcl
+if %sysopt2% equ 20 goto menusysoptimizeP3
 echo →  输入异常，请检查输入选项
 pause
 goto menusysoptimizeP2
+
+:menusysoptimizeP3
+cls
+echo ------------------------------------------------------------------------------------------
+echo                                       系统优化调整菜单
+echo ------------------------------------------------------------------------------------------
+echo     0. 返回主菜单
+echo.
+echo     1. 返回上一页（当前页面为：P3）
+echo.
+echo     2. 禁用 Windows UCPD.sys CN 监测后门
+echo.
+echo     3. 恢复默认 UCPD.sys 设置（推荐设备地区修改为欧盟成员国后再操作）
+echo.
+echo     4. 任务栏时间显示秒数开关
+echo ------------------------------------------------------------------------------------------
+set /p sysopt3=→  请选择项目：
+if "%sysopt3%"=="" set sysopt3=null
+if %sysopt3% equ 0 goto menu
+if %sysopt3% equ 1 goto menusysoptimizeP2
+if %sysopt3% equ 2 goto disableUCPDbackdoor
+if %sysopt3% equ 3 goto restoreUCPD
+if %sysopt3% equ 4 goto SecOnTaskbarmenu
+echo →  输入异常，请检查输入选项
+pause
+goto menusysoptimizeP3
+
+
 
 rem 常用软件修复菜单
 
@@ -1727,6 +1758,7 @@ for /f "tokens=4" %%i in ('type %temp%\ip.txt 2^>nul ^|findstr /r "子网 Mask"'
 
 rem 判断正在连接网络dhcp还是手动
 netsh interface IP Show Address %networkname1% |findstr /r "否 No" 2>nul >nul && set ipsetmode=yes || set ipsetmode=no
+netsh int ip reset >nul 2>nul
 netsh int ipv4 reset >nul 2>nul
 netsh int ipv6 reset >nul 2>nul
 
@@ -4591,13 +4623,17 @@ echo del /f /s /q %%windir%%\prefetch\*.* ^>nul 2^>nul >>%appdata%\junkclean.bat
 echo echo 操作执行完成 >>%appdata%\junkclean.bat
 echo echo. >>%appdata%\junkclean.bat
 
-echo echo 注册表缓存清理 ^>nul 2^>nul >>%appdata%\junkclean.bat
+echo echo 注册表缓存清理 >>%appdata%\junkclean.bat
 echo reg delete "HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" /va /f ^>nul 2^>nul >>%appdata%\junkclean.bat
 echo reg delete "HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" /va /f ^>nul 2^>nul >>%appdata%\junkclean.bat
 echo reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" /va /f ^>nul 2^>nul >>%appdata%\junkclean.bat
 echo reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\Nonpackaged" /va /f ^>nul 2^>nul >>%appdata%\junkclean.bat
 echo echo 操作执行完成 >>%appdata%\junkclean.bat
 echo echo. >>%appdata%\junkclean.bat
+
+echo echo 回收站清理 >>%appdata%\junkclean.bat
+echo powershell Clear-RecycleBin -Force ^>nul 2^>nul >>%appdata%\junkclean.bat
+echo echo 操作执行完成 >>%appdata%\junkclean.bat
 
 echo echo 所有操作已执行完成 >>%appdata%\junkclean.bat
 echo echo 操作执行完成，如有需要请重新运行 MDT 程序 >>%appdata%\junkclean.bat
@@ -4906,7 +4942,7 @@ goto menu
 :noshortcut
 cls
 echo.
-echo 修改注册表设置
+echo 正在修改注册表设置
 reg delete "HKCR\lnkfile" /v "IsShortcut" /f
 reg delete "HKCR\piffile" /v "IsShortcut" /f
 taskkill /im explorer.exe /F
@@ -8796,7 +8832,7 @@ echo.
 
 echo 操作执行完成
 echo.
-echo 所有操作均已执行完成
+echo 所有操作已执行完成
 pause
 goto menu
 
@@ -9671,6 +9707,7 @@ goto:eof
 
 :hypervmenu
 cls
+echo.
 echo     设备安全性-内核隔离（Hyper-V 功能）调整菜单
 echo.
 echo     0. 返回主菜单
@@ -9858,6 +9895,7 @@ goto menu
 
 :wevcl
 cls
+echo.
 echo 开始清理 Windows 系统日志
 echo title 正在清理 Windows 系统日志，请稍等 >%appdata%\junkclean_log.bat
 echo for /F "tokens=*" %%%%1 in ('wevtutil.exe el') DO wevtutil cl "%%%%1" >>%appdata%\junkclean_log.bat
@@ -9865,6 +9903,82 @@ echo echo Windows 系统日志清理完毕 >>%appdata%\junkclean_log.bat
 echo timeout /t 2 /nobreak >nul >>%appdata%\junkclean_log.bat
 echo exit >>%appdata%\junkclean_log.bat
 start %appdata%\junkclean_log.bat
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:disableUCPDbackdoor
+cls
+echo.
+echo 禁用 Windows UCPD.sys CN 监测后门
+echo.
+echo 更改注册表设置以禁用 UCPD 驱动自启动
+powershell New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\UCPD" -Name "Start" -Value 4 -PropertyType DWORD -Force >nul 2>nul
+echo.
+echo 操作执行完成
+echo.
+echo 禁用 UCPD 自动恢复相关计划任务
+powershell Disable-ScheduledTask -TaskName '\Microsoft\Windows\AppxDeploymentClient\UCPD velocity' >nul 2>nul
+echo.
+echo 操作执行完成
+echo.
+echo 所有操作已执行完成
+pause
+goto menu
+
+:restoreUCPD
+cls
+echo.
+echo 恢复默认 UCPD.sys 设置（推荐设备地区修改为欧盟成员国后再操作）
+echo.
+echo 更改注册表设置以恢复 UCPD 驱动自启动
+powershell New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\UCPD" -Name "Start" -Value 1 -PropertyType DWORD -Force >nul 2>nul
+echo.
+echo 操作执行完成
+echo.
+echo 恢复 UCPD 自动恢复相关计划任务
+powershell Enable-ScheduledTask -TaskName '\Microsoft\Windows\AppxDeploymentClient\UCPD velocity' >nul 2>nul
+echo.
+echo 操作执行完成
+echo.
+echo 所有操作已执行完成
+pause
+goto menu
+
+:SecOnTaskbarmenu
+cls
+echo     任务栏时间显示秒数开关
+echo.
+echo     0. 返回主菜单
+echo     1. 开启任务栏时间显示秒数
+echo     2. 关闭任务栏时间显示秒数
+echo.
+set /p user_input=→  请选择一个项目：
+if "%user_input%"=="" set user_input=null
+if %user_input% equ 0 goto menu
+if %user_input% equ 1 goto SecOnTaskbarOn
+if %user_input% equ 2 goto SecOnTaskbarOff
+echo.
+echo →  输入异常，请检查输入选项
+timeout /t 3 /nobreak > NUL
+goto SecOnTaskbarmenu
+
+:SecOnTaskbarOn
+cls
+echo.
+echo 正在修改注册表设置
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowSecondsInSystemClock /t REG_DWORD /d 1 /f >nul 2>nul
+echo.
+echo 操作执行完成
+pause
+goto menu
+
+:SecOnTaskbarOff
+cls
+echo.
+echo 正在修改注册表设置
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowSecondsInSystemClock /t REG_DWORD /d 0 /f >nul 2>nul
 echo.
 echo 操作执行完成
 pause
